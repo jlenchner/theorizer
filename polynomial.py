@@ -5,7 +5,7 @@ import random
 #This is a wrapper around the sympy Poly class with some extra functionality
 class Polynomial:
     PROB_OF_NUM_TERMS = [0, 1.0/3.0, 1.0/2.0, 1.0/6.0]  #probs of a randomly generated poly having 1 term, 2 terms, etc.
-    PROB_FACTORS_PER_TERM = [0.4, 0.4, 0.3]  #probs that a term in a randomly generated poly will have 1, 2, 3, etc. factors
+    PROB_FACTORS_PER_TERM = [0.4, 0.4, 0.2]  #probs that a term in a randomly generated poly will have 1, 2, 3, etc. factors
     SAME_FACTOR_BIAS = 2.0  #bias for repeating the same factor in a term (in other words, favoring x^2 over xy)
 
     PROB_TERM_HAS_NON_UNITAL_CONSTANT = 0.2

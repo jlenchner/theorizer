@@ -5,7 +5,7 @@ from polynomial import Polynomial
 
 class EquationSystem:
 
-    def __init__(self, vars = [], equations = [], maxVarsPerEqn=Polynomial.NO_MAX):
+    def __init__(self, vars = [], measuredVars =[],  equations = [], maxVarsPerEqn=Polynomial.NO_MAX):
         self._equations = equations
         self._vars = vars
         if len(vars) == 0 and len(equations) > 0:
@@ -14,7 +14,14 @@ class EquationSystem:
                 vars_as_set.update(eqn._poly.free_symbols)
             for var in vars_as_set:   #Turn set into an array
                 self._vars.append(var)
+
+        self._measuredVars = measuredVars
+        if len(measuredVars) == 0 and len(vars) > 0:
+            self._measuredVars = list(vars)[:len(vars)//2]
+
         self._maxVarsPerEqn = maxVarsPerEqn
+        self._nonMeasuredVars = set(self._vars) - set(self._measuredVars)
+
 
     def getZeroes(self):   #not yet implemented
         return None
@@ -23,12 +30,32 @@ class EquationSystem:
         var_names = []
         for var in self._vars:
            var_names.append(str(var))
-        var_names.sort()
 
         return var_names
+    
+    def getMeasuredVars(self):
+        measured_var_names = []
+        for var in self._measuredVars:
+            measured_var_names.append(str(var))
+        
+        return measured_var_names
+    
+    def getNonMeasuredVars(self):
+        non_measured_var_names = []
+        for var in self._nonMeasuredVars:
+            non_measured_var_names.append(str(var))
+        
+        return non_measured_var_names
+    
+    def getEquations(self):
+        equation_strings = []
+        for eqn in self._equations:
+            equation_strings.append(eqn.toString())
+            
+        return equation_strings
 
     @classmethod
-    def GenerateRandom(cls, vars, numEqns, maxVarsPerEqn):
+    def GenerateRandom(cls, vars, measuredVars, numEqns, maxVarsPerEqn):
         eqns = []
 
         while True:  #A crude way to make sure we use all the variables
@@ -43,7 +70,7 @@ class EquationSystem:
             else:
                 break
 
-        return EquationSystem(vars=vars, equations=eqns, maxVarsPerEqn=maxVarsPerEqn)
+        return EquationSystem(vars=vars, measuredVars= measuredVars, equations=eqns, maxVarsPerEqn=maxVarsPerEqn)
 
     def replaceRandomEqnByIndex(self, eqnIndex):
         eqn = None
@@ -67,12 +94,31 @@ class EquationSystem:
 
     def toString(self):
         varNames = self.getVarNames()
-
         exp = "Variables: \n"
         for i in range(len(varNames)):
             exp += varNames[i]
             if i < len(varNames) - 1:
                 exp += ','
+        exp += '\n'
+        exp += '\n'
+
+        measuredVarNames = self.getMeasuredVars()
+        exp = "Measured Variables: \n"
+        for i in range(len(measuredVarNames)):
+            exp += measuredVarNames[i]
+            if i < len(measuredVarNames) - 1:
+                exp += ','
+
+        exp += '\n'
+        exp += '\n'
+        exp += "Non Measured Variables: \n"
+        nonMeasuredVarNames = self.getNonMeasuredVars()
+        for i in range(len(nonMeasuredVarNames)):
+            exp += nonMeasuredVarNames[i]
+            if i < len(nonMeasuredVarNames) - 1:
+                exp += ','
+
+        exp += '\n'
         exp += '\n'
         exp += "Equations: \n"
         for i in range(len(self._equations)):
