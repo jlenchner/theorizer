@@ -1,6 +1,7 @@
 from equationSystem import *
-from polynomial import *
+from equation import *
 from m2_functions import *
+from unitOfMeasure import *
 
 def isConsistent(eqnSystem):
     """
@@ -161,9 +162,20 @@ def projectRandomSystems(vars, measured_vars, num):
 
 if __name__ == "__main__":
     d1,d2,m1,m2,w,p,Fc,Fg = symbols('d1,d2,m1,m2,w,p,Fc,Fg')
-    vars = [Fc,Fg,w,d1,d2,m1,m2,p]
+    syms = [Fc,Fg,w,d1,d2,m1,m2,p]
     #measured_vars = [d1,d2,m1,m2,p]
-    #eq2 = Polynomial(d1**2*Fg + 2*d1*d2*Fg + d2**2*Fg - m1*m2)
+    eq2 = Equation(d1**2*Fg + 2*d1*d2*Fg + d2**2*Fg - m1*m2)
+    vbles = eq2._variables
+    terms = eq2.getTerms()
+    m,s = symbols('m,s')
+    units = UofM(m/s)
+
+    x = Symbol('x')
+    var = Variable(x)
+
+    F,m,d,dxdt,d2xdt2 = symbols("F,m,d, dxdt, d2xdt2")
+    eq3 = Equation(F - m*d2xdt2)
+
     #eq3 = Polynomial(Fc - m2*d2*w**2)
     #eq4 = Polynomial(Fg - Fc)
     #eq5 = Polynomial(w*p - 1)
