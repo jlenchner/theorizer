@@ -1,11 +1,11 @@
 import random
 
 from sympy import *
-from polynomial import Polynomial
+from equation import Equation
 
 class EquationSystem:
 
-    def __init__(self, vars = [], measuredVars =[],  equations = [], maxVarsPerEqn=Polynomial.NO_MAX):
+    def __init__(self, vars = [], measuredVars =[],  equations = [], maxVarsPerEqn=Equation.NO_MAX):
         self._equations = equations
         self._vars = vars
         if len(vars) == 0 and len(equations) > 0:
@@ -61,7 +61,7 @@ class EquationSystem:
         while True:  #A crude way to make sure we use all the variables
             vars_used = set()
             for i in range(numEqns):
-                eqn = Polynomial.GenerateRandom(vars=vars, max_vars=maxVarsPerEqn)
+                eqn = Equation.GenerateRandom(vars=vars, max_vars=maxVarsPerEqn)
                 vars_used = vars_used.union(eqn.getVarsUsed())
                 eqns.append(eqn)
 
@@ -80,7 +80,7 @@ class EquationSystem:
                 vars_used = vars_used.union(self._equations[i].getVarsUsed())
 
         while True:
-            eqn = Polynomial.GenerateRandom(vars=self._vars, max_vars=self._maxVarsPerEqn)
+            eqn = Equation.GenerateRandom(vars=self._vars, max_vars=self._maxVarsPerEqn)
             all_vars = vars_used.union(eqn.getVarsUsed())
             if len(all_vars) == len(self._vars):
                 self._equations[eqnIndex] = eqn
