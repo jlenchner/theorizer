@@ -1,57 +1,20 @@
 from unitOfMeasure import *
+from sympy import *
 
-class Variable:
+
+class Variable(Symbol):  #condeivable to have a separate derivative class
     VAR_TO_UofM_DICT = dict()
     DEFAULT_MAPPING = dict()
 
-    def __init__(self, sym, u_of_m = None, isConstant = False, derivativeOrder = 0, depVariable = None, indepVariable = None):
-        self._sym = sym
-        if derivativeOrder == 0:
-            ableToGuessDerivativeInfo = self.guessDerivativeInfo()
+    def __init__(self, name, u_of_m = None, isConstant = False):
+        super().__init__()
+        self._name = name
         if u_of_m is None:
-            self.u_of_m = UofM.GuessUofM(measuredQtyDesc=sym.name)
+            self._u_of_m = UofM.GuessUofM(measuredQtyDesc=self._name)
         else:
             self._u_of_m = u_of_m
-        Variable.VAR_TO_UofM_DICT.update({sym: u_of_m})
+        Variable.VAR_TO_UofM_DICT.update({name: u_of_m})
         self._isConstant = isConstant
-        if derivativeOrder > 0 or not ableToGuessDerivativeInfo:
-            self._derivativeOrder = derivativeOrder
-            self._depVariable = depVariable
-            self._indepVariable = indepVariable
-
-
-    def guessDerivativeInfo(self):
-        ableToGuess = False
-        if self._sym.name.startswith('d'):
-            d_count = self._sym.name.count('d')
-            two_count = self._sym.name.count('2')
-            three_count = self._sym.name.count('3')
-            if d_count == 2:
-                if two_count == 0 and three_count == 0:
-                    l1 = self._sym.name.find('d')
-                    l2 = self._sym.name.find('d', l1+1)
-                    self._derivativeOrder = 1
-                    self._depVariable = Variable(Symbol(self._sym.name[l1+1:l2]))
-                    self._indepVariable = Variable(Symbol(self._sym.name[l2:]))
-                    ableToGuess = True
-                elif two_count == 2:
-                    l1 = self._sym.name.find('d2')
-                    l2 = self._sym.name.find('d', l1 + 1)
-                    l3 = self._sym.name.find('2', l2 + 1)
-                    self._derivativeOrder = 2
-                    self._depVariable = Variable(Symbol(self._sym.name[l1 + 2:l2]))
-                    self._indepVariable = Variable(Symbol(self._sym.name[l2:l3]))
-                    ableToGuess = True
-                elif three_count == 2:
-                    l1 = self._sym.name.find('d3')
-                    l2 = self._sym.name.find('d', l1 + 1)
-                    l3 = self._sym.name.find('3', l2 + 1)
-                    self._derivativeOrder = 3
-                    self._depVariable = Variable(Symbol(self._sym.name[l1 + 2:l2]))
-                    self._indepVariable = Variable(Symbol(self._sym.name[l2:l3]))
-                    ableToGuess = True
-
-        return ableToGuess
 
     @classmethod
     def SetAll(cls, var_to_UofM_dict):  #perhaps do this with parallel arrays
@@ -70,11 +33,14 @@ class Variable:
     def isConstant(self):
         return self._isConstant
 
-    def isDerivate(self):
-        return self._derivativeOrder > 0
+    def __str__(self):
+        return self._name
 
-    def getDerivativeOrder(self):
-        return self._derivativeOrder
 
-    def getIndepVariable(self):
-        return self._indepVariable
+def variables(arg_string):
+    syms =  symbols(arg_string)
+    vars = []
+    for sym in syms:
+        var = Variable(sym.name)
+        vars.append(var)
+    return vars
