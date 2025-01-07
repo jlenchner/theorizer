@@ -1,8 +1,9 @@
 from sympy import *
+from baseUnit import *
 
 class UofM:  #Need methods to get UofM for a term and to determine if an equation is dimensionally consistent (perhaps not in this class0
    #How to deal with a N (Newton) = kg*m/(sec*sec)?  UofMs need to be polys not symbols!!
-    m,kg,s,mol,A,cd,K = symbols('m,kg,s,mol,A,cd,K')
+    m,kg,s,mol,A,cd,K = base_units('m,kg,s,mol,A,cd,K')
     BASE_MEASURED_QUANTITY = ["l", "m", "t", "n", "i", "I", "T"]
     BASE_UNITS = [m,kg,s,mol,A,cd,K]
     BASE_UNITS_TO_DESC_DICT = {m: "meter",
@@ -12,12 +13,12 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
                               A: "Ampere",
                               cd: "candela",
                               K: "Kelvin"}
-    ALL_MEASURED_QUANTITY = ["l", "d", "x", "y", "z", "m", "t", "n", "i", "I", "T", "F"]
-    ALL_UNITS = [Mul(m),Mul(m),Mul(m),Mul(m),Mul(m),Mul(kg),Mul(s),Mul(mol),Mul(A),Mul(cd),Mul(K), Mul(kg*m/(s*s))]
+    ALL_MEASURED_QUANTITIES = ["l", "d", "x", "y", "z", "m", "t", "n", "i", "I", "T", "F", "v", "a"]
+    ALL_UNITS = [m,m,m,m,m,kg,s,mol,A,cd,K, kg*m/(s*s), m/s, m/(s*s)]
 
 
     def __init__(self, units):
-        self._units = Mul(units)
+        self._units = units #this can be a Mul, Pow or BaseUnit
         for sym in self._units.free_symbols:
             if sym not in UofM.BASE_UNITS:
                 UofM.BASE_UNITS.append(sym)
@@ -31,14 +32,26 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
 
     @classmethod
     def GuessUofM(cls, measuredQtyDesc):
-        if measuredQtyDesc in UofM.ALL_MEASURED_QUANTITY:
-            which = UofM.ALL_MEASURED_QUANTITY.index(measuredQtyDesc)
-            return UofM.ALL_UNITS[which]
+        if measuredQtyDesc in UofM.ALL_MEASURED_QUANTITIES:
+            which = UofM.ALL_MEASURED_QUANTITIES.index(measuredQtyDesc)
+            return UofM(UofM.ALL_UNITS[which])
         else:
-            for i in range(len(UofM.ALL_MEASURED_QUANTITY)):
-                if measuredQtyDesc.startswith(UofM.ALL_MEASURED_QUANTITY[i]):
-                    return UofM.ALL_UNITS[i]
+            for i in range(len(UofM.ALL_MEASURED_QUANTITIES)):
+                if measuredQtyDesc.startswith(UofM.ALL_MEASURED_QUANTITIES[i]):
+                    return UofM(UofM.ALL_UNITS[i])
 
         return None
+
+    def __eq__(self, UofM):
+        return self._units == UofM._units
+
+    def __str__(self):
+        return str(Poly(self._units))
+
+
+
+
+
+
 
 
