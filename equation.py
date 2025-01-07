@@ -1,5 +1,6 @@
 from sympy import *
 from variable import *
+from derivative import *
 import random
 
 
@@ -22,6 +23,43 @@ class Equation:
             self._variables = Equation.InferVarsFromExpression(exp)
 
 
+    def isDimensionallyConsistent(self):
+        UofMs = []
+        terms = self.getTerms()
+        for term in terms:  #may need to be a term class that contains the symbols along with the units of measure....
+            UofM = self.getUofMForTerm(term)
+            UofMs.append(UofM)
+
+        #Now check whether they are all equal
+        firstUofM = None
+        for UofM in UofMs:
+            if firstUofM is None:
+                firstUofM = UofM
+            else:
+                if firstUofM != UofM:
+                    return False
+
+        return True
+
+    def getUofMForTerm(self, term):
+        return UofM(self.innerGetUofMForTerm(term))
+
+    def innerGetUofMForTerm(self, term):
+        if isinstance(term, Variable) or isinstance(term, Derivative):
+            return term._u_of_m._units
+        elif isinstance(term, Mul):
+            args = []
+            for arg in term.args:
+                raw_u_of_m = self.innerGetUofMForTerm(arg)
+                if raw_u_of_m is not None:
+                    args.append(raw_u_of_m)
+            return Mul(*args)
+        elif isinstance(term, Pow):
+            return Pow(term.args[0]._u_of_m._units, term.args[1])
+        else:
+            return None
+
+
 
     def add(self, exp, vars = []):
         self._poly = self._poly.add(Poly(exp))
@@ -37,7 +75,7 @@ class Equation:
     def InferVarsFromExpression(cls, exp):
         vars = []
         for sym in exp.free_symbols:
-           vars.append(Variable(sym))
+           vars.append(Variable(sym.name))
 
         return vars
 
@@ -83,8 +121,15 @@ class Equation:
 
         return Equation(exp)
 
-    def getVarsUsed(self):  #returns a set of variables
+    def getSymbolsUsed(self):  #returns a set of variables
         return self._poly.free_symbols
+
+    def getUofM(self, sym):
+        for var in self._variables:
+            if var.name == str(sym):
+                return var._u_of_m
+
+        return None
 
 
     @classmethod
@@ -210,5 +255,6 @@ class Equation:
     def getTerms(self):
         return self._poly.expr.args
 
-    def toString(self):
+    def __str__(self):
         return str(self._poly.expr)
+
