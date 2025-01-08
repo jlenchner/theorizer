@@ -13,8 +13,8 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
                               A: "Ampere",
                               cd: "candela",
                               K: "Kelvin"}
-    ALL_MEASURED_QUANTITIES = ["l", "d", "x", "y", "z", "m", "t", "n", "i", "I", "T", "F", "v", "a"]
-    ALL_UNITS = [m,m,m,m,m,kg,s,mol,A,cd,K, kg*m/(s*s), m/s, m/(s*s)]
+    ALL_MEASURED_QUANTITIES = ["l", "d", "x", "y", "z", "m", "t", "n", "i", "I", "T", "F", "v", "a", "W","p", "P"]
+    ALL_UNITS = [m,m,m,m,m,kg,s,mol,A,cd,K, kg*m/(s*s), m/s, m/(s*s), kg*m*m/(s*s), kg*m/s, kg/(m*s*s)]
 
 
     def __init__(self, units):
@@ -47,6 +47,12 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
 
     def __str__(self):
         return str(Poly(self._units))
+
+
+
+
+
+
 
 
 
