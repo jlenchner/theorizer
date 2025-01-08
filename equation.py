@@ -15,15 +15,23 @@ class Equation:
 
     NO_MAX = -1
 
-    def __init__(self, exp, vars = []):
+    def __init__(self, exp):
         self._poly = Poly(exp)  #The equation is treated generically like a polynomial of symbols
-        if len(vars) > 0:
-            self._variables = vars
-        else:
-            self._variables = Equation.InferVarsFromExpression(exp)
+        self._variables, self._derivatives = Equation.InferVarsAndDerivativesFromExpression(exp)
 
 
     def isDimensionallyConsistent(self):
+        #should first check that all the variable, derivatives and constants have associated units of measure
+        #Also should print warnings about entitites without units
+        for var in self._variables:
+            if var._u_of_m is None:
+                print("The variable " + str(var) + " has no associated units of measure!")
+                return False
+        for derivative in self._derivatives:
+            if derivative._u_of_m is None:
+                print("The derivative " + str(derivative) + " has no associated units of measure!")
+                return False
+
         UofMs = []
         terms = self.getTerms()
         for term in terms:  #may need to be a term class that contains the symbols along with the units of measure....
@@ -72,12 +80,18 @@ class Equation:
 
 
     @classmethod
-    def InferVarsFromExpression(cls, exp):
+    def InferVarsAndDerivativesFromExpression(cls, exp):   #this will not retain the units of measure!
         vars = []
+        derivtives = []
         for sym in exp.free_symbols:
-           vars.append(Variable(sym.name))
+            if isinstance(sym, Variable):
+                vars.append(sym)
+            elif isinstance(sym, Derivative):
+                derivtives.append(sym)
 
-        return vars
+        return vars, derivtives
+
+
 
 
 
@@ -257,4 +271,6 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr)
+
+
 
