@@ -4,28 +4,18 @@ from m2_functions import *
 from unitOfMeasure import *
 from derivative import *
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     
 
 if __name__ == "__main__":
     u = BaseUnit('u')
     U = UofM(u)
     UP = UofM(Pow(U._units, 2))
-    d1, d2, m1, m2, w, p, Fc, Fg = variables('d1,d2,m1,m2,w,p,Fc,Fg')
+    d1, d2, m1, m2, W, p, Fc, Fg = variables('d1,d2,m1,m2,W,p,Fc,Fg')
     #d1,d2,m1,m2,w,p,Fc,Fg = symbols('d1,d2,m1,m2,w,p,Fc,Fg')   #see if it is possible to do this using variables()
-    vars = [Fc,Fg,w,d1,d2,m1,m2,p]
+    vars = [Fc,Fg,W,d1,d2,m1,m2,p]
+
+    eqnSystem = EquationSystem.GenerateRandom(vars=vars, measuredVars=vars, numEqns=4, maxVarsPerEqn=4)
+    res = eqnSystem._equations[0].isDimensionallyConsistent()
     #measured_vars = [d1,d2,m1,m2,p]
     eq2 = Equation(d1**2*Fg + 2*d1*d2*Fg + d2**2*Fg - m1*m2)
     res = eq2.isDimensionallyConsistent()
@@ -68,6 +58,11 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, measured_vars, 10)
+
+
+
+
+
 
 
 
