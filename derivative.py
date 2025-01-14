@@ -1,7 +1,8 @@
+import sympy
 from sympy import *
 from variable import *
 
-class Derivative(Symbol):
+class Derivatif(Symbol):
     UNDEFINED = -999
     def __init__(self, name, u_of_m = None, derivativeOrder = UNDEFINED, depVariable = None, indepVariable = None):
         super().__init__()
@@ -12,7 +13,8 @@ class Derivative(Symbol):
         self._depVariable = depVariable
         self._indepVariable = indepVariable
 
-        if derivativeOrder == Derivative.UNDEFINED or depVariable is None or indepVariable is None:
+
+        if derivativeOrder == Derivatif.UNDEFINED or depVariable is None or indepVariable is None:
             self.guessDerivativeInfo()
 
         if u_of_m is None and self._depVariable is not None and self._indepVariable is not None:
@@ -65,6 +67,6 @@ def derivatives(arg_string):
     syms =  symbols(arg_string)
     derivatives = []
     for sym in syms:
-        derivative = Derivative(sym.name)
+        derivative = Derivatif(sym.name)
         derivatives.append(derivative)
     return derivatives
