@@ -1,5 +1,6 @@
 import random
 import os
+from variable import *
 
 from sympy import *
 from equation import Equation
@@ -7,21 +8,36 @@ from m2_functions import *
 
 class EquationSystem:
 
-    def __init__(self, vars = [], measuredVars =[],  equations = [], maxVarsPerEqn=Equation.NO_MAX):
+    def __init__(self, vars = [],derivatives = [],  measuredVars =[],  equations = [], max_var_and_derivatives_per_eqn=Equation.NO_MAX):
         self._equations = equations
         self._vars = vars
         if len(vars) == 0 and len(equations) > 0:
             vars_as_set = set()
             for eqn in equations:
-                vars_as_set.update(eqn._poly.free_symbols)
+                vars_in_eqn = set()
+                for sym in eqn._poly.free_symbols:
+                    if isinstance(sym, Variable):
+                        vars_in_eqn.add(sym)
+                vars_as_set.update(vars_in_eqn)
             for var in vars_as_set:   #Turn set into an array
                 self._vars.append(var)
+        self._derivatives = derivatives
+        if len(derivatives) == 0 and len(equations) > 0:
+            derivs_as_set = set()
+            for eqn in equations:
+                derivs_in_eqn = set()
+                for sym in eqn._poly.free_symbols:
+                    if isinstance(sym, Derivative):
+                        derivs_in_eqn.add(sym)
+                derivs_as_set.update(derivs_in_eqn)
+            for deriv in derivs_as_set:  # Turn set into an array
+                self._derivatives.append(deriv)
 
         self._measuredVars = measuredVars
         if len(measuredVars) == 0 and len(vars) > 0:
             self._measuredVars = list(vars)[:len(vars)//2]
 
-        self._maxVarsPerEqn = maxVarsPerEqn
+        self.max_var_and_derivatives_per_eqn = max_var_and_derivatives_per_eqn
         self._nonMeasuredVars = set(self._vars) - set(self._measuredVars)
 
 
@@ -153,7 +169,7 @@ class EquationSystem:
         return result
 
     @classmethod
-    def ProjectRandomSystems(cls, vars, measured_vars, num):
+    def ProjectRandomSystems(cls, vars, derivatives, measured_vars, num):
         """
         Projects random systems of equations onto the measured variables.
         Inputs:
@@ -163,7 +179,7 @@ class EquationSystem:
         """
         results = []
         for i in range(num):
-            eqnSystem = EquationSystem.GenerateRandom(vars, measured_vars, 4, 6)
+            eqnSystem = EquationSystem.GenerateRandom(vars, derivatives, measured_vars, 4, 6)
             print("System: \n" + str(eqnSystem))
             result = eqnSystem.projectUnknownMeasuredVars()
             results.append(result)
@@ -191,6 +207,13 @@ class EquationSystem:
            var_names.append(str(var))
 
         return var_names
+
+    def getDerivNames(self):
+        deriv_names = []
+        for derirvative in self._derivatives:
+           deriv_names.append(str(derirvative))
+
+        return deriv_names
     
     def getMeasuredVars(self):
         measured_var_names = []
@@ -214,13 +237,13 @@ class EquationSystem:
         return equation_strings
 
     @classmethod
-    def GenerateRandom(cls, vars, measuredVars, numEqns, maxVarsPerEqn):
+    def GenerateRandom(cls, vars, derivatives, measuredVars, numEqns, max_var_and_derivatives_per_eqn):
         eqns = []
 
         while True:  #A crude way to make sure we use all the variables
             symbols_used = set()
             for i in range(numEqns):
-                eqn = Equation.GenerateRandom(vars=vars, max_vars=maxVarsPerEqn)
+                eqn = Equation.GenerateRandom(vars=vars, derivatives=derivatives, max_var_and_derivatives_per_eqn=max_var_and_derivatives_per_eqn)
                 symbols_used = symbols_used.union(eqn.getSymbolsUsed())
                 eqns.append(eqn)
 
@@ -229,7 +252,7 @@ class EquationSystem:
             else:
                 break
 
-        return EquationSystem(vars=vars, measuredVars= measuredVars, equations=eqns, maxVarsPerEqn=maxVarsPerEqn)
+        return EquationSystem(vars=vars, measuredVars= measuredVars, equations=eqns, max_var_and_derivatives_per_eqn=max_var_and_derivatives_per_eqn)
 
     def replaceRandomEqnByIndex(self, eqnIndex):
         eqn = None
@@ -261,8 +284,17 @@ class EquationSystem:
         exp += '\n'
         exp += '\n'
 
+        derivNames = self.getDerivNames()
+        exp += "Derivatives: \n"
+        for i in range(len(derivNames)):
+            exp += derivNames[i]
+            if i < len(derivNames) - 1:
+                exp += ','
+        exp += '\n'
+        exp += '\n'
+
         measuredVarNames = self.getMeasuredVars()
-        exp = "Measured Variables: \n"
+        exp += "Measured Variables: \n"
         for i in range(len(measuredVarNames)):
             exp += measuredVarNames[i]
             if i < len(measuredVarNames) - 1:
@@ -286,6 +318,20 @@ class EquationSystem:
                 exp += '\n'
 
         return exp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
