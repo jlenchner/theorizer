@@ -61,3 +61,9 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
 
 
 
+
+
+
+
+
+
