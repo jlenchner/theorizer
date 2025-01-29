@@ -20,7 +20,7 @@ class Equation:
     NO_MAX = 999
 
     _logger = logging.getLogger()
-    logging.basicConfig(filename='theorizer.log', filemode='w', encoding='utf-8', level=logging.DEBUG)
+
 
     def __init__(self, exp):
         self._poly = Poly(exp)  #The equation is treated generically like a polynomial of symbols
@@ -685,10 +685,17 @@ class Equation:
         self._poly = Poly(exp)
 
 
-
+    @classmethod
+    def SetLogging(cls, filename='theorizer.log', filemode='w', encoding='utf-8', level=logging.DEBUG):
+        logging.basicConfig(filename=filename, filemode=filemode, encoding=encoding, level=level)
 
     def __str__(self):
         return str(self._poly.expr)
+
+
+
+
+
 
 
 
