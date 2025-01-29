@@ -8,6 +8,7 @@ from constant import *
     
 
 if __name__ == "__main__":
+    Equation.SetLogging()
     x, y,z ,w  = variables('x,y,z,w')
     eqn = Equation(2*x - 2*y)
     terms = eqn.getTerms()
