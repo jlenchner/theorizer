@@ -34,7 +34,7 @@ if __name__ == "__main__":
     #vars.extend(constants)
 
     eqnSystem = EquationSystem.GenerateRandom(vars=vars, derivatives=derivs, measuredVars=vars, \
-                                              constants=constants, numEqns=4, max_vars_derivatives_and_constants_per_eqn=4)
+                                              constants=constants, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
     res = eqnSystem._equations[0].isDimensionallyConsistent()
 
     #for i in range(100):
@@ -95,26 +95,6 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
