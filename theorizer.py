@@ -3,13 +3,25 @@ from equation import *
 from m2_functions import *
 from unitOfMeasure import *
 from derivative import *
+from constant import *
 
     
 
 if __name__ == "__main__":
-    d1, d2, m1, m2, W, p, Fc, Fg = variables('d1,d2,m1,m2,W,p,Fc,Fg')
+    x, y,z ,w  = variables('x,y,z,w')
+    eqn = Equation(2*x - 2*y)
+    terms = eqn.getTerms()
+    for term in terms:
+        c = Equation.GetUnnamedConstantForTerm(term)
+    eqn.divideByCommonUnnamedConstants()
+
+    d1, d2, m1, m2, W, p, Fc, Fg, T = variables('d1,d2,m1,m2,W,p,Fc,Fg,T')
+    d2xdt2 = Derivatif('d2xdt2')
+    G, c = constants('G,c')
     #d1,d2,m1,m2,w,p,Fc,Fg = symbols('d1,d2,m1,m2,w,p,Fc,Fg')   #see if it is possible to do this using variables()
-    vars = [Fc,Fg,W,d1,d2,m1,m2,p]
+    vars = [Fc,Fg,W,d1,d2,m1,m2,p,T]
+    derivs = [d2xdt2]
+    constants = [G,c]
     term = Equation.GenerateTermFromBaseNum(31200113, vars, [])
 
     term1 = 3*term
@@ -17,11 +29,22 @@ if __name__ == "__main__":
     term3 = d1
     terms = [term, term1, term2, term3]
     cf = Equation.GetCommonFactors(terms)
-    res = Equation.TermsEqualModConstants(term1, term2)
+    res = Equation.TermsEqualModUnnamedConstants(term1, term2)
 
-    eqnSystem = EquationSystem.GenerateRandom(vars=vars, derivatives=[], measuredVars=vars, \
-                                              numEqns=4, max_var_and_derivatives_per_eqn=4)
+    #vars.extend(constants)
+
+    eqnSystem = EquationSystem.GenerateRandom(vars=vars, derivatives=derivs, measuredVars=vars, \
+                                              constants=constants, numEqns=4, max_vars_derivatives_and_constants_per_eqn=4)
     res = eqnSystem._equations[0].isDimensionallyConsistent()
+
+    #for i in range(100):
+    #    eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=[])
+    #    print(str(i+1) + ": " + str(eqn))
+    for i in range(250):
+        eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=constants,
+                                              measuredVars=vars, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
+        print(str(i+1) + ": " + str(eqnSystem) + "\n\n")
+        res = eqnSystem._equations[0].isDimensionallyConsistent()
     #measured_vars = [d1,d2,m1,m2,p]
     eq2 = Equation(d1**2*Fg + 2*d1*d2*Fg + d2**2*Fg - m1*m2)
     res = eq2.isDimensionallyConsistent()
@@ -72,6 +95,11 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
+
+
+
+
+
 
 
 
