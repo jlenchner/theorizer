@@ -260,7 +260,7 @@ class EquationSystem:
         return equation_strings
 
     @classmethod
-    def GenerateRandom(cls, vars, derivatives, constants, measuredVars, numEqns, max_vars_derivatives_and_constants_per_eqn):
+    def GenerateRandom(cls, vars, derivatives, constants, measuredVars, numEqns, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX):
         eqns = []
 
         while True:  #A crude way to make sure we use all the variables
@@ -282,7 +282,7 @@ class EquationSystem:
 
 
     @classmethod
-    def GenerateRandomDimensionallyConsistent(cls, vars, derivatives, constants, measuredVars, numEqns, max_vars_derivatives_and_constants_per_eqn):
+    def GenerateRandomDimensionallyConsistent(cls, vars, derivatives, constants, measuredVars, numEqns, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX):
         eqns = []
 
         varsDerivsAndConstants = []
