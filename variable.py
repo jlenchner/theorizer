@@ -2,19 +2,19 @@ from unitOfMeasure import *
 from sympy import *
 
 
-class Variable(Symbol):  #condeivable to have a separate derivative class
+class Variable(Symbol):
     VAR_TO_UofM_DICT = dict()
-    DEFAULT_MAPPING = dict()
+    #DEFAULT_MAPPING = dict()
 
-    def __init__(self, name, u_of_m = None, isConstant = False):
+    def __init__(self, name, u_of_m = None):
         super().__init__()
         self._name = name
         if u_of_m is None:
             self._u_of_m = UofM.GuessUofM(measuredQtyDesc=self._name)
         else:
             self._u_of_m = u_of_m
-        Variable.VAR_TO_UofM_DICT.update({name: u_of_m})
-        self._isConstant = isConstant
+        Variable.VAR_TO_UofM_DICT.update({name: self._u_of_m})
+
 
     @classmethod
     def SetAll(cls, var_to_UofM_dict):  #perhaps do this with parallel arrays
@@ -30,8 +30,6 @@ class Variable(Symbol):  #condeivable to have a separate derivative class
 
         return allVars
 
-    def isConstant(self):
-        return self._isConstant
 
     def __str__(self):
         return self._name
