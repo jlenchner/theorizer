@@ -7,7 +7,6 @@ import math
 import logging
 
 
-#This is a wrapper around the sympy Poly class with some extra functionality
 class Equation:
     PROB_OF_NUM_TERMS = [0, 1.0/3.0, 1.0/2.0, 1.0/6.0]  #probs of a randomly generated poly having 1 term, 2 terms, etc.
     PROB_FACTORS_PER_TERM = [0.4, 0.4, 0.2]  #probs that a term in a randomly generated poly will have 1, 2, 3, etc. factors
@@ -288,7 +287,7 @@ class Equation:
             try:
                 candidateTerms = u_of_mToTermLookupDict.get(u_of_m_to_match._units)[0].copy()
             except:
-                Equation._logger.error("There are no candidate terms!!")
+                Equation._logger.error("There are no candidate terms for first term:" + str(firstTerm))
 
             if len(candidateTerms) < num_terms or Equation.GetCommonFactors(candidateTerms) != set():
                 continue
@@ -691,11 +690,6 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr)
-
-
-
-
-
 
 
 
