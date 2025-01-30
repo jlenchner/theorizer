@@ -280,7 +280,7 @@ class Equation:
         while True:
             num_terms = Equation.GetRandomNumberOfTerms()
 
-            firstTerm = Equation.GenerateRandomTerm(vars, derivatives, constants)
+            firstTerm = Equation.GenerateRandomTerm(vars, derivatives, constants, max_power=max_power)
             terms = [firstTerm]
             u_of_m_to_match = Equation.GetUofMForTerm(firstTerm)
             candidateTerms = set()
@@ -288,12 +288,17 @@ class Equation:
                 candidateTerms = u_of_mToTermLookupDict.get(u_of_m_to_match._units)[0].copy()
             except:
                 Equation._logger.error("There are no candidate terms for first term:" + str(firstTerm))
+                continue
 
             if len(candidateTerms) < num_terms or Equation.GetCommonFactors(candidateTerms) != set():
                 continue
             constantStrippedFirstTerm = Equation.GetUnnamedConstantStrippedTerm(firstTerm)
-            candidateTerms.remove(constantStrippedFirstTerm)
-            #must now remove matching term (modulo constant)
+            try:
+                candidateTerms.remove(constantStrippedFirstTerm)
+            except: #I believe I have fixed the cause of this exception but just in case....
+                Equation._logger.error("Could not remove constantStrippedFirstTerm=" + str(constantStrippedFirstTerm) + \
+                                       ". First term was: " + str(firstTerm))
+                continue
 
             additionalTerms = Equation.GenerateFixedNumberofDimensionallyConsistentTermsFromList(num_terms=num_terms - 1,
                                                                                                  candidateTerms=candidateTerms,
@@ -314,6 +319,9 @@ class Equation:
     @classmethod
     def GetUofMToPrimitiveTermLookupTable(cls, vars, derivatives, constants, max_power=3,
                                           max_vars_derivatives_and_constants_per_eqn=NO_MAX):
+        # This impelementation is very slow. Can be sped up drastically by first choosing the up to
+        # max_vars_derivatives_and_constants_per_eqn slots and filling them with integers between 0
+        # and max_power
         if max_vars_derivatives_and_constants_per_eqn == Equation.NO_MAX:
             max_vars_derivatives_and_constants_per_eqn = 999
         uOfMToTermLookupDict = dict()
@@ -690,6 +698,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr)
+
+
+
+
+
 
 
 
