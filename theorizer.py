@@ -41,7 +41,7 @@ if __name__ == "__main__":
     #for i in range(100):
     #    eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=[])
     #    print(str(i+1) + ": " + str(eqn))
-    for i in range(250):
+    for i in range(2500):
         eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=constants,
                                               measuredVars=vars, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
         print(str(i+1) + ": " + str(eqnSystem) + "\n\n")
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     vars = [F,m,a]
     derivatives = [dxdt, d2xdt2]
 
-    eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivatives)
+    eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivatives, constants=[])
     print(str(eqn))
     res = eqn.isDimensionallyConsistent()
 
