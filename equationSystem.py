@@ -356,7 +356,7 @@ class EquationSystem:
                 u_of_ms_in_use.add(u_of_m_for_term)
             while True:
                 eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivatives, constants=constants,
-                                                            u_of_mToTermLookupDict=EquationSystem._LookupDict,
+                                                            u_of_mToTermLookupDict=EquationSystem._LookupDict, max_power=max_power,
                                                             max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
                 firstTerm = eqn.getTerms()[0]
                 u_of_m_for_term = Equation.GetUofMForTerm(firstTerm)
@@ -368,8 +368,16 @@ class EquationSystem:
         return EquationSystem(vars=vars, derivatives=derivatives, constants=constants, measuredVars=measuredVars, equations=eqns,
                               max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
 
-    def replaceRandomDimensionallyConsistentEqnByIndex(self, eqnIndex): #To be implemented
-        return self
+    def replaceRandomDimensionallyConsistentEqnByIndex(self, eqnIndex): #To be fully implemented
+        symbols_of_others = set()
+        symbols_of_this_eqn = set()
+        for i in range(len(self._equations)):
+            if i != eqnIndex:
+                symbols_of_others = symbols_of_others.union(self._equations[i].getSymbolsUsed())
+            else:
+                symbols_of_this_eqn = self._equations[i].getSymbolsUsed()
+
+        symbols_needed = symbols_of_this_eqn - symbols_of_others  #these are the symbols needed in the new equation
 
     def replaceRamdomDimensionallyConsistentEqn(self):
         randIndex = random.randint(0, len(self._equations) - 1)
