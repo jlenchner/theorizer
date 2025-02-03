@@ -434,7 +434,7 @@ class Equation:
 
 
 
-    def getSymbolsUsed(self):  #returns a set of variables
+    def getSymbolsUsed(self):  #returns a set of variables, derivs and constants
         return self._poly.free_symbols
 
     def getUofM(self, sym):
@@ -647,12 +647,32 @@ class Equation:
     def getTerms(self):
         return self._poly.expr.args
 
+    def __eq__(self, eqn):
+        return self.getTerms() == eqn.getTerms()
+
+
+    def equalModUnnamedConstants(self, eqn):
+        ourTerms = self.getTerms()
+        ourStrippedTerms = set()
+        for term in ourTerms:
+            ourStrippedTerms.add(Equation.GetUnnamedConstantStrippedTerm(term))
+        otherTerms = eqn.getTerms()
+        otherStrippedTerms = set()
+        for term in otherTerms:
+            otherStrippedTerms.add(Equation.GetUnnamedConstantStrippedTerm(term))
+
+        return ourStrippedTerms == otherStrippedTerms
+
     @classmethod
     def TermsEqualModUnnamedConstants(cls, term1, term2):
         t1 = Equation.GetUnnamedConstantStrippedTerm(term1)
         t2 = Equation.GetUnnamedConstantStrippedTerm(term2)
 
         return t1 == t2
+
+    @classmethod
+    def TermsEqual(self, term1, term2):
+        return term1 == term2
 
     @classmethod
     def GetUnnamedConstantStrippedTerm(cls, term):
@@ -692,12 +712,19 @@ class Equation:
         self._poly = Poly(exp)
 
 
+
+
     @classmethod
     def SetLogging(cls, filename='theorizer.log', filemode='w', encoding='utf-8', level=logging.DEBUG):
         logging.basicConfig(filename=filename, filemode=filemode, encoding=encoding, level=level)
 
     def __str__(self):
         return str(self._poly.expr)
+
+
+
+
+
 
 
 
