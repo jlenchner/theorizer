@@ -16,21 +16,29 @@ if __name__ == "__main__":
         c = Equation.GetUnnamedConstantForTerm(term)
     eqn.divideByCommonUnnamedConstants()
 
-    d1, d2, m1, m2, W, p, Fc, Fg, T = variables('d1,d2,m1,m2,W,p,Fc,Fg,T')
+    d1, d2, m1, m2, W, p, Fc, Fg, T, E = variables('d1,d2,m1,m2,W,p,Fc,Fg,T,E')
     d2xdt2 = Derivatif('d2xdt2')
     G, c = constants('G,c')
-    #d1,d2,m1,m2,w,p,Fc,Fg = symbols('d1,d2,m1,m2,w,p,Fc,Fg')   #see if it is possible to do this using variables()
-    vars = [Fc,Fg,W,d1,d2,m1,m2,p,T]
+    #vars = [Fc,Fg,W,d1,d2,m1,m2,p,T,E]
+    vars = [Fc, Fg, W, d1, d2, m1, m2, p]
     derivs = [d2xdt2]
     constants = [G,c]
     term = Equation.GenerateTermFromBaseNum(31200113, vars, [])
 
     term1 = 3*term
-    term2 = 5*term
+    term2 = term*5
     term3 = d1
     terms = [term, term1, term2, term3]
     cf = Equation.GetCommonFactors(terms)
+    term1 = 3*W*p
+    term2 = p*W*3
+    eq1 = Equation(2*m1*c**2 - d2xdt2*G)
+    eq2 = Equation(-d2xdt2*G + m1*2*c**2)
+    res = eq1 == eq2
+    eq2 = Equation(-d2xdt2*4*G + m1*2*c**2)
+    res = eq1.equalModUnnamedConstants(eq2)
     res = Equation.TermsEqualModUnnamedConstants(term1, term2)
+    res = Equation.TermsEqual(term1, term2)
 
     #vars.extend(constants)
 
@@ -45,7 +53,9 @@ if __name__ == "__main__":
         eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=constants,
                                               measuredVars=vars, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
         print(str(i+1) + ": " + str(eqnSystem) + "\n\n")
-        res = eqnSystem._equations[0].isDimensionallyConsistent()
+        #eqn = eqnSystem.replaceRandomDimensionallyConsistentEqnByIndex(1)
+
+
     #measured_vars = [d1,d2,m1,m2,p]
     eq2 = Equation(d1**2*Fg + 2*d1*d2*Fg + d2**2*Fg - m1*m2)
     res = eq2.isDimensionallyConsistent()
@@ -96,6 +106,11 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
+
+
+
+
+
 
 
 
