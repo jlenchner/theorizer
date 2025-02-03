@@ -148,7 +148,13 @@ class Equation:
                         terms.append(term)
                         break
             if Equation.GetCommonFactors(terms) == set():
-                break
+                if Equation.SanitCheckFromTerms(terms):
+                    break
+                else:
+                    exp = terms[0]
+                    for i in range(1, len(terms)):
+                        exp = exp + terms[i]
+                    Equation._logger.info("Equation: " + str(exp) + " has failed sanityCheck!")
 
 
         Equation.AssignRandomSignsToTerms(terms)
@@ -305,8 +311,14 @@ class Equation:
                                                                                                  existing_terms=terms)
             terms.extend(additionalTerms)
             if Equation.GetCommonFactors(terms) == set(): #this should always happen because it is
-                                    # handled in Equation.GenerateFixedNumberofDimensionallyConsistentTermsFromList()
-                break
+                # handled in Equation.GenerateFixedNumberofDimensionallyConsistentTermsFromList()
+                if Equation.SanitCheckFromTerms(terms):
+                    break
+                else:
+                    exp = terms[0]
+                    for i in range(1, len(terms)):
+                        exp = exp + terms[i]
+                    Equation._logger.info("Equation: " + str(exp) + " has failed sanityCheck!")
 
         Equation.AssignRandomSignsToTerms(terms)
 
@@ -394,40 +406,43 @@ class Equation:
 
         newFirstTerm = None
         strippedNewFistTerm = None
-        while True:
-            newFirstTerm = Equation.GenerateRandomTermWithGivenVarDerivativeOrConstant(vars=vars,
-                                                            derivatives=derivatives,
-                                                            constants=constants,
-                                                            givenVar=given_var,
-                                                            givenDeriv=given_derivative,
-                                                            givenConstant=given_constant,
-                                                            max_power=max_power,
-                                                            max_varsDerivsAndConstants=4)
-            strippedNewFistTerm = Equation.GetUnnamedConstantStrippedTerm(newFirstTerm)
-            if strippedNewFistTerm in terms_to_keep:
-                Equation._logger.info("Term is a good one!")
+        eqn = None
+        while True: #To get a viable equation
+            while True:  #To get a viable first tierm
+                newFirstTerm = Equation.GenerateRandomTermWithGivenVarDerivativeOrConstant(vars=vars,
+                                                                derivatives=derivatives,
+                                                                constants=constants,
+                                                                givenVar=given_var,
+                                                                givenDeriv=given_derivative,
+                                                                givenConstant=given_constant,
+                                                                max_power=max_power,
+                                                                max_varsDerivsAndConstants=4)
+                strippedNewFistTerm = Equation.GetUnnamedConstantStrippedTerm(newFirstTerm)
+                if strippedNewFistTerm in terms_to_keep:
+                    Equation._logger.info("Term is a good one!")
+                    break
+                else:
+                    Equation._logger.info("Term is not good. Trying again....")
+
+            u_of_m_for_term = Equation.GetUofMForTerm(strippedNewFistTerm)
+            termsForUofM = u_of_mToTermLookupDict.get(u_of_m_for_term._units)[0].copy()
+            termsForUofM.remove(strippedNewFistTerm)
+            existing_terms = [newFirstTerm]
+            addtional_terms = Equation.GenerateFixedNumberofDimensionallyConsistentTermsFromList(num_terms=num_terms-1,
+                                                            candidateTerms=termsForUofM,
+                                                            existing_terms=existing_terms,
+                                                            max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+            existing_terms.extend(addtional_terms)
+            Equation.AssignRandomSignsToTerms(existing_terms)
+            exp = existing_terms[0]
+            for i in range(1, len(existing_terms)):
+                exp = exp + existing_terms[i]
+            eqn = Equation(exp)
+            if eqn.sanityCheck():
                 break
             else:
-                Equation._logger.info("Term is not good. Trying again....")
-        #rand_int = random.randint(0, len(terms_to_keep))
-        #strippedNewFistTerm = terms_to_keep[rand_int]
-        #c = Equation.GetConstant()
-        #newFirstTerm = c*strippedNewFistTerm  #the following set of ifs will be automatic...
-        u_of_m_for_term = Equation.GetUofMForTerm(strippedNewFistTerm)
-        termsForUofM = u_of_mToTermLookupDict.get(u_of_m_for_term._units)[0].copy()
-        termsForUofM.remove(strippedNewFistTerm)
-        existing_terms = [newFirstTerm]
-        addtional_terms = Equation.GenerateFixedNumberofDimensionallyConsistentTermsFromList(num_terms=num_terms-1,
-                                                        candidateTerms=termsForUofM,
-                                                        existing_terms=existing_terms,
-                                                        max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
-        existing_terms.extend(addtional_terms)
-        Equation.AssignRandomSignsToTerms(existing_terms)
-        exp = existing_terms[0]
-        for i in range(1, len(existing_terms)):
-            exp = exp + existing_terms[i]
+                Equation._logger.info("Equation: " + str(exp) + " has failed sanityCheck!")
 
-        eqn = Equation(exp)
         eqn.divideByCommonUnnamedConstants()
 
         return eqn
@@ -644,6 +659,20 @@ class Equation:
 
         return None
 
+    def sanityCheck(self): #perform various different sanity checks to make sure an equation is of an appropriate form
+        #First check is whether equation is just one var-deriv-or-constant is equal (mod unnamed constants) to another
+        terms = self.getTerms()
+        return Equation.SanitCheckFromTerms(terms)
+
+    @classmethod
+    def SanitCheckFromTerms(cls, terms):
+        if len(terms) == 2 and len(terms[0].free_symbols) == 1 and len(terms[1].free_symbols) == 1:
+            return False
+
+        return True
+
+
+
     def getTerms(self):
         return self._poly.expr.args
 
@@ -720,6 +749,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr)
+
+
+
+
+
 
 
 
