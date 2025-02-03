@@ -292,9 +292,7 @@ class EquationSystem:
 
         varsDerivsAndConstantsRemainingToBeUsed = set(varsDerivsAndConstants)
 
-        max_power = 3
-        if len(varsDerivsAndConstants) > 10:
-            max_power = 2
+        max_power = EquationSystem.DetermineMaxPower(vars, derivatives, constants)
 
         if varsDerivsAndConstants != EquationSystem._LastVarsDerivsAndConstants:
             Equation._logger.info("Using NEW lookup dictionary.")
@@ -367,8 +365,46 @@ class EquationSystem:
 
         return EquationSystem(vars=vars, derivatives=derivatives, constants=constants, measuredVars=measuredVars, equations=eqns,
                               max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+    @classmethod
+    def DetermineMaxPower(cls, vars, derivatives, constants):
+        varsDerivsAndConstants = []
+        varsDerivsAndConstants.extend(vars)
+        varsDerivsAndConstants.extend(derivatives)
+        varsDerivsAndConstants.extend(constants)
+
+        if len(varsDerivsAndConstants) > 10:
+            return 2
+        else:
+            return 3
 
     def replaceRandomDimensionallyConsistentEqnByIndex(self, eqnIndex): #To be fully implemented
+        #First make sure that all vars, derivatives and constants have u_of_ms!
+        for var in self._vars:
+            if var._u_of_m is None:
+                Equation._logger.error("The variable " + str(var) + " has no _u_of_m!")
+                return self._equations[eqnIndex]
+        for deriv in self._derivatives:
+            if deriv._u_of_m is None:
+                Equation._logger.error("The derivative " + str(deriv) + " has no _u_of_m!")
+                return self._equations[eqnIndex]
+        for const in self._constants:
+            if const._u_of_m is None:
+                Equation._logger.error("The constant " + str(const) + " has no _u_of_m!")
+                return self._equations[eqnIndex]
+
+        varsDerivsAndConstants = []
+        varsDerivsAndConstants.extend(self._vars)
+        varsDerivsAndConstants.extend(self._derivatives)
+        varsDerivsAndConstants.extend(self._constants)
+
+        max_power = EquationSystem.DetermineMaxPower(self._vars, self._derivatives, self._constants)
+
+        if varsDerivsAndConstants != EquationSystem._LastVarsDerivsAndConstants:
+            EquationSystem._LastVarsDerivsAndConstants = varsDerivsAndConstants
+            EquationSystem._LookupDict = Equation.GetUofMToPrimitiveTermLookupTable(vars, derivatives, constants,
+                                max_power=max_power,
+                                max_vars_derivatives_and_constants_per_eqn=self._max_vars_derivatives_and_constants_per_eqn)
+
         symbols_of_others = set()
         symbols_of_this_eqn = set()
         for i in range(len(self._equations)):
@@ -377,7 +413,53 @@ class EquationSystem:
             else:
                 symbols_of_this_eqn = self._equations[i].getSymbolsUsed()
 
-        symbols_needed = symbols_of_this_eqn - symbols_of_others  #these are the symbols needed in the new equation
+        symbols_needed = symbols_of_this_eqn - symbols_of_others  # these are the symbols needed in the new equation
+        Equation._logger.info("EquationSystem.replaceRandomDimensionallyConsistentEqnByIndex(): Vars,derivs and constants needed = " + str(symbols_needed))
+        replacement_eqn = None
+        if len(symbols_needed) == 0:
+            while True:
+                replacement_eqn = Equation.GenerateRandomDimensionallyConsistent(vars=self._vars, derivatives=self._derivatives,
+                                        constants=self._constants, u_of_mToTermLookupDict=EquationSystem._LookupDict)
+                found_dup = False
+                for eqn in self._equations:
+                    if replacement_eqn.equalModUnnamedConstants(eqn):
+                        Equation._logger.info("Generated equation: " + str(replacement_eqn)
+                                + " is, modulo unnamed constants, equal to existing equation: " + str(eqn)
+                                + ". Will generate a new equation!")
+                        found_dup = True
+                        continue
+                if not found_dup:
+                    break
+        else:
+            while True:
+                random_additional_symbol = random.choice(list(symbols_needed))
+                given_var = given_derivative = given_constant = None
+                if isinstance(random_additional_symbol, Constant):
+                    given_constant = random_additional_symbol
+                elif isinstance(random_additional_symbol, Variable):
+                    given_var = random_additional_symbol
+                elif isinstance(random_additional_symbol, Derivatif):
+                    given_derivative = random_additional_symbol
+                replacement_eqn = Equation.GenerateRandomDimensionallyConsistentEquationWithSpecifiedVarOrDerivative(vars=self._vars,
+                                derivatives=self._derivatives, constants=self._constants,
+                                u_of_mToTermLookupDict=EquationSystem._LookupDict,
+                                given_var=given_var, given_derivative=given_derivative, given_constant=given_constant,
+                                max_power=max_power,
+                                max_vars_derivatives_and_constants_per_eqn=self._max_vars_derivatives_and_constants_per_eqn)
+                # should check that replacement_eqn is not pone of the existing equations
+                if symbols_needed.issubset(replacement_eqn.getSymbolsUsed()):
+                    if replacement_eqn.equalModUnnamedConstants(self._equations[eqnIndex]):
+                        Equation._logger.info("Generated equation: " + str(replacement_eqn)
+                                + " is, modulo unnamed constants, equal to existing equation: " + str(self._equations[eqnIndex])
+                                + ". Will generate a new equation!")
+                        continue
+                    else:
+                        break
+
+        Equation._logger.info("EquationSystem.replaceRandomDimensionallyConsistentEqnByIndex(): Replacement eqn: " + str(replacement_eqn))
+        self._equations[eqnIndex] = replacement_eqn
+        return replacement_eqn
+
 
     def replaceRamdomDimensionallyConsistentEqn(self):
         randIndex = random.randint(0, len(self._equations) - 1)
@@ -403,6 +485,7 @@ class EquationSystem:
     def replaceRamdomEqn(self):    #Need dimensionally consistent variant of this method
         randIndex = random.randint(0, len(self._equations) - 1)
         return self.replaceRandomEqnByIndex(randIndex)
+
 
     def __str__(self):
         varNames = self.getVarNames()
@@ -457,6 +540,20 @@ class EquationSystem:
                 exp += '\n'
 
         return exp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
