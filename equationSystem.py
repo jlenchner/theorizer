@@ -283,90 +283,102 @@ class EquationSystem:
 
     @classmethod
     def GenerateRandomDimensionallyConsistent(cls, vars, derivatives, constants, measuredVars, numEqns, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX):
-        eqns = []
+        while True: #Keep generating new ones until they pass the sanityCheck
+            eqns = []
 
-        varsDerivsAndConstants = []
-        varsDerivsAndConstants.extend(vars)
-        varsDerivsAndConstants.extend(derivatives)
-        varsDerivsAndConstants.extend(constants)
+            varsDerivsAndConstants = []
+            varsDerivsAndConstants.extend(vars)
+            varsDerivsAndConstants.extend(derivatives)
+            varsDerivsAndConstants.extend(constants)
 
-        varsDerivsAndConstantsRemainingToBeUsed = set(varsDerivsAndConstants)
+            varsDerivsAndConstantsRemainingToBeUsed = set(varsDerivsAndConstants)
 
-        max_power = EquationSystem.DetermineMaxPower(vars, derivatives, constants)
+            max_power = EquationSystem.DetermineMaxPower(vars, derivatives, constants)
 
-        if varsDerivsAndConstants != EquationSystem._LastVarsDerivsAndConstants:
-            Equation._logger.info("Using NEW lookup dictionary.")
-            EquationSystem._LastVarsDerivsAndConstants = varsDerivsAndConstants
-            EquationSystem._LookupDict = Equation.GetUofMToPrimitiveTermLookupTable(vars, derivatives, constants,
-                                                    max_power=max_power,
-                                                    max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
-        else:
-            Equation._logger.info("Using existing lookup dictionary.")
-
-
-        symbols_used = set()
-        u_of_ms = set()   #each equation should have a distinct u_of_m
-        eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivatives, constants=constants,
-                                    u_of_mToTermLookupDict=EquationSystem._LookupDict, max_power=max_power,
-                                    max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
-        firstTerm = eqn.getTerms()[0]
-        u_of_m = Equation.GetUofMForTerm(firstTerm)
-        u_of_ms.add(u_of_m)
-        symbols_used = eqn.getSymbolsUsed()
-        eqns.append(eqn)
-
-        Equation._logger.info("Eqn: " + str(eqn))
-
-        #Note that additional equations should probably have different u_of_ms....
-
-        varsDerivsAndConstantsRemainingToBeUsed = varsDerivsAndConstantsRemainingToBeUsed - symbols_used
-        while len(varsDerivsAndConstantsRemainingToBeUsed) > 0 and len(eqns) < numEqns:
-            nextVarDerivativeOrConstant = next(iter(varsDerivsAndConstantsRemainingToBeUsed))
-            next_var = None
-            next_derivative = None
-            next_constant = None
-            if isinstance(nextVarDerivativeOrConstant, Constant):
-                next_constant = nextVarDerivativeOrConstant
-            elif isinstance(nextVarDerivativeOrConstant, Variable):
-                next_var = nextVarDerivativeOrConstant
-            elif isinstance(nextVarDerivativeOrConstant, Derivatif):
-                next_derivative = nextVarDerivativeOrConstant
-            next_eqn = Equation.GenerateRandomDimensionallyConsistentEquationWithSpecifiedVarOrDerivative(vars=vars, derivatives=derivatives,
-                                        constants=constants, u_of_mToTermLookupDict=EquationSystem._LookupDict,
-                                        given_var=next_var, given_derivative=next_derivative, given_constant=next_constant,
-                                        max_power = max_power,
-                                        max_vars_derivatives_and_constants_per_eqn = max_vars_derivatives_and_constants_per_eqn)
-
-            if next_eqn is not None:
-                eqns.append(next_eqn)
-                Equation._logger.info("Eqn: " + str(next_eqn))
-                symbols_used = next_eqn.getSymbolsUsed()
-                varsDerivsAndConstantsRemainingToBeUsed = varsDerivsAndConstantsRemainingToBeUsed - symbols_used
+            if varsDerivsAndConstants != EquationSystem._LastVarsDerivsAndConstants:
+                Equation._logger.info("Using NEW lookup dictionary.")
+                EquationSystem._LastVarsDerivsAndConstants = varsDerivsAndConstants
+                EquationSystem._LookupDict = Equation.GetUofMToPrimitiveTermLookupTable(vars, derivatives, constants,
+                                                        max_power=max_power,
+                                                        max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
             else:
-                varsDerivsAndConstantsRemainingToBeUsed.remove(nextVarDerivativeOrConstant)
-                Equation._logger.info("Dropping var-deriv-or-constant: " + str(nextVarDerivativeOrConstant))
+                Equation._logger.info("Using existing lookup dictionary.")
 
-        while len(eqns) < numEqns:
-            u_of_ms_in_use = set()
-            for eqn in eqns:
-                firstTerm = eqn.getTerms()[0]
-                u_of_m_for_term = Equation.GetUofMForTerm(firstTerm)
-                u_of_ms_in_use.add(u_of_m_for_term)
-            while True:
-                eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivatives, constants=constants,
-                                                            u_of_mToTermLookupDict=EquationSystem._LookupDict, max_power=max_power,
-                                                            max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
-                firstTerm = eqn.getTerms()[0]
-                u_of_m_for_term = Equation.GetUofMForTerm(firstTerm)
-                if u_of_m_for_term not in u_of_ms_in_use:
-                    eqns.append(eqn)
-                    Equation._logger.info("Eqn: " + str(eqn))
-                    break
 
-        return EquationSystem(vars=vars, derivatives=derivatives, constants=constants, measuredVars=measuredVars, equations=eqns,
-                              max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+            symbols_used = set()
+            u_of_ms = set()   #each equation should have a distinct u_of_m
+            eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivatives, constants=constants,
+                                        u_of_mToTermLookupDict=EquationSystem._LookupDict, max_power=max_power,
+                                        max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+            firstTerm = eqn.getTerms()[0]
+            u_of_m = Equation.GetUofMForTerm(firstTerm)
+            u_of_ms.add(u_of_m)
+            symbols_used = eqn.getSymbolsUsed()
+            eqns.append(eqn)
+
+            Equation._logger.info("Eqn: " + str(eqn))
+
+            #Note that additional equations should probably have different u_of_ms....
+
+            varsDerivsAndConstantsRemainingToBeUsed = varsDerivsAndConstantsRemainingToBeUsed - symbols_used
+            while len(varsDerivsAndConstantsRemainingToBeUsed) > 0 and len(eqns) < numEqns:
+                nextVarDerivativeOrConstant = next(iter(varsDerivsAndConstantsRemainingToBeUsed))
+                next_var = None
+                next_derivative = None
+                next_constant = None
+                if isinstance(nextVarDerivativeOrConstant, Constant):
+                    next_constant = nextVarDerivativeOrConstant
+                elif isinstance(nextVarDerivativeOrConstant, Variable):
+                    next_var = nextVarDerivativeOrConstant
+                elif isinstance(nextVarDerivativeOrConstant, Derivatif):
+                    next_derivative = nextVarDerivativeOrConstant
+                next_eqn = Equation.GenerateRandomDimensionallyConsistentEquationWithSpecifiedVarOrDerivative(vars=vars, derivatives=derivatives,
+                                            constants=constants, u_of_mToTermLookupDict=EquationSystem._LookupDict,
+                                            given_var=next_var, given_derivative=next_derivative, given_constant=next_constant,
+                                            max_power = max_power,
+                                            max_vars_derivatives_and_constants_per_eqn = max_vars_derivatives_and_constants_per_eqn)
+
+                if next_eqn is not None:
+                    eqns.append(next_eqn)
+                    Equation._logger.info("Eqn: " + str(next_eqn))
+                    symbols_used = next_eqn.getSymbolsUsed()
+                    varsDerivsAndConstantsRemainingToBeUsed = varsDerivsAndConstantsRemainingToBeUsed - symbols_used
+                else:
+                    varsDerivsAndConstantsRemainingToBeUsed.remove(nextVarDerivativeOrConstant)
+                    Equation._logger.info("Dropping var-deriv-or-constant: " + str(nextVarDerivativeOrConstant))
+
+            while len(eqns) < numEqns:
+                u_of_ms_in_use = set()
+                for eqn in eqns:
+                    firstTerm = eqn.getTerms()[0]
+                    u_of_m_for_term = Equation.GetUofMForTerm(firstTerm)
+                    u_of_ms_in_use.add(u_of_m_for_term)
+                while True:
+                    eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivatives, constants=constants,
+                                                                u_of_mToTermLookupDict=EquationSystem._LookupDict, max_power=max_power,
+                                                                max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+                    firstTerm = eqn.getTerms()[0]
+                    u_of_m_for_term = Equation.GetUofMForTerm(firstTerm)
+                    if u_of_m_for_term not in u_of_ms_in_use:
+                        eqns.append(eqn)
+                        Equation._logger.info("Eqn: " + str(eqn))
+                        break
+
+            if not EquationSystem.SanityCheckEquationList(eqns):
+                exp = ""
+                for i in range(len(eqns)):
+                    exp += str(eqns[i])
+                    if i < len(eqns) - 1:
+                        exp += '\n'
+                Equation._logger.info("Equation system does not pass sanityCheck: \n\n" + exp)
+                continue
+            else:
+                return EquationSystem(vars=vars, derivatives=derivatives, constants=constants, measuredVars=measuredVars, equations=eqns,
+                                  max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+
     @classmethod
-    def DetermineMaxPower(cls, vars, derivatives, constants):
+    def DetermineMaxPower(cls, vars, derivatives, constants): #Somewhat ad hoc - but to try to make sure everyone
+                                                              # uses the same ad hoc method
         varsDerivsAndConstants = []
         varsDerivsAndConstants.extend(vars)
         varsDerivsAndConstants.extend(derivatives)
@@ -377,7 +389,7 @@ class EquationSystem:
         else:
             return 3
 
-    def replaceRandomDimensionallyConsistentEqnByIndex(self, eqnIndex): #To be fully implemented
+    def replaceRandomDimensionallyConsistentEqnByIndex(self, eqnIndex): #must sanityCheck resulting equation against others!
         #First make sure that all vars, derivatives and constants have u_of_ms!
         for var in self._vars:
             if var._u_of_m is None:
@@ -420,6 +432,13 @@ class EquationSystem:
             while True:
                 replacement_eqn = Equation.GenerateRandomDimensionallyConsistent(vars=self._vars, derivatives=self._derivatives,
                                         constants=self._constants, u_of_mToTermLookupDict=EquationSystem._LookupDict)
+                if not self.sanityCheckReplacementEquation(eqnIndex, replacement_eqn):
+                    Equation._logger.info("Equation " + str(replacement_eqn) + " did not pass EquationSystem sanityCheck!")
+                    Equation._logger.info("Other equations: ")
+                    for i in range(len(self._equations)):
+                        if i != eqnIndex:
+                            Equation._logger.info(str(self._equations[i]))
+                    continue
                 found_dup = False
                 for eqn in self._equations:
                     if replacement_eqn.equalModUnnamedConstants(eqn):
@@ -453,19 +472,26 @@ class EquationSystem:
                                 + " is, modulo unnamed constants, equal to existing equation: " + str(self._equations[eqnIndex])
                                 + ". Will generate a new equation!")
                         continue
+                    elif not self.sanityCheckReplacementEquation(eqnIndex, replacement_eqn):
+                        Equation._logger.info("Equation " + str(replacement_eqn) + " did not pass EquationSystem sanityCheck!")
+                        Equation._logger.info("Other equations: ")
+                        for i in range(len(self._equations)):
+                            if i != eqnIndex:
+                                Equation._logger.info(str(self._equations[i]))
+                        continue
                     else:
                         break
 
         Equation._logger.info("EquationSystem.replaceRandomDimensionallyConsistentEqnByIndex(): Replacement eqn: " + str(replacement_eqn))
         self._equations[eqnIndex] = replacement_eqn
-        return replacement_eqn
+        return replacement_eqn  #should sanityCheck the new systrem!!
 
 
     def replaceRamdomDimensionallyConsistentEqn(self):
         randIndex = random.randint(0, len(self._equations) - 1)
         return self.replaceRandomDimensionallyConsistentEqnByIndex(randIndex)
 
-    def replaceRandomEqnByIndex(self, eqnIndex):  #Need dimensionally consistent variant of this method
+    def replaceRandomEqnByIndex(self, eqnIndex):
         eqn = None
         symbols_used = set()
         for i in range(len(self._equations)):
@@ -485,6 +511,52 @@ class EquationSystem:
     def replaceRamdomEqn(self):    #Need dimensionally consistent variant of this method
         randIndex = random.randint(0, len(self._equations) - 1)
         return self.replaceRandomEqnByIndex(randIndex)
+
+    def sanityCheck(self): #assumes a dimensionally consistent set
+        return EquationSystem.SanityCheckEquationList(self._equations)
+
+    @classmethod
+    def SanityCheckEquationList(cls, eqns): #assumes a dimensionally consistent set
+        uOofMsSoFar = []
+        for i in range(len(eqns)):
+            firstTermOfEqn = eqns[i].getTerms()[0]
+            u_of_m = Equation.GetUofMForTerm(firstTermOfEqn)
+            if u_of_m in uOofMsSoFar:
+                j = uOofMsSoFar.index(u_of_m)
+                i_vars = set(eqns[i]._variables)
+                i_derivs = set(eqns[i]._derivatives)
+                j_vars = set(eqns[j]._variables)
+                j_derivs = set(eqns[j]._derivatives)
+                if not i_vars.isdisjoint(j_vars) or not i_derivs.isdisjoint(j_derivs):
+                    return False
+                else:
+                    uOofMsSoFar.append(u_of_m)
+            else:
+                uOofMsSoFar.append(u_of_m)
+
+        return True
+
+    def sanityCheckReplacementEquation(self, replacementIndex, eqn):
+        u_of_m_for_replacement = Equation.GetUofMForTerm(eqn.getTerms()[0])
+        for i in range(len(self._equations)):
+            if i == replacementIndex:
+                continue
+            firstTermOfEqn = self._equations[i].getTerms()[0]
+            u_of_m = Equation.GetUofMForTerm(firstTermOfEqn)
+            if u_of_m_for_replacement == u_of_m:
+                i_vars = set(self._equations[i]._variables)
+                i_derivs = set(self._equations[i]._derivatives)
+                j_vars = set(eqn._variables)
+                j_derivs = set(eqn._derivatives)
+                if not i_vars.isdisjoint(j_vars) or not i_derivs.isdisjoint(j_derivs):
+                    return False
+
+        return True
+
+
+
+
+
 
 
     def __str__(self):
@@ -540,6 +612,20 @@ class EquationSystem:
                 exp += '\n'
 
         return exp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
