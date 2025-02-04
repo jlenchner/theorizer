@@ -5,6 +5,7 @@ from constant import *
 import random
 import math
 import logging
+import itertools
 
 
 class Equation:
@@ -194,6 +195,8 @@ class Equation:
     @classmethod
     def ToBase(cls, num, base):
         res = 0
+        if num == 0:
+            return 0
         max_pow = ceiling(math.log(num, base))
         for i in range(max_pow+1):
             res += pow(10,i)*(num % base)
@@ -201,6 +204,27 @@ class Equation:
             num = int(num/base)
 
         return int(res)
+
+    @classmethod
+    def GenerateTermFromTupleAndBaseNum(cls, tuple, s_baseNum):
+        term = None
+
+        for i in range(len(s_baseNum)):
+            val = int(s_baseNum[i])
+            if val > 0:
+                varDerivOrConstant = tuple[i]
+                if term is not None:
+                    if val == 1:
+                        term = term*varDerivOrConstant
+                    else:
+                        term = term * (varDerivOrConstant**val)
+                else:
+                    if val == 1:
+                        term = varDerivOrConstant
+                    else:
+                        term = varDerivOrConstant**val
+
+        return term
 
     @classmethod
     def GenerateTermFromBaseNum(cls, baseNum, vars=[], derivatives=[], constants=[]):
@@ -279,8 +303,7 @@ class Equation:
 
         if u_of_mToTermLookupDict is None:
             u_of_mToTermLookupDict = Equation.GetUofMToPrimitiveTermLookupTable(vars=vars, derivatives=derivatives,
-                                                constants=constants, max_power=max_power,
-                                                max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+                                                constants=constants, max_power=max_power)
 
         terms = None
         while True:
@@ -328,14 +351,13 @@ class Equation:
 
         return Equation(exp)
 
+    #Will eventually delete this next method - once the new one is sufficently tested
     @classmethod
-    def GetUofMToPrimitiveTermLookupTable(cls, vars, derivatives, constants, max_power=3,
-                                          max_vars_derivatives_and_constants_per_eqn=NO_MAX):
+    def GetUofMToPrimitiveTermLookupTable_old(cls, vars, derivatives, constants, max_power=3,
+                                          max_vars_derivatives_and_constants_per_term=4):
         # This impelementation is very slow. Can be sped up drastically by first choosing the up to
         # max_vars_derivatives_and_constants_per_eqn slots and filling them with integers between 0
         # and max_power
-        if max_vars_derivatives_and_constants_per_eqn == Equation.NO_MAX:
-            max_vars_derivatives_and_constants_per_eqn = 999
         uOfMToTermLookupDict = dict()
 
         for i in range(1, pow(max_power + 1, len(vars) + len(derivatives) + len(constants))):
@@ -345,7 +367,7 @@ class Equation:
                 s_baseNum = '0' * (len(vars) + len(derivatives) + len(constants) - len(s_baseNum)) + s_baseNum
             numZeroes = s_baseNum.count('0')
             numVarsDerivsAndConstants = len(vars) + len(derivatives) + len(constants) - numZeroes
-            if numVarsDerivsAndConstants <= max_vars_derivatives_and_constants_per_eqn:
+            if numVarsDerivsAndConstants <= max_vars_derivatives_and_constants_per_term:
                 primitiveTerm = Equation.GenerateTermFromBaseNum(baseNum, vars, derivatives, constants)
                 u_of_m = Equation.GetUofMForTerm(primitiveTerm)
                 lookupPair = uOfMToTermLookupDict.get(u_of_m._units)
@@ -367,6 +389,39 @@ class Equation:
         #        orphan_uofms.add(key)
         # for orphan in orphan_uofms:
         #    del uOfMToTermLookupDict[orphan]
+
+        return uOfMToTermLookupDict
+
+    @classmethod
+    def GetUofMToPrimitiveTermLookupTable(cls, vars, derivatives, constants, max_power=3,
+                                          max_vars_derivatives_and_constants_per_term=4):
+        # This impelementation is very slow. Can be sped up drastically by first choosing the up to
+        # max_vars_derivatives_and_constants_per_eqn slots and filling them with integers between 0
+        # and max_power
+        uOfMToTermLookupDict = dict()
+        vars_derivs_and_constants = set(vars).union(set(derivatives)).union(set(constants))
+        for i in range(1, max_vars_derivatives_and_constants_per_term+1):
+            sBaseNums = []
+            for j in range(pow(max_power + 1, i)):
+                baseNum = Equation.ToBase(j, max_power + 1)
+                for k in range(i):
+                    baseNum += pow(10,k)
+                s_baseNum = str(baseNum)
+                sBaseNums.append(s_baseNum)
+            tuples = itertools.combinations(vars_derivs_and_constants, i)
+            for tuple in tuples:
+                for s_baseNum in sBaseNums:
+                    primitiveTerm = Equation.GenerateTermFromTupleAndBaseNum(tuple, s_baseNum)
+                    u_of_m = Equation.GetUofMForTerm(primitiveTerm)
+                    lookupPair = uOfMToTermLookupDict.get(u_of_m._units)
+                    vars_derivs_and_constants_in_term = primitiveTerm.free_symbols
+                    if lookupPair is None:
+                        uOfMToTermLookupDict[u_of_m._units] = ([primitiveTerm], vars_derivs_and_constants_in_term)
+                    else:
+                        listOfPrimitiveTerms = lookupPair[0]
+                        vars_derivatives_and_constants_in_use = lookupPair[1]
+                        listOfPrimitiveTerms.append(primitiveTerm)
+                        vars_derivatives_and_constants_in_use.update(vars_derivs_and_constants_in_term)
 
         return uOfMToTermLookupDict
 
@@ -749,6 +804,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr)
+
+
+
+
+
 
 
 
