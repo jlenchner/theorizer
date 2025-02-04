@@ -37,6 +37,8 @@ class Constant(Variable):  #should be able to automatically pick up units of mea
                 self._value = 6.62607015e-34
             elif self._name == 'h-bar':
                 self._value = 1.0545771817e-34
+            elif self._name == 'k':
+                self._value = 1.380649e-23
 
         return self._value
 
