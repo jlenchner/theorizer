@@ -39,6 +39,8 @@ class Constant(Variable):  #should be able to automatically pick up units of mea
                 self._value = 1.0545771817e-34
             elif self._name == 'k':
                 self._value = 1.380649e-23
+            elif self._name == "e":
+                self._value = 1.602176634e-19
 
         return self._value
 
