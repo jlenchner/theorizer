@@ -14,16 +14,17 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
                               cd: "candela",
                               K: "Kelvin"}
     ALL_MEASURED_QUANTITIES = ["l", "d", "x", "y", "z", "m", "t", "n", "i", "I", "T", "F", "v", "a", "W","p", "P",
-                               "c","G", "h","h-bar", "E", "k","e"]
+                               "c","G", "h","h-bar", "E", "k", "e", "pi"]
     ALL_UNITS = [m,m,m,m,m,kg,s,mol,A,cd,K, kg*m/(s*s), m/s, m/(s*s), kg*m*m/(s*s), kg*m/s, kg/(m*s*s),
-                                m/s, m**3/(kg*s*s), kg*m/s, kg*m/s, kg*m*m/(s*s), kg*m*m/(s*s*K), A*s]
+                                m/s, m**3/(kg*s*s), kg*m/s, kg*m/s, kg*m*m/(s*s), kg*m*m/(s*s*K), A*s, m/m]
 
 
     def __init__(self, units):
         self._units = units #this can be a Mul, Pow or BaseUnit
-        for sym in self._units.free_symbols:
-            if sym not in UofM.BASE_UNITS:
-                UofM.BASE_UNITS.append(sym)
+        if units != 1:  #if not dimensionless
+            for sym in self._units.free_symbols:
+                if sym not in UofM.BASE_UNITS:
+                    UofM.BASE_UNITS.append(sym)
 
     def getUnits(self):
         return self._units.free_symbols
@@ -52,6 +53,12 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
 
     def __str__(self):
         return str(Poly(self._units))
+
+
+
+
+
+
 
 
 
