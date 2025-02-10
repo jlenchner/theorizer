@@ -41,8 +41,11 @@ class Constant(Variable):  #should be able to automatically pick up units of mea
                 self._value = 1.380649e-23
             elif self._name == "e":
                 self._value = 1.602176634e-19
+            elif self._name == "pi":
+                self._value = 3.14159265359
 
         return self._value
+
 
     def __str__(self):
         return self._name
