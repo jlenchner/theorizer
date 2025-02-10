@@ -17,12 +17,13 @@ if __name__ == "__main__":
     eqn.divideByCommonUnnamedConstants()
 
     d1, d2, m1, m2, W, p, Fc, Fg, T, E = variables('d1,d2,m1,m2,W,p,Fc,Fg,T,E')
-    d2xdt2 = Derivatif('d2xdt2')
-    G, c = constants('G,c')
+    dxdt, d2xdt2 = derivatives('dxdt,d2xdt2')
+    G, c, pi = constants('G,c,pi')
     #vars = [Fc,Fg,W,d1,d2,m1,m2,p,T,E]
     vars = [Fc, Fg, W, d1, d2, m1, m2, p]
-    derivs = [d2xdt2]
-    constants = [G,c]
+    derivs = [dxdt, d2xdt2]
+    constants = [G, c, pi]
+    res = pi.isDimensionless()
     term = Equation.GenerateTermFromBaseNum(31200113, vars, [])
 
     term1 = 3*term
@@ -41,6 +42,12 @@ if __name__ == "__main__":
     res = Equation.TermsEqual(term1, term2)
 
     #vars.extend(constants)
+    eqns = []
+    eqns.append(Equation(d2xdt2*d2**2*m2 - 2*W*d1))
+    eqns.append(Equation(G*Fc*d1 + G*W - 2*d2xdt2**2*d1**2*d2))
+    eqns.append(Equation(c**2*d1*m1 - Fg*d2**2))
+    eqns.append(Equation(-c*p + Fg*d2 + W))
+    EquationSystem.SanityCheckEquationList(eqns)
 
     eqnSystem = EquationSystem.GenerateRandom(vars=vars, derivatives=derivs, measuredVars=vars, \
                                               constants=constants, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
@@ -53,7 +60,7 @@ if __name__ == "__main__":
         eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=constants,
                                               measuredVars=vars, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
         print(str(i+1) + ": " + str(eqnSystem) + "\n\n")
-        #eqn = eqnSystem.replaceRandomDimensionallyConsistentEqnByIndex(1)
+        eqn = eqnSystem.replaceRandomDimensionallyConsistentEqnByIndex(1)
 
 
     #measured_vars = [d1,d2,m1,m2,p]
@@ -106,6 +113,11 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
+
+
+
+
+
 
 
 
