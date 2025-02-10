@@ -30,6 +30,10 @@ class Variable(Symbol):
 
         return allVars
 
+    def isDimensionless(self):  #this generally only applies to Constants (which are Variable),
+                                # though in theory can apply to any Variable
+        return self._u_of_m is not None and self._u_of_m._units == 1
+
 
     def __str__(self):
         return self._name
