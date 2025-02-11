@@ -349,7 +349,10 @@ class Equation:
         for i in range(1, len(terms)):
             exp = exp + terms[i]
 
-        return Equation(exp)
+        eqn = Equation(exp)
+        eqn.divideByCommonUnnamedConstants()
+
+        return eqn
 
     #Will eventually delete this next method - once the new one is sufficently tested
     @classmethod
@@ -673,6 +676,7 @@ class Equation:
 
         return common_factors
 
+
     @classmethod
     def TermAmongExistingTerms(cls, existingTerms, term):
         for t in existingTerms:
@@ -804,26 +808,6 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
