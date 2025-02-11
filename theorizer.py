@@ -18,11 +18,14 @@ if __name__ == "__main__":
 
     d1, d2, m1, m2, W, p, Fc, Fg, T, E = variables('d1,d2,m1,m2,W,p,Fc,Fg,T,E')
     dxdt, d2xdt2 = derivatives('dxdt,d2xdt2')
+    dx1dt, d2x1dt2, dx2dt, d2x2dt2  = derivatives('dx1dt,d2x1dt2,dx2dt,d2x2dt2')
     G, c, pi = constants('G,c,pi')
     #vars = [Fc,Fg,W,d1,d2,m1,m2,p,T,E]
     vars = [Fc, Fg, W, d1, d2, m1, m2, p]
-    derivs = [dxdt, d2xdt2]
-    constants = [G, c, pi]
+    #derivs = [dxdt, d2xdt2]
+    derivs = [dx1dt, d2x1dt2, dx2dt, d2x2dt2]
+    #constants = [G, c, pi]
+    constants = [G, c]
     res = pi.isDimensionless()
     term = Equation.GenerateTermFromBaseNum(31200113, vars, [])
 
@@ -60,7 +63,7 @@ if __name__ == "__main__":
         eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=constants,
                                               measuredVars=vars, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
         print(str(i+1) + ": " + str(eqnSystem) + "\n\n")
-        eqn = eqnSystem.replaceRandomDimensionallyConsistentEqnByIndex(1)
+        #eqn = eqnSystem.replaceRandomDimensionallyConsistentEqnByIndex(1)
 
 
     #measured_vars = [d1,d2,m1,m2,p]
@@ -113,16 +116,6 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
-
-
-
-
-
-
-
-
-
-
 
 
 
