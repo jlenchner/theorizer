@@ -1,3 +1,4 @@
+
 import sympy
 from sympy import *
 from variable import *
@@ -34,14 +35,14 @@ class Derivatif(Symbol):
             two_count = self._name.count('2')
             three_count = self._name.count('3')
             if d_count == 2:
-                if two_count == 0 and three_count == 0:
+                if two_count <= 1 and three_count <= 1:
                     l1 = self._name.find('d')
                     l2 = self._name.find('d', l1 + 1)
                     self._derivativeOrder = 1
                     self._depVariable = Variable(self._name[l1 + 1:l2])
                     self._indepVariable = Variable(self._name[l2 + 1:])
                     ableToGuess = True
-                elif two_count == 2:
+                elif two_count <= 3:
                     l1 = self._name.find('d2')
                     l2 = self._name.find('d', l1 + 1)
                     l3 = self._name.find('2', l2 + 1)
@@ -49,7 +50,7 @@ class Derivatif(Symbol):
                     self._depVariable = Variable(self._name[l1 + 2:l2])
                     self._indepVariable = Variable(self._name[l2 + 1:l3])
                     ableToGuess = True
-                elif three_count == 2:
+                elif three_count <= 3:
                     l1 = self._name.find('d3')
                     l2 = self._name.find('d', l1 + 1)
                     l3 = self._name.find('3', l2 + 1)
