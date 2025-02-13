@@ -17,6 +17,8 @@ class Equation:
     PROB_TERM_HAS_NON_UNITAL_INTEGER_CONSTANT = 0.2
     PROB_OF_SMALL_INTEGER_CONSTANTS = [0.0, 0.0, 0.9, 0.07, 0.02, 0.01]  # prob that a small non-unital integer constant is [0,1,2,3,4,5]
 
+    HOMOGENEOUS_EQN_PROB = 0.05
+
     NO_MAX = 999
 
     _logger = logging.getLogger()
@@ -697,6 +699,10 @@ class Equation:
 
     @classmethod
     def AssignRandomSignsToTerms(cls, terms):  #guarantees at least one term has a positive and one term is negative
+        #In rare cases just output an all positive (homogeneous) equation
+        if random.random() < Equation.HOMOGENEOUS_EQN_PROB:
+            return
+
         #First pick a term to be positive and a different one to be negative
         rands = []
         signs = []
@@ -818,6 +824,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
+
+
+
+
+
 
 
 
