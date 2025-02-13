@@ -78,6 +78,16 @@ class Equation:
         else:
             return None
 
+    def getUofM(self):
+        terms = self.getTerms()
+        firstUofM = Equation.GetUofMForTerm(terms[0])
+        for i in range(1, len(terms)):
+            UofMforTerm = Equation.GetUofMForTerm(terms[i])
+            if firstUofM != UofMforTerm:
+                return None
+
+        return firstUofM
+
 
 
     def add(self, exp, vars = [], derivatives = [], constants = []):
@@ -510,18 +520,18 @@ class Equation:
     def getSymbolsUsed(self):  #returns a set of variables, derivs and constants
         return self._poly.free_symbols
 
-    def getUofM(self, sym):
-        for var in self._variables:
-            if var.name == str(sym):
-                return var._u_of_m
-        for deriv in self._derivatives:
-            if deriv.name == str(sym):
-                return deriv._u_of_m
-        for const in self._constants:
-            if const.name == str(sym):
-                return const._u_of_m
-
-        return None
+    #def getUofM(self, sym):
+    #    for var in self._variables:
+    #        if var.name == str(sym):
+    #            return var._u_of_m
+    #    for deriv in self._derivatives:
+    #        if deriv.name == str(sym):
+    #            return deriv._u_of_m
+    #    for const in self._constants:
+    #        if const.name == str(sym):
+    #            return const._u_of_m
+    #
+    #    return None
 
     @classmethod
     def GetAllTermsWithGivenVarDerivativeOrConstant(cls, vars=[], derivatives=[], constants=[], given_var=None, given_derivative=None,
@@ -807,7 +817,12 @@ class Equation:
         logging.basicConfig(filename=filename, filemode=filemode, encoding=encoding, level=level)
 
     def __str__(self):
-        return str(self._poly.expr)
+        return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
+
+
+
+
+
 
 
 
