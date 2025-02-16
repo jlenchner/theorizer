@@ -263,7 +263,7 @@ class EquationSystem:
     def GenerateRandom(cls, vars, derivatives, constants, measuredVars, numEqns, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX):
         eqns = []
 
-        while True:  #A crude way to make sure we use all the variables
+        while True:  #A crude way to make sure we use all the vars, derivatives and constatns
             symbols_used = set()
             for i in range(numEqns):
                 eqn = Equation.GenerateRandom(vars=vars, derivatives=derivatives, constants=constants,
@@ -271,7 +271,9 @@ class EquationSystem:
                 symbols_used = symbols_used.union(eqn.getSymbolsUsed())
                 eqns.append(eqn)
 
-            if len(symbols_used) < len(vars):
+            if len(symbols_used) < len(vars) + len(derivatives) + len(constants):
+                eqns = []
+            elif len(eqns) != len(set(eqns)):   #means there are duplicate equations
                 eqns = []
             else:
                 break
@@ -299,8 +301,7 @@ class EquationSystem:
                 Equation._logger.info("Using NEW lookup dictionary.")
                 EquationSystem._LastVarsDerivsAndConstants = varsDerivsAndConstants
                 EquationSystem._LookupDict = Equation.GetUofMToPrimitiveTermLookupTable(vars, derivatives, constants,
-                                                        max_power=max_power,
-                                                        max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+                                                        max_power=max_power)
             else:
                 Equation._logger.info("Using existing lookup dictionary.")
 
@@ -414,8 +415,7 @@ class EquationSystem:
         if varsDerivsAndConstants != EquationSystem._LastVarsDerivsAndConstants:
             EquationSystem._LastVarsDerivsAndConstants = varsDerivsAndConstants
             EquationSystem._LookupDict = Equation.GetUofMToPrimitiveTermLookupTable(vars, derivatives, constants,
-                                max_power=max_power,
-                                max_vars_derivatives_and_constants_per_eqn=self._max_vars_derivatives_and_constants_per_eqn)
+                                max_power=max_power)
 
         symbols_of_others = set()
         symbols_of_this_eqn = set()
@@ -612,6 +612,20 @@ class EquationSystem:
                 exp += '\n'
 
         return exp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
