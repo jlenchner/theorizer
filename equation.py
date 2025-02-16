@@ -161,7 +161,7 @@ class Equation:
                         terms.append(term)
                         break
             if Equation.GetCommonFactors(terms) == set():
-                if Equation.SanitCheckFromTerms(terms):
+                if Equation.SanityCheckFromTerms(terms):
                     break
                 else:
                     exp = terms[0]
@@ -347,7 +347,7 @@ class Equation:
             terms.extend(additionalTerms)
             if Equation.GetCommonFactors(terms) == set(): #this should always happen because it is
                 # handled in Equation.GenerateFixedNumberofDimensionallyConsistentTermsFromList()
-                if Equation.SanitCheckFromTerms(terms):
+                if Equation.SanityCheckFromTerms(terms):
                     break
                 else:
                     exp = terms[0]
@@ -737,13 +737,16 @@ class Equation:
     def sanityCheck(self): #perform various different sanity checks to make sure an equation is of an appropriate form
         #First check is whether equation is just one var-deriv-or-constant is equal (mod unnamed constants) to another
         terms = self.getTerms()
-        return Equation.SanitCheckFromTerms(terms)
+        return Equation.SanityCheckFromTerms(terms)
 
     @classmethod
-    def SanitCheckFromTerms(cls, terms):
+    def SanityCheckFromTerms(cls, terms):
+        #check that there are not two terms, each with a single free symbol
         if len(terms) == 2 and len(terms[0].free_symbols) == 1 and len(terms[1].free_symbols) == 1:
             return False
-
+        #check that no two terms are equal
+        if len(terms) != len(set(terms)):
+            return False
         return True
 
 
@@ -824,6 +827,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
+
+
+
+
+
 
 
 
