@@ -747,6 +747,10 @@ class Equation:
         #check that no two terms are equal
         if len(terms) != len(set(terms)):
             return False
+        else:
+            for pair in itertools.combinations(set(terms), 2):
+                if Equation.TermsEqualModUnnamedConstants(pair[0], pair[1]):
+                    return False
         return True
 
 
@@ -827,6 +831,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
+
+
+
+
+
 
 
 
