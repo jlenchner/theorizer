@@ -410,15 +410,12 @@ class Equation:
     @classmethod
     def GetUofMToPrimitiveTermLookupTable(cls, vars, derivatives, constants, max_power=3,
                                           max_vars_derivatives_and_constants_per_term=4):
-        # This impelementation is very slow. Can be sped up drastically by first choosing the up to
-        # max_vars_derivatives_and_constants_per_eqn slots and filling them with integers between 0
-        # and max_power
         uOfMToTermLookupDict = dict()
         vars_derivs_and_constants = set(vars).union(set(derivatives)).union(set(constants))
         for i in range(1, max_vars_derivatives_and_constants_per_term+1):
             sBaseNums = []
-            for j in range(pow(max_power + 1, i)):
-                baseNum = Equation.ToBase(j, max_power + 1)
+            for j in range(pow(max_power, i)):  #changed max_power+1 => max_power
+                baseNum = Equation.ToBase(j, max_power) #changed max_power+1 => max_power
                 for k in range(i):
                     baseNum += pow(10,k)
                 s_baseNum = str(baseNum)
@@ -834,31 +831,6 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
