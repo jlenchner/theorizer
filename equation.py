@@ -761,6 +761,9 @@ class Equation:
     def __eq__(self, eqn):
         return self.getTerms() == eqn.getTerms()
 
+    def __hash__(self):
+        return hash(str(self))
+
 
     def equalModUnnamedConstants(self, eqn):
         ourTerms = self.getTerms()
@@ -831,6 +834,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
+
+
+
+
+
 
 
 
