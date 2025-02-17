@@ -1,0 +1,14 @@
+System number 32
+Measured Variables: ['d1', 'm2', 'Fc', 'c', 'W', 'Fg', 'T', 'p', 'd2xdt2']
+Non-Measured Variables: ['m1', 'd2', 'G']
+Equations:
+c*m1 - c*m2 + p
+d2xdt2*Fc*d2*m2 + d2xdt2*W*m2 - 2*Fg*W
+2*d1 - d2
+G*d2xdt2*m1 - G*d2xdt2*m2 + G*Fc - 2*c^2*d2xdt2*d2
+
+Target Polynomial:
+2*d1*m2*Fc*d2xdt2+m2*W*d2xdt2-2*W*Fg
+
+
+

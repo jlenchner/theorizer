@@ -1,0 +1,11 @@
+System number 44
+Measured Variables: ['c', 'p', 'd2xdt2', 'Fc', 'm1', 'G', 'Fg', 'd2']
+Non-Measured Variables: ['m2', 'T', 'W', 'd1']
+Equations:
+d2xdt2*p^2 - Fg^2*d1
+d1*m2 + d2*m1 - d2*m2
+c*d2xdt2*m2 - c*Fc + d2xdt2*p
+-c*W + d2xdt2*d1*p
+
+Target Polynomial:
+c*p^2*d2xdt2*Fc+c*d2xdt2*m1*Fg^2*d2-c*Fc*Fg^2*d2-p^3*d2xdt2^2+p*d2xdt2*Fg^2*d2

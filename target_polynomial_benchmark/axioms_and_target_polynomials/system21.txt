@@ -1,0 +1,14 @@
+System number 21
+Measured Variables: ['d2xdt2', 'm2', 'Fg', 'c', 'd2', 'd1', 'Fc', 'T', 'm1']
+Non-Measured Variables: ['p', 'W', 'G']
+Equations:
+-2*Fc*W + Fg^2*d2
+c*m1*m2 - m1*p + m2*p
+2*c*p + Fg*d1 - Fg*d2
+G*Fc*d2^2 - G*W*d1 + c^2*d2xdt2*d1*d2^2
+
+Target Polynomial:
+m2*Fg*d2-m2*Fg*d1+2*m2*c^2*m1-Fg*d2*m1+Fg*d1*m1
+
+
+

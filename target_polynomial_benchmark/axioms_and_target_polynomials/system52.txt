@@ -1,0 +1,11 @@
+System number 52
+Measured Variables: ['m1', 'Fg', 'Fc', 'W', 'd2xdt2', 'c', 'd2', 'T']
+Non-Measured Variables: ['m2', 'p', 'd1', 'G']
+Equations:
+-d1 + 2*d2
+-d1*m1 + 2*d1*m2 + d2*m2
+c*d2xdt2*m1*m2^2 - c*Fc*m1^2 + Fg*m2*p
+c*d2xdt2*d1*m1*m2 + 2*c*Fc*d1*m2 - W*p
+
+Target Polynomial:
+8*m1^3*Fg*d2xdt2*c*d2^2+4*m1^3*W*d2xdt2*c*d2+16*m1^2*Fg*Fc*c*d2^2-25*m1^2*Fc*W*c*d2

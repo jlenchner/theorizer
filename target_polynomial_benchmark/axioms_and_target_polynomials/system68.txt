@@ -1,0 +1,11 @@
+System number 68
+Measured Variables: ['d2', 'p', 'Fg', 'W', 'm1', 'd2xdt2', 'm2', 'Fc']
+Non-Measured Variables: ['G', 'd1', 'T', 'c']
+Equations:
+d1*m1 + d1*m2 - d2*m1 - d2*m2
+2*c*m1 + 2*c*m2 - p
+c^2*d2xdt2*Fc*m1 - c^2*Fc^2 + d2xdt2*Fg*W
+G*Fg*d1*m1 + G*p^2 + c^2*Fc*d1^2 - d2xdt2*Fc*d1^2*d2
+
+Target Polynomial:
+p^2*m1*d2xdt2*Fc-p^2*Fc^2+4*Fg*W*m1^2*d2xdt2+8*Fg*W*m1*d2xdt2*m2+4*Fg*W*d2xdt2*m2^2

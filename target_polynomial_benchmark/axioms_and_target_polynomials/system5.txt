@@ -1,0 +1,14 @@
+System number 6
+Measured Variables: ['c', 'W', 'Fc', 'm2', 'd2', 'G', 'd1', 'm1']
+Non-Measured Variables: ['d2xdt2', 'p', 'Fg', 'T']
+Equations:
+2*c*Fg^2*d2 + c*Fg*W - d2xdt2*Fc*d1*p
+G*c*m2 - G*p + c*d2xdt2*d1^2
+-c^2*m2^2 + d2xdt2*d2*m2^2 + Fc*d1*m1
+c*W - d2xdt2*d1*p + 2*d2xdt2*d2*p
+
+Target Polynomial:
+2*c^5*m2^4*d2*d1^2-c^5*m2^4*d1^3-4*c^3*Fc*m2^2*d2*d1^3*m1+2*c^3*Fc*m2^2*d1^4*m1+2*c^3*m2^5*d2^2*G-c^3*m2^5*d2*G*d1+c*W*m2^4*d2^2*G+2*c*Fc^2*d2*d1^4*m1^2-c*Fc^2*d1^5*m1^2-2*c*Fc*m2^3*d2^2*G*d1*m1+c*Fc*m2^3*d2*G*d1^2*m1
+
+
+

@@ -1,0 +1,14 @@
+System number 16
+Measured Variables: ['c', 'm1', 'd2', 'd2xdt2', 'T', 'G', 'Fc', 'd1']
+Non-Measured Variables: ['m2', 'Fg', 'p', 'W']
+Equations:
+-m1^2 + m1*m2 + m2^2
+-c*d2*m1 + 2*d1*p
+d2xdt2^2*d2*m1^2 - d2xdt2^2*d2*m2^2 + Fg*W
+G*p - c*d2xdt2*d1*d2
+
+Target Polynomial:
+c*m1*d2*G-2*c*d2*d2xdt2*d1^2
+
+
+

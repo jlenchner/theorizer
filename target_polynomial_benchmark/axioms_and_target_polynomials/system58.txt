@@ -1,0 +1,11 @@
+System number 58
+Measured Variables: ['c', 'Fc', 'd2xdt2', 'm1', 'G', 'm2', 'T', 'p', 'Fg']
+Non-Measured Variables: ['d1', 'W', 'd2']
+Equations:
+-c^2*m1 - c*p + Fc*d2 + 2*W
+-G*m1*m2 + W*d1
+-G*Fg*W + 2*c^2*d2xdt2^2*d1^2*m1 + c^2*d2xdt2^2*d1*d2*m2
+d1 - d2
+
+Target Polynomial:
+2*c^8*d2xdt2^2*m1^4*G*Fg+c^8*d2xdt2^2*m1^3*G*m2*Fg+6*c^7*d2xdt2^2*m1^3*G*p*Fg+3*c^7*d2xdt2^2*m1^2*G*m2*p*Fg+6*c^6*d2xdt2^2*m1^2*G*p^2*Fg+3*c^6*d2xdt2^2*m1*G*m2*p^2*Fg+2*c^5*d2xdt2^2*m1*G*p^3*Fg+c^5*d2xdt2^2*G*m2*p^3*Fg-12*c^4*Fc*d2xdt2^2*m1^3*G^2*m2*Fg-6*c^4*Fc*d2xdt2^2*m1^2*G^2*m2^2*Fg-32*c^4*d2xdt2^4*m1^4*G^2*m2^2-32*c^4*d2xdt2^4*m1^3*G^2*m2^3-8*c^4*d2xdt2^4*m1^2*G^2*m2^4-12*c^3*Fc*d2xdt2^2*m1^2*G^2*m2*p*Fg-6*c^3*Fc*d2xdt2^2*m1*G^2*m2^2*p*Fg-Fc^3*m1*G^3*m2*Fg^2

@@ -1,0 +1,16 @@
+System number 22
+Measured Variables: ['Fg', 'm2', 'T']
+Non-Measured Variables: ['Fc', 'W', 'd2xdt2', 'm1', 'd1', 'c', 'p', 'd2', 'G']
+Equations:
+-d1 + d2
+2*G*m2 + d2xdt2*d1^2 - d2xdt2*d2^2
+c*m1 - p
+-d2xdt2*m1^2 + Fg*m2
+
+Target Polynomial:
+m2*Fg*d2-m2*Fg*d1+2*m2*c^2*m1-Fg*d2*m1+Fg*d1*m1
+
+
+
+
+

@@ -1,0 +1,14 @@
+System number 11
+Measured Variables: ['T']
+Non-Measured Variables: ['Fc', 'W', 'Fg', 'd2xdt2', 'm2', 'm1', 'd1', 'c', 'p', 'd2', 'G']
+Equations:
+-d1*m1 + d1*m2 + d2*m2
+-G*c*m1 + G*p + c*d2xdt2*d1*d2
+d2xdt2^2*m1^2 + d2xdt2*Fc*m1 - Fc*Fg
+d2xdt2*d2*m2 – W
+
+Target Polynomial:
+4*Fc^2*G-2*Fc*m1*d2xdt2*G+c^2*m1*d2xdt2^2*d1+c^2*Fg*d2xdt2*d1
+
+
+

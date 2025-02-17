@@ -1,0 +1,11 @@
+System number 64
+Measured Variables: ['T', 'm1', 'Fc', 'W', 'd1', 'd2xdt2', 'c', 'Fg']
+Non-Measured Variables: ['m2', 'p', 'd2', 'G']
+Equations:
+d2xdt2*m1^2 + 2*d2xdt2*m2^2 - Fc*m2
+-c*d1*m1 + 2*d2*p
+2*d2xdt2*m2 - Fg
+-Fc*d1*d2*m1 + W*d1*m1 + d2*p^2
+
+Target Polynomial:
+2*m1^2*d2xdt2^2-Fc*Fg+Fg^2

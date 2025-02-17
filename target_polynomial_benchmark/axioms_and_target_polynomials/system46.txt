@@ -1,0 +1,11 @@
+System number 46
+Measured Variables: ['m1', 'T', 'd2', 'W', 'd1', 'm2', 'G', 'Fg']
+Non-Measured Variables: ['d2xdt2', 'p', 'Fc', 'c']
+Equations:
+-c^2*Fc + d2xdt2*W
+-G*m2 + d2xdt2*d1^2 + 2*d2xdt2*d1*d2 + d2xdt2*d2^2
+2*d2xdt2*m1 - d2xdt2*m2 + Fg
+c*Fg*m1*m2 - d2xdt2*m2^2*p + Fc*m1*p
+
+Target Polynomial:
+2*m1*m2*G+d2^2*Fg+2*d2*d1*Fg+d1^2*Fg-m2^2*G

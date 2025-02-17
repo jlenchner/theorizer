@@ -1,0 +1,11 @@
+System number 62
+Measured Variables: ['d2xdt2', 'Fc', 'W', 'G', 'm1', 'Fg', 'c', 'p']
+Non-Measured Variables: ['T', 'm2', 'd2', 'd1']
+Equations:
+2*d2xdt2*m2 - Fc
+c*m1 - c*m2 + p
+Fc*d2 - Fg*d1 + 2*Fg*d2 - W
+-G*d2xdt2*m1 + G*Fc + d2xdt2^2*d1*d2
+
+Target Polynomial:
+2*d2xdt2*m1*c+2*d2xdt2*p-Fc*c

@@ -1,0 +1,11 @@
+System number 41
+Measured Variables: ['d1', 'G', 'd2', 'c', 'm2', 'W', 'd2xdt2', 'Fc']
+Non-Measured Variables: ['m1', 'p', 'Fg', 'T']
+Equations:
+3*c*d1*m1 - 2*d2*p
+-d2xdt2*m1^2 + Fc*m1 - Fc*m2 + Fg*m2
+c*p + Fg*d1 - W
+G*c*d1*m2 - 3*G*d2*p + c*d2xdt2*d1*d2^2
+
+Target Polynomial:
+4*d1*G^2*d2*c*m2^2*d2xdt2+63*d1*G^2*d2*c*m2*Fc+27*d1*G^2*c^3*m2^2+8*d1*G*d2^3*c*m2*d2xdt2^2-18*d1*G*d2^3*c*d2xdt2*Fc+27*d1*G*d2^2*c^3*m2*d2xdt2+4*d1*d2^5*c*d2xdt2^3-81*G^2*d2*c*m2*W
