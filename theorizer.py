@@ -5,16 +5,42 @@ from unitOfMeasure import *
 from derivative import *
 from constant import *
 
+def KeplerReplacement():
+    d1, d2, m1, m2, w, Fg = variables('d1, d2, m1, m2, w, Fg')
+    vars = [d1, d2, m1, m2, w, Fg]
+    eqn0 = Equation(d1 * m1 - d2*m2)
+    eqn1 = Equation(d1**2 + 2*d1*d2 + d2**2 + Fg - m1*m2)
+    eqn2 = Equation(Fg - m2 * d2 * w**2)
+    eqns = [eqn0, eqn1, eqn2]
+    eqnSys = EquationSystem(vars=vars, derivatives=[], constants=[], equations=eqns,
+                           max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
+    for i in range(10):
+        newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=2)
+        print("New eqn for eqn2: " + str(newEqn))
+    print("\n")
+    for i in range(10):
+        newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=1)
+        print("New eqn for eqn1: " + str(newEqn))
     
 
 if __name__ == "__main__":
     Equation.SetLogging()
+
+    KeplerReplacement()
     x, y,z ,w  = variables('x,y,z,w')
     eqn = Equation(2*x - 2*y)
     terms = eqn.getTerms()
     for term in terms:
         c = Equation.GetUnnamedConstantForTerm(term)
     eqn.divideByCommonUnnamedConstants()
+
+    terms = [x*y*z, w*y, y*z, 3*y*z*x]
+    res = Equation.SanityCheckFromTerms(terms)
+    terms = [x * y * z, w * y, y * z ,x]
+    res = Equation.SanityCheckFromTerms(terms)
+
+    eqn1 = Equation(2*x + 3*y)
+    eqn2 = Equation(3 * y + 2 * x)
 
     d1, d2, m1, m2, W, p, Fc, Fg, T, E = variables('d1,d2,m1,m2,W,p,Fc,Fg,T,E')
     dxdt, d2xdt2 = derivatives('dxdt,d2xdt2')
@@ -28,6 +54,10 @@ if __name__ == "__main__":
     constants = [G, c]
     res = pi.isDimensionless()
     term = Equation.GenerateTermFromBaseNum(31200113, vars, [])
+
+    eqn = Equation(c*d2x1dt2*m2 - c*Fg - d2x1dt2*dx1dt*m1 + d2x1dt2*dx2dt*m2)
+    terms = eqn.getTerms()
+    commonFactors = Equation.GetCommonFactors(terms)
 
     term1 = 3*term
     term2 = term*5
@@ -52,15 +82,19 @@ if __name__ == "__main__":
     eqns.append(Equation(-c*p + Fg*d2 + W))
     EquationSystem.SanityCheckEquationList(eqns)
 
-    eqnSystem = EquationSystem.GenerateRandom(vars=vars, derivatives=derivs, measuredVars=vars, \
-                                              constants=constants, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
-    res = eqnSystem._equations[0].isDimensionallyConsistent()
+    #print("Non-Dimensionally Consistent Set:\n\n")
+    #for i in range(200):
+    #    eqnSystem = EquationSystem.GenerateRandom(vars=vars, derivatives=derivs, measuredVars=vars, \
+    #                                          constants=constants, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
+    #    print(str(i + 1) + ": " + str(eqnSystem) + "\n\n")
+    #res = eqnSystem._equations[0].isDimensionallyConsistent()
 
     #for i in range(100):
     #    eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=[])
     #    print(str(i+1) + ": " + str(eqn))
-    for i in range(2500):
-        eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=constants,
+    print("Dimensionally Consistent Set:\n\n")
+    for i in range(200):
+        eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=[],
                                               measuredVars=vars, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
         print(str(i+1) + ": " + str(eqnSystem) + "\n\n")
         #eqn = eqnSystem.replaceRandomDimensionallyConsistentEqnByIndex(1)
@@ -116,6 +150,11 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
+
+
+
+
+
 
 
 
