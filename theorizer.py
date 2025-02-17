@@ -8,19 +8,25 @@ from constant import *
 def KeplerReplacement():
     d1, d2, m1, m2, w, Fg = variables('d1, d2, m1, m2, w, Fg')
     vars = [d1, d2, m1, m2, w, Fg]
+    G = Constant('G')
+    constants = [G]
     eqn0 = Equation(d1 * m1 - d2*m2)
-    eqn1 = Equation(d1**2 + 2*d1*d2 + d2**2 + Fg - m1*m2)
+    eqn1 = Equation(Fg*d1**2 + 2*Fg*d1*d2 + Fg*d2**2 - G*m1*m2)
     eqn2 = Equation(Fg - m2 * d2 * w**2)
     eqns = [eqn0, eqn1, eqn2]
-    eqnSys = EquationSystem(vars=vars, derivatives=[], constants=[], equations=eqns,
+    eqnSys = EquationSystem(vars=vars, derivatives=[], constants=constants, equations=eqns,
                            max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
     for i in range(10):
-        newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=2)
-        print("New eqn for eqn2: " + str(newEqn))
+        newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=0)
+        print("New eqn for eqn0: " + str(newEqn))
     print("\n")
     for i in range(10):
         newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=1)
         print("New eqn for eqn1: " + str(newEqn))
+    print("\n")
+    for i in range(10):
+        newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=2)
+        print("New eqn for eqn2: " + str(newEqn))
     
 
 if __name__ == "__main__":
@@ -150,6 +156,11 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
+
+
+
+
+
 
 
 
