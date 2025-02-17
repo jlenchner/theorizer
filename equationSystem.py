@@ -1,3 +1,4 @@
+
 import random
 import os
 from variable import *
@@ -385,7 +386,7 @@ class EquationSystem:
         varsDerivsAndConstants.extend(derivatives)
         varsDerivsAndConstants.extend(constants)
 
-        if len(varsDerivsAndConstants) > 10:
+        if len(varsDerivsAndConstants) > 12:
             return 2
         else:
             return 3
@@ -414,8 +415,8 @@ class EquationSystem:
 
         if varsDerivsAndConstants != EquationSystem._LastVarsDerivsAndConstants:
             EquationSystem._LastVarsDerivsAndConstants = varsDerivsAndConstants
-            EquationSystem._LookupDict = Equation.GetUofMToPrimitiveTermLookupTable(vars, derivatives, constants,
-                                max_power=max_power)
+            EquationSystem._LookupDict = Equation.GetUofMToPrimitiveTermLookupTable(vars=self._vars, derivatives=self._derivatives,
+                                constants=self._constants, max_power=max_power)
 
         symbols_of_others = set()
         symbols_of_this_eqn = set()
@@ -612,23 +613,6 @@ class EquationSystem:
                 exp += '\n'
 
         return exp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
