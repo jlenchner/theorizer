@@ -277,8 +277,11 @@ class Equation:
        while True:
             tries += 1
             if tries > MAX_TRIES:
-                num_terms += 1
-                tries = 0
+                if num_terms < len(candidateTerms):
+                    num_terms += 1
+                    tries = 0
+                else:
+                    return []
             candidateTermsCopy = candidateTerms.copy()
             terms = []
             vars_derivs_and_constants_in_use = set()
@@ -327,7 +330,7 @@ class Equation:
             candidateTerms = set()
             try:
                 candidateTerms = u_of_mToTermLookupDict.get(u_of_m_to_match._units)[0].copy()
-            except:
+            except:  #should not happen; just for safety
                 Equation._logger.error("There are no candidate terms for first term:" + str(firstTerm))
                 continue
 
@@ -344,6 +347,9 @@ class Equation:
             additionalTerms = Equation.GenerateFixedNumberofDimensionallyConsistentTermsFromList(num_terms=num_terms - 1,
                                                                                                  candidateTerms=candidateTerms,
                                                                                                  existing_terms=terms)
+            if additionalTerms == []: #could not get needed additional terms
+                continue
+
             terms.extend(additionalTerms)
             if Equation.GetCommonFactors(terms) == set(): #this should always happen because it is
                 # handled in Equation.GenerateFixedNumberofDimensionallyConsistentTermsFromList()
@@ -473,9 +479,10 @@ class Equation:
 
         newFirstTerm = None
         strippedNewFistTerm = None
+        foundGoodFirstTerm = False
         eqn = None
         while True: #To get a viable equation
-            while True:  #To get a viable first tierm
+            for i in range(100):  #To get a viable first tierm
                 newFirstTerm = Equation.GenerateRandomTermWithGivenVarDerivativeOrConstant(vars=vars,
                                                                 derivatives=derivatives,
                                                                 constants=constants,
@@ -487,9 +494,16 @@ class Equation:
                 strippedNewFistTerm = Equation.GetUnnamedConstantStrippedTerm(newFirstTerm)
                 if strippedNewFistTerm in terms_to_keep:
                     Equation._logger.info("Term is a good one!")
+                    foundGoodFirstTerm = True
                     break
                 else:
                     Equation._logger.info("Term is not good. Trying again....")
+
+            if not foundGoodFirstTerm:
+                randIndex = random.randint(0, len(terms_to_keep) - 1)
+                strippedNewFistTerm = terms_to_keep[randIndex]
+                c = Equation.GenerateRandomUnnamedConstant()
+                newFirstTerm = c * strippedNewFistTerm
 
             u_of_m_for_term = Equation.GetUofMForTerm(strippedNewFistTerm)
             termsForUofM = u_of_mToTermLookupDict.get(u_of_m_for_term._units)[0].copy()
@@ -499,6 +513,9 @@ class Equation:
                                                             candidateTerms=termsForUofM,
                                                             existing_terms=existing_terms,
                                                             max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
+            if addtional_terms == []:
+                continue
+
             existing_terms.extend(addtional_terms)
             Equation.AssignRandomSignsToTerms(existing_terms)
             exp = existing_terms[0]
@@ -831,6 +848,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
+
+
+
+
+
 
 
 
