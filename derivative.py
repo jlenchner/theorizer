@@ -1,10 +1,13 @@
-
 import sympy
 from sympy import *
 from variable import *
 
 class Derivatif(Symbol):
     UNDEFINED = -999
+
+    def __new__(cls, *args, **kwargs):
+        return super().__new__(cls, args[0])
+
     def __init__(self, name, u_of_m = None, derivativeOrder = UNDEFINED, depVariable = None, indepVariable = None):
         super().__init__()
 
