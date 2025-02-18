@@ -6,16 +6,47 @@ from derivative import *
 from constant import *
 
 def KeplerReplacement():
-    d1, d2, m1, m2, w, Fg = variables('d1, d2, m1, m2, w, Fg')
+    d1, d2, m1, m2, Fg = variables('d1, d2, m1, m2, Fg')
+    w = Variable('w', UofM(1/UofM.s))
     vars = [d1, d2, m1, m2, w, Fg]
     G = Constant('G')
     constants = [G]
-    eqn0 = Equation(d1 * m1 - d2*m2)
+    eqn0 = Equation(d1*m1 - d2*m2)
     eqn1 = Equation(Fg*d1**2 + 2*Fg*d1*d2 + Fg*d2**2 - G*m1*m2)
     eqn2 = Equation(Fg - m2 * d2 * w**2)
     eqns = [eqn0, eqn1, eqn2]
     eqnSys = EquationSystem(vars=vars, derivatives=[], constants=constants, equations=eqns,
                            max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
+    print("Kepler System Equation Replacements:\n")
+    for i in range(10):
+        newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=0)
+        print("New eqn for eqn0: " + str(newEqn))
+    print("\n")
+    for i in range(10):
+        newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=1)
+        print("New eqn for eqn1: " + str(newEqn))
+    print("\n")
+    for i in range(10):
+        newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=2)
+        print("New eqn for eqn2: " + str(newEqn))
+
+def TimeDilationReplacement():
+    dt = Variable('dt', UofM(UofM.s))
+    dt0 = Variable('dt0', UofM(UofM.s))
+    d, v = variables('d,v')
+    L = Variable('L', UofM(UofM.m))
+    f = Variable('f', UofM(1/UofM.s))
+    f0 = Variable('f0', UofM(1/UofM.s))
+    c = Constant('c')
+    vars = [dt, dt0, d, v, L, f, f0]
+    constants = [c]
+    eqn0 = Equation(c*dt0 - 2*d)
+    eqn1 = Equation(c*dt - 2*L)
+    eqn2 = Equation(4*L**2-4*d**2-v**2*dt**2)
+    eqns = [eqn0, eqn1, eqn2]
+    eqnSys = EquationSystem(vars=vars, derivatives=[], constants=constants, equations=eqns,
+                            max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
+    print("Time Dilation System Equation Replacements:\n")
     for i in range(10):
         newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=0)
         print("New eqn for eqn0: " + str(newEqn))
@@ -32,7 +63,9 @@ def KeplerReplacement():
 if __name__ == "__main__":
     Equation.SetLogging()
 
-    KeplerReplacement()
+
+    #KeplerReplacement()
+    TimeDilationReplacement()
     x, y,z ,w  = variables('x,y,z,w')
     eqn = Equation(2*x - 2*y)
     terms = eqn.getTerms()
@@ -100,7 +133,7 @@ if __name__ == "__main__":
     #    print(str(i+1) + ": " + str(eqn))
     print("Dimensionally Consistent Set:\n\n")
     for i in range(200):
-        eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=[],
+        eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs, constants=constants,
                                               measuredVars=vars, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
         print(str(i+1) + ": " + str(eqnSystem) + "\n\n")
         #eqn = eqnSystem.replaceRandomDimensionallyConsistentEqnByIndex(1)
@@ -156,6 +189,11 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
+
+
+
+
+
 
 
 
