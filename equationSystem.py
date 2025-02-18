@@ -1,4 +1,3 @@
-
 import random
 import os
 from variable import *
@@ -57,6 +56,11 @@ class EquationSystem:
         self._max_vars_derivatives_and_constants_per_eqn = max_vars_derivatives_and_constants_per_eqn
         self._nonMeasuredVars = set(self._vars) - set(self._measuredVars)
 
+
+    def copy(self):
+        return EquationSystem(vars=self._vars.copy(), derivatives=self._derivatives.copy(), constants=self._constants.copy(),
+                              measuredVars=self._measuredVars.copy(), equations=self._equations.copy(),
+                              max_vars_derivatives_and_constants_per_eqn=self._max_vars_derivatives_and_constants_per_eqn)
 
     def getZeroes(self):   #not yet implemented
         return None
@@ -490,7 +494,7 @@ class EquationSystem:
 
     def replaceRamdomDimensionallyConsistentEqn(self):
         randIndex = random.randint(0, len(self._equations) - 1)
-        return self.replaceRandomDimensionallyConsistentEqnByIndex(randIndex)
+        return randIndex, self.replaceRandomDimensionallyConsistentEqnByIndex(randIndex)
 
     def replaceRandomEqnByIndex(self, eqnIndex):
         eqn = None
@@ -613,31 +617,6 @@ class EquationSystem:
                 exp += '\n'
 
         return exp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
