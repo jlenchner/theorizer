@@ -5,8 +5,9 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
    #How to deal with a N (Newton) = kg*m/(sec*sec)?  UofMs need to be polys not symbols!!
     m,kg,s,mol,A,cd,K = base_units('m,kg,s,mol,A,cd,K')
     BASE_MEASURED_QUANTITY = ["l", "m", "t", "n", "i", "I", "T"]
-    BASE_UNITS = [m,kg,s,mol,A,cd,K]
-    BASE_UNITS_TO_DESC_DICT = {m: "meter",
+    BASE_UNITS = [1,m,kg,s,mol,A,cd,K]
+    BASE_UNITS_TO_DESC_DICT = {1: "unity",
+                               m: "meter",
                               kg: "kilogram",
                               s: "second",
                               mol: "mole",
@@ -14,9 +15,9 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
                               cd: "candela",
                               K: "Kelvin"}
     ALL_MEASURED_QUANTITIES = ["l", "d", "x", "y", "z", "m", "t", "n", "i", "I", "T", "F", "v", "a", "W","p", "P",
-                               "c","G", "h","h-bar", "E", "k", "w", "e", "pi"]
+                               "c","G", "h","h-bar", "E", "k", "f", "e", "pi"]
     ALL_UNITS = [m,m,m,m,m,kg,s,mol,A,cd,K, kg*m/(s*s), m/s, m/(s*s), kg*m*m/(s*s), kg*m/s, kg/(m*s*s),
-                                m/s, m**3/(kg*s*s), kg*m/s, kg*m/s, kg*m*m/(s*s), kg*m*m/(s*s*K), 1/s, A*s, m/m]
+                                m/s, m**3/(kg*s*s), kg*m/s, kg*m/s, kg*m*m/(s*s), kg*m*m/(s*s*K), 1/s, A*s, 1]
 
 
     def __init__(self, units):
@@ -52,7 +53,23 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
         return hash(self._units)
 
     def __str__(self):
-        return str(Poly(self._units))
+        #return str(Poly(self._units))
+        if isinstance(self, BaseUnit):
+            return self.name
+        if isinstance(self._units, BaseUnit):
+            return self._units.name
+        elif isinstance(self._units, Mul):
+            return str(self._units.args[0]) + '*' + str(self._units.args[1])
+        elif isinstance(self._units, Pow):
+            return str(self._units.args[0]) + '**' + str(self._units.args[1])
+        else:
+            return str(self._units)
+
+
+
+
+
+
 
 
 
