@@ -8,6 +8,9 @@ class Constant(Variable):  #should be able to automatically pick up units of mea
     CONSTANT_TO_UofM_DICT = dict()
     UNDEFINED = -999
 
+    def __new__(cls, *args, **kwargs):
+        return super().__new__(cls, args[0])
+
     def __init__(self, name, u_of_m=1, value=UNDEFINED):  #in other words, the default is that the constant is dimensionless
         self._name = name
         if u_of_m == 1:
