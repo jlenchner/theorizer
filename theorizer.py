@@ -58,6 +58,28 @@ def TimeDilationReplacement():
     for i in range(10):
         newEqn = eqnSys.replaceRandomDimensionallyConsistentEqnByIndex(eqnIndex=2)
         print("New eqn for eqn2: " + str(newEqn))
+
+def TimeDilationLikeTheoryWithReplacement():
+    dt = Variable('dt', UofM(UofM.s))
+    dt0 = Variable('dt0', UofM(UofM.s))
+    d, v = variables('d,v')
+    L = Variable('L', UofM(UofM.m))
+    f = Variable('f', UofM(1 / UofM.s))
+    f0 = Variable('f0', UofM(1 / UofM.s))
+    c = Constant('c')
+    vars = [dt, dt0, d, v, L, f, f0]
+    constants = [c]
+
+    for i in range(10):
+        eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=[], constants=constants,
+                                              measuredVars=vars, numEqns=4, max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
+        print("\n\nSystem " + str(i+1) + ": " + str(eqnSystem) + "\n\n")
+        print("\n\nReplacements: \n")
+        for j in range(5):
+            index, eqn = eqnSystem.copy().replaceRamdomDimensionallyConsistentEqn()
+            print("Replacement eqn index: " + str(index))
+            print("Replacement eqn: " + str(eqn))
+
     
 
 if __name__ == "__main__":
@@ -65,7 +87,10 @@ if __name__ == "__main__":
 
 
     #KeplerReplacement()
-    TimeDilationReplacement()
+    #TimeDilationReplacement()
+    TimeDilationLikeTheoryWithReplacement()
+
+    exit(0)
     x, y,z ,w  = variables('x,y,z,w')
     eqn = Equation(2*x - 2*y)
     terms = eqn.getTerms()
@@ -189,6 +214,11 @@ if __name__ == "__main__":
     random.shuffle(measured_vars)
 
     EquationSystem.ProjectRandomSystems(vars, derivatives, measured_vars, 10)
+
+
+
+
+
 
 
 
