@@ -4,7 +4,9 @@ from sympy import *
 
 class Variable(Symbol):
     VAR_TO_UofM_DICT = dict()
-    #DEFAULT_MAPPING = dict()
+
+    def __new__(cls, *args, **kwargs):
+        return super().__new__(cls, args[0])
 
     def __init__(self, name, u_of_m = None):
         super().__init__()
