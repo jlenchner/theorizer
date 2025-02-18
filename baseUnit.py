@@ -6,7 +6,8 @@ class BaseUnit(Symbol):
         self._sym = Symbol(sym)
 
     def __str__(self):
-        return self._sym
+        #return self._sym
+        return self.name
 
 def base_units(arg_string):
     syms = symbols(arg_string)
