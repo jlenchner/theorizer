@@ -1,12 +1,15 @@
 System number 19
-Measured Variables: ['c', 'Fc', 'd2', 'Fg', 'p', 'd2xdt2', 'd1', 'T']
-Non-Measured Variables: ['m1', 'm2', 'W', 'G']
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['W', 'm1', 'd1', 'Fg']
+Non Measured Variables: ['Fc', 'd2', 'm2', 'p', 'T']
+Constants: ['G', 'c']
+Observed Constants: ['G', 'c']
+Derivatives: ['d2xdt2']
+Observed Derivatives: ['d2xdt2']
 Equations:
 G*d2xdt2*m2^2 - 2*G*Fg*m1 + d2xdt2^2*d2^2*m1
 c*m2 - p
 -2*c*d2xdt2*Fc*d2*m1*m2 + Fg*W*p
 -c*d1*m2 + d1*p + d2*p
 
-Target Polynomial:
-Fg*W^2*G^2+4*Fg*W*c^4*G*d1-12*d2xdt2*m1^2*c^6*G*d1
-
+Target Polynomial: Fg*W^2*G^2+4*Fg*W*c^4*G*d1-12*d2xdt2*m1^2*c^6*G*d1

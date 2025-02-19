@@ -1,11 +1,15 @@
 System number 36
-Measured Variables: ['d1', 'm1', 'c', 'Fc', 'd2xdt2', 'Fg', 'T', 'W', 'G']
-Non-Measured Variables: ['m2', 'p', 'd2']
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['d1', 'W', 'Fc', 'Fg', 'm1']
+Non Measured Variables: ['d2', 'm2', 'p', 'T']
+Constants: ['G', 'c']
+Observed Constants: ['G', 'c']
+Derivatives: ['d2xdt2']
+Observed Derivatives: ['d2xdt2']
 Equations:
 d2xdt2*m2 + Fc - Fg
 c*m1 + c*m2 - p
 -2*c*d2xdt2*d1^2*m2^2 + 2*c*d2xdt2*d2^2*m1^2 + W*d2*p
 G*c^2*Fc - G*d2xdt2^2*d2*m1 - G*d2xdt2*W + 2*c^2*d2xdt2^2*d1^2
 
-Target Polynomial:
-8*d1^4*m1*c^5*d2xdt2^4+8*d1^2*m1*c^5*Fc*d2xdt2^2*G-6*d1^2*m1*c^3*d2xdt2^3*W*G-2*d1^2*m1*c*Fc^2*d2xdt2^2*G^2+4*d1^2*m1*c*Fc*d2xdt2^2*Fg*G^2-2*d1^2*m1*c*d2xdt2^2*Fg^2*G^2-2*d1^2*c^3*Fc*d2xdt2^2*W*G+2*d1^2*c^3*d2xdt2^2*Fg*W*G+2*m1*c^5*Fc^2*G^2-3*m1*c^3*Fc*d2xdt2*W*G^2+m1*c*d2xdt2^2*W^2*G^2-c^3*Fc^2*W*G^2+c^3*Fc*Fg*W*G^2+c*Fc*d2xdt2*W^2*G^2-c*d2xdt2*Fg*W^2*G^2
+Target Polynomial: 8*d1^4*m1*c^5*d2xdt2^4+8*d1^2*m1*c^5*Fc*d2xdt2^2*G-6*d1^2*m1*c^3*d2xdt2^3*W*G-2*d1^2*m1*c*Fc^2*d2xdt2^2*G^2+4*d1^2*m1*c*Fc*d2xdt2^2*Fg*G^2-2*d1^2*m1*c*d2xdt2^2*Fg^2*G^2-2*d1^2*c^3*Fc*d2xdt2^2*W*G+2*d1^2*c^3*d2xdt2^2*Fg*W*G+2*m1*c^5*Fc^2*G^2-3*m1*c^3*Fc*d2xdt2*W*G^2+m1*c*d2xdt2^2*W^2*G^2-c^3*Fc^2*W*G^2+c^3*Fc*Fg*W*G^2+c*Fc*d2xdt2*W^2*G^2-c*d2xdt2*Fg*W^2*G^2

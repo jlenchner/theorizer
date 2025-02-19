@@ -1,11 +1,15 @@
 System number 31
-Measured Variables: ['c', 'd1', 'Fc', 'G', 'm1', 'W', 'm2', 'p', 'd2xdt2']
-Non-Measured Variables: ['Fg', 'T', 'd2']
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['d1', 'm2', 'm1', 'p', 'W', 'Fc']
+Non Measured Variables: ['Fg', 'd2', 'T']
+Constants: ['G', 'c']
+Observed Constants: ['G']
+Derivatives: ['d2xdt2']
+Observed Derivatives: ['d2xdt2']
 Equations:
 c^2*Fg - d2xdt2*W
 d1*m1 - d1*m2 + d2*m2
 -2*G*d1*p + G*d2*p + c*d2xdt2*d1*d2^2
 2*c^2*m2 + d2xdt2*d2*m2 - 3*Fc*d2 + Fg*d1
 
-Target Polynomial:
-d1^9*m1^8*W^2*d2xdt2^6-8*d1^9*m1^7*W^2*m2*d2xdt2^6+28*d1^9*m1^6*W^2*m2^2*d2xdt2^6-56*d1^9*m1^5*W^2*m2^3*d2xdt2^6+70*d1^9*m1^4*W^2*m2^4*d2xdt2^6-56*d1^9*m1^3*W^2*m2^5*d2xdt2^6+28*d1^9*m1^2*W^2*m2^6*d2xdt2^6-8*d1^9*m1*W^2*m2^7*d2xdt2^6+d1^9*W^2*m2^8*d2xdt2^6+3*d1^5*Fc*G^2*m1^7*W*m2*p^2*d2xdt2^3-9*d1^5*Fc*G^2*m1^6*W*m2^2*p^2*d2xdt2^3+3*d1^5*Fc*G^2*m1^5*W*m2^3*p^2*d2xdt2^3+15*d1^5*Fc*G^2*m1^4*W*m2^4*p^2*d2xdt2^3-15*d1^5*Fc*G^2*m1^3*W*m2^5*p^2*d2xdt2^3-3*d1^5*Fc*G^2*m1^2*W*m2^6*p^2*d2xdt2^3+9*d1^5*Fc*G^2*m1*W*m2^7*p^2*d2xdt2^3-3*d1^5*Fc*G^2*W*m2^8*p^2*d2xdt2^3-d1^5*G^2*m1^7*W*m2^2*p^2*d2xdt2^4+3*d1^5*G^2*m1^6*W*m2^3*p^2*d2xdt2^4-d1^5*G^2*m1^5*W*m2^4*p^2*d2xdt2^4-5*d1^5*G^2*m1^4*W*m2^5*p^2*d2xdt2^4+5*d1^5*G^2*m1^3*W*m2^6*p^2*d2xdt2^4+d1^5*G^2*m1^2*W*m2^7*p^2*d2xdt2^4-3*d1^5*G^2*m1*W*m2^8*p^2*d2xdt2^4+d1^5*G^2*W*m2^9*p^2*d2xdt2^4+2*G^4*m1^4*W*m2^5*p^4*d2xdt2+8*G^4*m1^3*W*m2^6*p^4*d2xdt2+12*G^4*m1^2*W*m2^7*p^4*d2xdt2+8*G^4*m1*W*m2^8*p^4*d2xdt2+2*G^4*W*m2^9*p^4*d2xdt2
+Target Polynomial: d1^9*m1^8*W^2*d2xdt2^6-8*d1^9*m1^7*W^2*m2*d2xdt2^6+28*d1^9*m1^6*W^2*m2^2*d2xdt2^6-56*d1^9*m1^5*W^2*m2^3*d2xdt2^6+70*d1^9*m1^4*W^2*m2^4*d2xdt2^6-56*d1^9*m1^3*W^2*m2^5*d2xdt2^6+28*d1^9*m1^2*W^2*m2^6*d2xdt2^6-8*d1^9*m1*W^2*m2^7*d2xdt2^6+d1^9*W^2*m2^8*d2xdt2^6+3*d1^5*Fc*G^2*m1^7*W*m2*p^2*d2xdt2^3-9*d1^5*Fc*G^2*m1^6*W*m2^2*p^2*d2xdt2^3+3*d1^5*Fc*G^2*m1^5*W*m2^3*p^2*d2xdt2^3+15*d1^5*Fc*G^2*m1^4*W*m2^4*p^2*d2xdt2^3-15*d1^5*Fc*G^2*m1^3*W*m2^5*p^2*d2xdt2^3-3*d1^5*Fc*G^2*m1^2*W*m2^6*p^2*d2xdt2^3+9*d1^5*Fc*G^2*m1*W*m2^7*p^2*d2xdt2^3-3*d1^5*Fc*G^2*W*m2^8*p^2*d2xdt2^3-d1^5*G^2*m1^7*W*m2^2*p^2*d2xdt2^4+3*d1^5*G^2*m1^6*W*m2^3*p^2*d2xdt2^4-d1^5*G^2*m1^5*W*m2^4*p^2*d2xdt2^4-5*d1^5*G^2*m1^4*W*m2^5*p^2*d2xdt2^4+5*d1^5*G^2*m1^3*W*m2^6*p^2*d2xdt2^4+d1^5*G^2*m1^2*W*m2^7*p^2*d2xdt2^4-3*d1^5*G^2*m1*W*m2^8*p^2*d2xdt2^4+d1^5*G^2*W*m2^9*p^2*d2xdt2^4+2*G^4*m1^4*W*m2^5*p^4*d2xdt2+8*G^4*m1^3*W*m2^6*p^4*d2xdt2+12*G^4*m1^2*W*m2^7*p^4*d2xdt2+8*G^4*m1*W*m2^8*p^4*d2xdt2+2*G^4*W*m2^9*p^4*d2xdt2

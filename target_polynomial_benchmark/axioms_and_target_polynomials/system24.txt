@@ -1,14 +1,15 @@
 System number 24
-Measured Variables: ['d2xdt2', 'c', 'W', 'p', 'd2', 'T', 'Fg', 'Fc']
-Non-Measured Variables: ['m1', 'm2', 'd1', 'G']
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['Fg', 'd2', 'W', 'Fc']
+Non Measured Variables: ['d1', 'm1', 'm2', 'p', 'T']
+Constants: ['G', 'c']
+Observed Constants: []
+Derivatives: ['d2xdt2']
+Observed Derivatives: []
 Equations:
 G*d1*m2 - 2*G*d2*m1 + 2*c^2*d1^2
 2*c*m1 + c*m2 - 2*p
 d2xdt2*W*m1 - Fg^2*d2
 -d2xdt2*m1 + Fc
 
-Target Polynomial:
-W*Fc-d2*Fg^2
-
-
-
+Target Polynomial: W*Fc-d2*Fg^2

@@ -1,11 +1,15 @@
 System number 47
-Measured Variables: ['G', 'c', 'd2xdt2', 'm1', 'Fg', 'T', 'm2', 'd2']
-Non-Measured Variables: ['p', 'Fc', 'd1', 'W']
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['Fg', 'm1', 'm2', 'd2']
+Non Measured Variables: ['Fc', 'W', 'd1', 'p', 'T']
+Constants: ['G', 'c']
+Observed Constants: []
+Derivatives: ['d2xdt2']
+Observed Derivatives: ['d2xdt2']
 Equations:
 d2xdt2*d2*m1 + Fg*d1 - Fg*d2
 d1*m2 - d2*m1 + 2*d2*m2
 c*m1 - p
 c^2*d2*m2 + Fc*d1*d2 + W*d1 - W*d2
 
-Target Polynomial:
-d2xdt2*m1*m2*d2+m1*Fg*d2-3*Fg*m2*d2
+Target Polynomial: d2xdt2*m1*m2*d2+m1*Fg*d2-3*Fg*m2*d2

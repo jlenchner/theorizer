@@ -1,11 +1,15 @@
 System number 50
-Measured Variables: ['d2xdt2', 'Fc', 'c', 'W', 'd1', 'Fg', 'd2', 'G', 'm2']
-Non-Measured Variables: ['m1', 'p', 'T']
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['d1', 'd2', 'Fg', 'Fc', 'W', 'm2']
+Non Measured Variables: ['m1', 'p', 'T']
+Constants: ['G', 'c']
+Observed Constants: ['G', 'c']
+Derivatives: ['d2xdt2']
+Observed Derivatives: []
 Equations:
 c*m1 - c*m2 + p
 -d2xdt2*m1 + Fg
 c^2*m1 + Fc*d2 - Fg*d2
 G*d2*m1*m2 + c^2*d1^2*m1 + d2xdt2*d1*d2^2*m2 - W*d1*d2
 
-Target Polynomial:
-Fc^2*c^2*d1^2*d2+Fc^2*d2^2*G*m2+Fc*c^2*W*d1*d2-2*Fc*c^2*d1^2*Fg*d2-2*Fc*Fg*d2^2*G*m2+c^4*d1*Fg*d2*m2-c^2*W*d1*Fg*d2+c^2*d1^2*Fg^2*d2+Fg^2*d2^2*G*m2
+Target Polynomial: Fc^2*c^2*d1^2*d2+Fc^2*d2^2*G*m2+Fc*c^2*W*d1*d2-2*Fc*c^2*d1^2*Fg*d2-2*Fc*Fg*d2^2*G*m2+c^4*d1*Fg*d2*m2-c^2*W*d1*Fg*d2+c^2*d1^2*Fg^2*d2+Fg^2*d2^2*G*m2
