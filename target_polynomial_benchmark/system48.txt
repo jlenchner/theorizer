@@ -1,6 +1,6 @@
 System number 48
 Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
-Measured Variables: ['m2', 'p', 'Fg', 'Fc', 'W', 'd1']
+Measured Variables: ['d1', 'm2', 'p', 'Fg', 'Fc', 'W']
 Non Measured Variables: ['d2', 'm1', 'T']
 Constants: ['G', 'c']
 Observed Constants: []

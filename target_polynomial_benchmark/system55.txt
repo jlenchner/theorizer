@@ -1,6 +1,6 @@
 System number 3
 Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
-Measured Variables: ['m1', 'd1', 'Fc', 'W', 'Fg', 'p', 'd2']
+Measured Variables: ['d1', 'm1', 'Fc', 'W', 'Fg', 'p', 'd2']
 Non Measured Variables: ['m2', 'T']
 Constants: ['G', 'c']
 Observed Constants: []
