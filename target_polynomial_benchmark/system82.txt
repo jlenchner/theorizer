@@ -1,0 +1,17 @@
+System number 82
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Measured Variables: 
+Non Measured Variables: 
+Constants: ['G']
+Observed Constants: 
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
+Observed Derivatives: 
+Equations:
+-d2x1dt2 + d2x2dt2 + d2*w**2
+2*dx1dt*d1*m1**2*w**2 - dx2dt*Fg*m2 + dx2dt*d1*m2**2*w**2 - Fg*d1*m1*w
+-G*m1 + dx1dt*dx2dt*d2 + dx2dt**2*d2
+-dx1dt - 2*dx2dt + d1*w + d2*w
+d2x1dt2*m1 + d2x2dt2*m1 - Fg
+Units of measure: "s**(-2)*m", "kg**2*m**2", "m**3*s**(-2)", "1/s*m", "s**(-2)*kg"
+
+Target Polynomial:

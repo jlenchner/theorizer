@@ -1,0 +1,16 @@
+System number 76
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Measured Variables: 
+Non Measured Variables: 
+Constants: ['G']
+Observed Constants: 
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
+Observed Derivatives: 
+Equations:
+2*dx1dt*m2 - d1*m1*w
+dx2dt*m1*w + Fg - d2*m1*w**2 + d2*m2*w**2
+-G*d2x1dt2*m2 + d2x1dt2*dx1dt*d1**2*w + d2x2dt2*d1**2*d2*w**2 + dx2dt**2*d1**2*w**2
+2*d2x1dt2*d2 - dx2dt**2
+Units of measure: "1/s*kg", "s**(-2)*kg", "m**4*s**(-4)", "m**2*s**(-2)"
+
+Target Polynomial:
