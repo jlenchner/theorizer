@@ -1,17 +1,16 @@
 System number 78
 Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
-Measured Variables: 
-Non Measured Variables: 
+Measured Variables: ['w']
+Non Measured Variables: ['d1', 'd2', 'm1', 'm2', 'Fg']
 Constants: ['G']
-Observed Constants: 
+Observed Constants: []
 Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
-Observed Derivatives: 
+Observed Derivatives: ['d2x1dt2', 'dx2dt', 'd2x2dt2']
+Units of measure: "m^2*s^(-3)", "m^3*s^(-4)", "m^3*s^(-2)", "s^(-2)*m", "m^5*s^(-4)"
 Equations:
 d2x1dt2*dx1dt - d2x1dt2*dx2dt + d2x2dt2*dx1dt
-d2x2dt2*Fg*d2 - 2*dx1dt**2*d1*m2*w**2
-G*m1 - d2x1dt2*d1**2 + dx2dt**2*d1
+d2x2dt2*Fg*d2 - 2*dx1dt^2*d1*m2*w^2
+G*m1 - d2x1dt2*d1^2 + dx2dt^2*d1
 -5*d2x1dt2 + dx1dt*w
-G*Fg*d1 + d2x1dt2*dx1dt**2*d2**2 - dx1dt**2*d2**3*w**2
-Units of measure: "m**2*s**(-3)", "m**3*s**(-4)", "m**3*s**(-2)", "s**(-2)*m", "m**5*s**(-4)"
-
-Target Polynomial:
+G*Fg*d1 + d2x1dt2*dx1dt^2*d2^2 - dx1dt^2*d2^3*w^2
+Target Polynomial: dx2dt*d2x1dt2*w-5*d2x1dt2^2-5*d2x1dt2*d2x2dt2
