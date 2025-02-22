@@ -14,4 +14,5 @@ G*dx2dt*m2 - d2x1dt2*d1^3*w
 -G*Fg*m1 + d2x1dt2*d2^3*m2*w^2
 d2x2dt2 - 2*d1*w^2
 -d2x1dt2*dx1dt + d2x1dt2*d2*w + 2*d2x2dt2*dx1dt - 2*d2^2*w^3
+
 Target Polynomial: 4*d2^4*w^4*d2x2dt2-4*d2^3*w^2*d2x2dt2*d2x1dt2-4*d2^2*d2x2dt2^2*d2x1dt2+5*d2^2*d2x2dt2*d2x1dt2^2-d2^2*d2x1dt2^3

@@ -12,4 +12,5 @@ dx1dt + d1*w - 2*d2*w
 2*d2x1dt2*d2x2dt2*d2*m2 - dx1dt^2*Fg
 -dx1dt*d1 + dx2dt*d2
 G*m1 - dx1dt*d1^2*w + d1*d2^2*w^2
+
 Target Polynomial: 2*d1*dx1dt*w-d1*w*dx2dt-dx1dt*dx2dt

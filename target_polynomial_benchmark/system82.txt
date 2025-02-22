@@ -13,4 +13,5 @@ Equations:
 -G*m1 + dx1dt*dx2dt*d2 + dx2dt^2*d2
 -dx1dt - 2*dx2dt + d1*w + d2*w
 d2x1dt2*m1 + d2x2dt2*m1 - Fg
+
 Target Polynomial: d2x2dt2^2*m1^2-d2x2dt2*w*m1^2*dx1dt+2*d2x2dt2*w*m1^2*dx2dt+d2x2dt2*w*m1*m2*dx2dt-d2x2dt2*w*m2^2*dx2dt-d2x1dt2^2*m1^2+3*d2x1dt2*w*m1^2*dx1dt+2*d2x1dt2*w*m1^2*dx2dt+d2x1dt2*w*m1*m2*dx2dt+d2x1dt2*w*m2^2*dx2dt-2*w^2*m1^2*dx1dt^2-4*w^2*m1^2*dx1dt*dx2dt-w^2*dx1dt*m2^2*dx2dt-2*w^2*m2^2*dx2dt^2
