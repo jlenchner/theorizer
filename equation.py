@@ -9,13 +9,13 @@ import itertools
 
 
 class Equation:
-    PROB_OF_NUM_TERMS = [0, 1.0/3.0, 1.0/2.0, 1.0/6.0]  #probs of a randomly generated poly having 1 term, 2 terms, etc.
-    PROB_FACTORS_PER_TERM = [0.4, 0.4, 0.2]  #probs that a term in a randomly generated poly will have 1, 2, 3, etc. factors
+    PROB_OF_NUM_TERMS = [0, 42.0/70.0, 20.0/70.0, 6.0/70.0, 2/70.0]  #probs of a randomly generated poly having 1 term, 2 terms, etc.
+    PROB_FACTORS_PER_TERM = [0.19, 0.47, 0.25, 0.09] #probs that a term in a randomly generated poly will have 1, 2, 3, 4 factors
     SAME_VARIABLE_FACTOR_BIAS = 2.0  #bias for repeating the same variable in a term (in other words, favoring x^2 over xy)
     SAME_DERIVATIVE_FACTOR_BIAS = 0.5 #bias for repeating the same derivative in a term (in other words, favoring dxdt^2 over dxdt*dydt)
 
     PROB_TERM_HAS_NON_UNITAL_INTEGER_CONSTANT = 0.2
-    PROB_OF_SMALL_INTEGER_CONSTANTS = [0.0, 0.0, 0.9, 0.07, 0.02, 0.01]  # prob that a small non-unital integer constant is [0,1,2,3,4,5]
+    PROB_OF_SMALL_INTEGER_CONSTANTS = [0.0, 0.0, 15.0/34.0, 10.0/34.0, 9.0/34.0]  # prob that a small non-unital integer constant is [0,1,2,3,4,5]
 
     HOMOGENEOUS_EQN_PROB = 0.05
 
@@ -848,6 +848,11 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
+
+
+
+
+
 
 
 
