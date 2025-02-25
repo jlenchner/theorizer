@@ -1,0 +1,10 @@
+System number 9
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Constants: ['G']
+Derivatives: []
+Units of measure: "kg^2*m^2", "m^4*s^(-4)", "m^3*s^(-2)", "m^2"
+Equations:
+-Fg*d2*m2 + 2*d1^2*m1^2*w^2 + d1*d2*m2^2*w^2
+-G*Fg*m2 + 2*G*d1*m2^2*w^2 + Fg*d1^2*d2*w^2
+-2*G*m2 + d1^3*w^2
+d1^2 + 2*d1*d2 - d2^2

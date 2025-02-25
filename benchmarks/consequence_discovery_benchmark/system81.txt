@@ -1,0 +1,20 @@
+System number 81
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Measured Variables: ['Fg']
+Non Measured Variables: ['d1', 'd2', 'm1', 'm2', 'w']
+Constants: ['G']
+Observed Constants: []
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
+Observed Derivatives: ['dx1dt', 'dx2dt']
+Units of measure: "m^2*s^(-3)", "m^3*s^(-6)", "m^2*kg", "m^3*s^(-3)", "1/s*kg", "kg*m", "m^2*s^(-4)", "s^(-2)*m"
+Equations:
+dx1dt*d1*m1*w^2 - dx1dt*d1*m2*w^2 + dx2dt*Fg
+d2x1dt2*d2x2dt2^2 - dx2dt^3*w^3
+-d1^2*m1 + 2*d1*d2*m1 + d2^2*m2
+-G*m2*w + d2x1dt2*dx2dt*d1
+dx1dt*m2 - dx2dt*m1 + 2*d1*m1*w
+-d1*m2 + 2*d2*m1
+-d2x1dt2*dx1dt*m2*w + d2x2dt2*Fg
+d2x1dt2 + 2*d1*w^2
+
+Target Polynomial: 1665*Fg^2*dx2dt^5*dx1dt-1392*Fg^2*dx2dt^4*dx1dt^2+4864*Fg^2*dx2dt^3*dx1dt^3-4096*Fg^2*dx2dt^2*dx1dt^4

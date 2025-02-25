@@ -1,0 +1,15 @@
+System number 10
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['d1', 'Fc', 'Fg', 'm1']
+Non Measured Variables: ['W', 'd2', 'm2', 'p', 'T']
+Constants: ['G', 'c']
+Observed Constants: ['G', 'c']
+Derivatives: ['d2xdt2']
+Observed Derivatives: ['d2xdt2']
+Equations:
+c^2*d2xdt2*m1 + c^2*Fg - d2xdt2^2*d2*m1 + 2*d2xdt2*Fc*d2
+d2xdt2*d2*m1^2 - 3*Fc*d1*m1 + 2*W*m2
+2*G*Fc - d2xdt2^2*d1*d2
+-c*d1*m2 + c*d2*m1 + d1*p
+
+Target Polynomial: 4*Fc^2*G-2*Fc*m1*d2xdt2*G+c^2*m1*d2xdt2^2*d1+c^2*Fg*d2xdt2*d1

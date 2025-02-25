@@ -1,0 +1,10 @@
+System number 8
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Constants: ['G']
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
+Units of measure: "m^2*1/s", "m^4*s^(-3)", "m^2*s^(-3)", "kg^2*m^2"
+Equations:
+dx2dt*d2*m2 - 2*d1^2*m1*w
+G*dx2dt*m2 + 2*d2x1dt2*d2^3*w - dx2dt*d1^2*d2*w^2
+d2x1dt2*dx1dt + d2x2dt2*dx1dt + dx1dt*d2*w^2 - d2^2*w^3
+-2*d2x2dt2^2*m2^2 + 2*d2x2dt2*Fg*m2 + dx2dt*Fg*m1*w

@@ -1,0 +1,15 @@
+System number 49
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['d1', 'm1', 'p', 'm2', 'W', 'Fc']
+Non Measured Variables: ['Fg', 'd2', 'T']
+Constants: ['G', 'c']
+Observed Constants: ['G']
+Derivatives: ['d2xdt2']
+Observed Derivatives: ['d2xdt2']
+Equations:
+2*c*p + Fg*d1 - 2*W
+d1*m2 - d2*m1
+G*Fg^2 - 2*d2xdt2^2*Fc*d1*d2
+-c*d2xdt2*m1 - c*d2xdt2*m2 + c*Fg + d2xdt2*p
+
+Target Polynomial: 2*Fc^2*m2^2*d2xdt2^4*d1^6-4*Fc*W^2*m2*d2xdt2^2*d1^2*G*m1-Fc*m2^3*d2xdt2^4*d1^4*G*m1-2*Fc*m2^2*d2xdt2^4*d1^4*G*m1^2-Fc*m2*d2xdt2^4*d1^4*G*m1^3-4*Fc*m2*d2xdt2^3*d1^3*G*p^2*m1+2*W^2*m2^2*d2xdt2^2*G^2*m1^2+4*W^2*m2*d2xdt2^2*G^2*m1^3+2*W^2*d2xdt2^2*G^2*m1^4-4*W*m2*d2xdt2^2*G^2*p^2*m1^2-4*W*d2xdt2^2*G^2*p^2*m1^3+2*d2xdt2^2*G^2*p^4*m1^2

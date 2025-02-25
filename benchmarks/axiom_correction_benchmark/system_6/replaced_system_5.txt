@@ -1,0 +1,10 @@
+System number 6
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Constants: ['G']
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
+Units of measure: "1/s*m", "m^3*s^(-3)", "m^2*1/s", "m^2*s^(-2)"
+Equations:
+-2*dx1dt + dx2dt + d1*w
+G*m1*w + d2x2dt2*dx1dt*d1 - dx1dt*dx2dt*d2*w
+-dx1dt*d2*m2 + 2*dx2dt*d1*m1 - d1^2*m2*w + d1*d2*m2*w
+d2x1dt2*d2*m2 - 4*d2x2dt2*d1*m2 - dx1dt*dx2dt*m1 + 2*Fg*d1

@@ -1,0 +1,10 @@
+System number 3
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Constants: ['G']
+Derivatives: []
+Units of measure: "kg^2*m", "kg^2*s^(-2)", "m^4*s^(-2)", "kg^2"
+Equations:
+d1*m2^2 - d2*m1^2 + d2*m1*m2
+Fg*m1 + Fg*m2 - d2*m1*m2*w^2
+3*G*d1*m2 + G*d2*m1 - G*d2*m2 + d1*d2^3*w^2
+m1^2 + m1*m2 - m2^2

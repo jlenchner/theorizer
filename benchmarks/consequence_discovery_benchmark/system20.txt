@@ -1,0 +1,15 @@
+System number 20
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['d1', 'd2', 'Fg', 'm2', 'Fc']
+Non Measured Variables: ['W', 'm1', 'p', 'T']
+Constants: ['G', 'c']
+Observed Constants: ['G', 'c']
+Derivatives: ['d2xdt2']
+Observed Derivatives: []
+Equations:
+-G*c*Fc*d2 + G*c*W + 2*G*d2xdt2*d1*p - c*d2xdt2^2*d1^2*d2
+G*Fg*d1 + c^2*d2xdt2*d1^2 - c^2*d2xdt2*d2^2
+-d2xdt2*m2 + 2*Fc
+m1^2 + m1*m2 - 2*m2^2
+
+Target Polynomial: m2*d1*G*Fg+2*Fc*c^2*d1^2-2*Fc*c^2*d2^2

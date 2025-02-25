@@ -1,0 +1,16 @@
+System number 77
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Measured Variables: ['m1', 'm2', 'w', 'Fg']
+Non Measured Variables: ['d1', 'd2']
+Constants: ['G']
+Observed Constants: ['G']
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
+Observed Derivatives: ['dx1dt', 'dx2dt']
+Units of measure: "kg^2*s^(-2)", "kg*m", "1/s*m", "m^5*s^(-5)"
+Equations:
+d2x1dt2*m2^2 - dx2dt*m1^2*w - Fg*m1 + Fg*m2
+-d1*m1 + d2*m2
+dx1dt - 2*dx2dt + d1*w
+G*dx2dt*Fg + G*d1^2*m2*w^3 - d2x1dt2*dx2dt*d2^3*w^2
+
+Target Polynomial: m1^5*dx1dt^3*dx2dt^2*w-6*m1^5*dx1dt^2*dx2dt^3*w+12*m1^5*dx1dt*dx2dt^4*w-8*m1^5*dx2dt^5*w+m1^4*dx1dt^3*dx2dt*Fg-6*m1^4*dx1dt^2*dx2dt^2*Fg+12*m1^4*dx1dt*dx2dt^3*Fg-8*m1^4*dx2dt^4*Fg-m1^3*dx1dt^3*dx2dt*m2*Fg+6*m1^3*dx1dt^2*dx2dt^2*m2*Fg-12*m1^3*dx1dt*dx2dt^3*m2*Fg+8*m1^3*dx2dt^4*m2*Fg+dx1dt^2*m2^6*G*w^2-4*dx1dt*dx2dt*m2^6*G*w^2+4*dx2dt^2*m2^6*G*w^2+dx2dt*m2^5*G*w*Fg

@@ -1,0 +1,18 @@
+System number 105
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Measured Variables: ['Fg', 'd1']
+Non-Measured Variables: ['d2', 'm1', 'w', 'm2']
+Constants: ['G']
+Observed Constants: ['G']
+Derivatives: []
+Observed Derivatives: []
+Units of measure: "kg*m", "m^3*s^(-2)", "kg^3*s^(-2)", "kg^2", "m^3", "s^(-2)*kg"
+Equations:
+-d1*m1 + 2*d2*m1 + d2*m2
+-G*m2 - d1^3*w^2 + d1^2*d2*w^2 + d1*d2^2*w^2
+Fg*m1*m2 - d1*m1^3*w^2 + 2*d2*m1*m2^2*w^2 + d2*m2^3*w^2
+m1^2 - m1*m2 + m2^2
+-d1^3 + d1^2*d2 + d2^3
+-Fg + d1*m1*w^2 + 2*d2*m1*w^2 + d2*m2*w^2
+
+Target Polynomial: 32*Fg*d1^3+96*Fg*d1^2-126*Fg*d1+81*Fg

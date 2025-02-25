@@ -1,0 +1,15 @@
+System number 61
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T']
+Measured Variables: ['d2', 'm2', 'W', 'Fg', 'p']
+Non Measured Variables: ['Fc', 'd1', 'm1', 'T']
+Constants: ['G', 'c']
+Observed Constants: ['c']
+Derivatives: ['d2xdt2']
+Observed Derivatives: ['d2xdt2']
+Equations:
+Fc*m2 + Fg*m1 - Fg*m2
+c*m1 - c*m2 + p
+-d1*m2 + 2*d2*m1 + d2*m2
+c*m2*p + d2xdt2*d2*m2^2 + Fc*d2*m2 - 2*W*m1
+
+Target Polynomial: d2*Fg*p+d2*m2^2*d2xdt2*c-2*W*m2*c+2*W*p+m2*p*c^2

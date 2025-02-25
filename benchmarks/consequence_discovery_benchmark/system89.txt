@@ -1,0 +1,18 @@
+System number 89
+Variables: ['d1', 'd2', 'm1', 'm2', 'w', 'Fg']
+Measured Variables: ['Fg', 'w', 'd1']
+Non Measured Variables: ['d2', 'm1', 'm2']
+Constants: ['G']
+Observed Constants: ['G']
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
+Observed Derivatives: ['dx2dt']
+Units of measure: "s^(-2)*m", "kg^2*s^(-2)", "1/s*kg", "m^2*1/s", "m^3*s^(-2)", "s^(-2)*kg"
+Equations:
+-d2x1dt2 + d2x2dt2 + dx2dt*w
+-dx2dt*m2^2*w + 2*Fg*m1
+dx1dt*m2 - 2*d2*m1*w
+-dx1dt*d1 + dx2dt*d2
+G*m2 - dx1dt*dx2dt*d1
+-dx2dt*m1*w + Fg
+
+Target Polynomial: 2*d1^2*Fg^3*G*w^2-Fg^3*dx2dt^2*G
