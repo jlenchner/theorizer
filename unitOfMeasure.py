@@ -1,8 +1,21 @@
+""""The base UofM class for managing units of measure.  See also the BaseUnit class
+    in the file baseUnit.py. the currently defined BaseUnits are m,kg,s,mol,A,cd,K
+    (for meter, kilogram, second, mole, Ampere, candela and Kelvin, respectively).
+    SUofMs that are not BaseUnits are products of BaseUnits and their reciprocals.
+    In addition to supporting explicitly constructed OofMs, this class also handles
+    the inferring or guessing of UofMs based on the supplied name of a Variable,
+    Derivative or Constant. Changing the set of inferred UofMs can be accomplished
+    by altering the parallel arrays: ALL_MEASURED_QUANTITIES and ALL_UNITS.
+"""
+
+# Author: Jonathan Lenchner (lenchner@us.ibm.com)
+#
+# License: BSD 3-Clause
+
 from sympy import *
 from baseUnit import *
 
-class UofM:  #Need methods to get UofM for a term and to determine if an equation is dimensionally consistent (perhaps not in this class0
-   #How to deal with a N (Newton) = kg*m/(sec*sec)?  UofMs need to be polys not symbols!!
+class UofM:  
     m,kg,s,mol,A,cd,K = base_units('m,kg,s,mol,A,cd,K')
     BASE_MEASURED_QUANTITY = ["l", "m", "t", "n", "i", "I", "T"]
     BASE_UNITS = [1,m,kg,s,mol,A,cd,K]
@@ -21,6 +34,14 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
 
 
     def __init__(self, units):
+        """
+            Ordinarily BaseUnits are created at the time of construction of a Variable, Derivative
+            or Constant. However it is also possible to create derived UofMs and utilize the derived
+            UofMs. For example one could define a Newton via N = UofM(UofM.kg*UofM.m/UofM.s),
+            and then, rather than using F = Variable('F'), or F = Variable('F', UofM(UofM.kg*UofM.m/UofM.s)),
+            one could accomplish the same thing with F = Variable ('F', N) and reuse N in other
+            Variable/Deriviatif/Constant or UofM definitions.
+        """
         self._units = units #this can be a Mul, Pow or BaseUnit
         if units != 1:  #if not dimensionless
             for sym in self._units.free_symbols:
@@ -58,30 +79,18 @@ class UofM:  #Need methods to get UofM for a term and to determine if an equatio
             return self.name
         if isinstance(self._units, BaseUnit):
             return self._units.name
-        elif isinstance(self._units, Mul):
-            return str(self._units.args[0]) + '*' + str(self._units.args[1])
+        elif isinstance(self._units, Mul): #can have more than 2 args!!
+            res = ""
+            for i in range(len(self._units.args)):
+                if i == 0:
+                    res = str(self._units.args[i])
+                else:
+                    res += '*' + str(self._units.args[i])
+            return res
         elif isinstance(self._units, Pow):
             return str(self._units.args[0]) + '**' + str(self._units.args[1])
         else:
             return str(self._units)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
