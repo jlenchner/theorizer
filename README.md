@@ -21,7 +21,7 @@ pip install numpy sympy
 
    - macOS (using Homebrew): `brew install macaulay2`
    - Linux (Debian/Ubuntu): [Macaulay2's official website](https://macaulay2.com/Downloads/)
-   - Windows: Download from [Macaulay2's official website]((https://macaulay2.com/Downloads/))
+   - Windows: Download from [Macaulay2's official website](https://macaulay2.com/Downloads/)
    - Verify installation by running `M2` in your terminal
 
 ## Consequence Generation
