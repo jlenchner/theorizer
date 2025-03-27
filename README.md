@@ -20,8 +20,8 @@ pip install numpy sympy
 #### Macaulay2 Installation
 
    - macOS (using Homebrew): `brew install macaulay2`
-   - Linux (Debian/Ubuntu): `sudo apt-get install macaulay2`
-   - Windows: Download from [Macaulay2's official website](https://faculty.math.illinois.edu/Macaulay2/Downloads/)
+   - Linux (Debian/Ubuntu): [Macaulay2's official website](https://macaulay2.com/Downloads/)
+   - Windows: Download from [Macaulay2's official website]((https://macaulay2.com/Downloads/))
    - Verify installation by running `M2` in your terminal
 
 ## Consequence Generation
