@@ -19,26 +19,14 @@ pip install numpy sympy
 
 #### Macaulay2 Installation
 
-##### macOS (Homebrew)
-```bash
-brew install macaulay2
-```
-
-##### Linux (Ubuntu/Debian)
-```bash
-sudo apt-get update
-sudo apt-get install macaulay2
-```
-
-##### Windows
-Macaulay2 can be installed via:
-- Windows Subsystem for Linux (WSL)
-- Docker container
-- Pre-compiled binaries from the [Macaulay2 website](http://www.math.uiuc.edu/Macaulay2/)
+   - macOS (using Homebrew): `brew install macaulay2`
+   - Linux (Debian/Ubuntu): `sudo apt-get install macaulay2`
+   - Windows: Download from [Macaulay2's official website](https://faculty.math.illinois.edu/Macaulay2/Downloads/)
+   - Verify installation by running `M2` in your terminal
 
 ## Consequence Generation
 
-### 1. Projection Function (`projection`)
+### Projection Function (`projection`)
 Performs algebraic projections using Macaulay2 to generate a consequence for a given axiom on a set of measured variables as described in the paper.
 
 #### Usage Example
