@@ -4,7 +4,7 @@ Measured Variables: ['p', 'd2', 'Fc', 'd1', 'Fg']
 Non Measured Variables: ['W', 'm1', 'm2', 'T']
 Constants: ['G', 'c']
 Observed Constants: []
-Derivatives: ['d2xdt2']
+Derivatives: ['d2x1dt2']
 Observed Derivatives: []
 Equations:
 -m1^2 + m2^2

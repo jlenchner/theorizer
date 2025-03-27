@@ -4,12 +4,12 @@ Measured Variables: ['d1', 'd2', 'W']
 Non Measured Variables: ['Fc', 'Fg', 'm1', 'm2', 'p', 'T']
 Constants: ['G', 'c']
 Observed Constants: ['G', 'c']
-Derivatives: ['d2xdt2']
-Observed Derivatives: ['d2xdt2']
+Derivatives: ['d2x1dt2']
+Observed Derivatives: ['d2x1dt2']
 Equations:
-2*c*d2xdt2*d1*m1 + c*Fc*d2 - 2*d2xdt2*d1*p
-d2xdt2*m1 - 2*d2xdt2*m2 + Fc + Fg
+2*c*d2x1dt2*d1*m1 + c*Fc*d2 - 2*d2x1dt2*d1*p
+d2x1dt2*m1 - 2*d2x1dt2*m2 + Fc + Fg
 c^2*m1 - W
-3*G*m1 - c^2*d2 + d2xdt2*d1^2 + d2xdt2*d2^2
+3*G*m1 - c^2*d2 + d2x1dt2*d1^2 + d2x1dt2*d2^2
 
-Target Polynomial: 3*W*G+d2xdt2*c^2*d1^2+d2xdt2*c^2*d2^2-c^4*d2
+Target Polynomial: 3*W*G+d2x1dt2*c^2*d1^2+d2x1dt2*c^2*d2^2-c^4*d2
