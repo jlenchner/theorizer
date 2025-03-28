@@ -398,17 +398,14 @@ class EquationSystem:
             else:
                 Equation._logger.info("Using existing lookup & sig dictionaries.")
 
-            symbols_used = set()
-            u_of_ms = set()  # each equation should have a distinct u_of_m
+
             eqn = Equation.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivatives,
                                                                  constants=constants,
                                                                  u_of_mToTermLookupDict=EquationSystem._LookupDict,
                                                                  sigDict=EquationSystem._sigDict,
                                                                  max_power=max_power,
                                                                  max_vars_derivatives_and_constants_per_eqn=max_vars_derivatives_and_constants_per_eqn)
-            firstTerm = eqn.getTerms()[0]
-            u_of_m = Equation.GetUofMForTerm(firstTerm)
-            u_of_ms.add(u_of_m)
+
             symbols_used = eqn.getSymbolsUsed()
             eqns.append(eqn)
 
@@ -781,20 +778,6 @@ class EquationSystem:
                 exp += '\n'
 
         return exp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
