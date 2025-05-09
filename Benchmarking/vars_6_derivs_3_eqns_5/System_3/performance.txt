@@ -1,0 +1,16 @@
+Total time: 402.98 seconds
+Peak memory: 91.08 MB
+generation_time: 175.55
+replacement_generation_time: 0.00
+system_root_search_time: 2.64
+system_noise_addition_time: 0.02
+consequence_generation_time: 0.82
+consequence_data_generation_time: 1.62
+consequence_data_noise_addition_time: 0.02
+generation_memory: 90.59 MB
+replacement_generation_memory: 90.59 MB
+system_root_search_memory: 91.00 MB
+system_noise_addition_memory: 91.00 MB
+consequence_generation_memory: 91.02 MB
+consequence_data_generation_memory: 91.08 MB
+consequence_data_noise_addition_memory: 91.08 MB

@@ -614,7 +614,7 @@ class EquationSystem:
         self._equations[eqnIndex] = replacement_eqn
         return replacement_eqn  # should sanityCheck the new systrem!!
 
-    def replaceRamdomDimensionallyConsistentEqn(self):
+    def replaceRandomDimensionallyConsistentEqn(self):
         """
             Replace an equation at a randomly selected index in this EquationSystem with a random
             dimensionally consistent equation (using the exiting variables, derivatives and constants)
