@@ -49,8 +49,6 @@ def evaluate_polynomial(target_polynomial, dataset, observed_constants, measured
     
     return np.array(evaluated_values)
 
-
-# Function to extract target polynomial, measured variables, observed constants, and observed derivatives
 def extract_info_from_file(filepath):
     with open(filepath, 'r') as file:
         content = file.readlines()
@@ -80,7 +78,6 @@ def extract_info_from_file(filepath):
     target_polynomial = ' '.join(target_polynomial)
     
     return target_polynomial, measured_variables, observed_constants, measured_derivatives
-
 
 def generate_dataset(target_polynomial, measured_variables, observed_constants, measured_derivatives, constant_data=True, derivative_data=True, region=[1,5]):
     # Initialize dataset as a 2D array with 1000 rows and 0 columns
@@ -240,7 +237,6 @@ def generate_dataset(target_polynomial, measured_variables, observed_constants, 
     
     return dataset
 
-
 def generate_dataset_no_der(target_polynomial, measured_variables, observed_constants, constant_data=True, region=[1,5]):
     # Initialize dataset as a 2D array with 1000 rows and 0 columns
     dataset = np.zeros((1000, 0))  # Start with an empty 2D array
@@ -346,7 +342,7 @@ def add_gaussian_noise(input_file, output_file, epsilon):
     # Save to output file
     np.savetxt(output_file, data, fmt='%.18e')
 
-def run_consequence_noiseless_data_generation(input_file, output_file):
+def run_consequence_noiseless_data_generation(input_file, output_file, region=[1, 10]):
     np.random.seed(42)
 
     # Extract info from file
@@ -386,10 +382,6 @@ def run_consequence_noiseless_data_generation(input_file, output_file):
     if not measured_derivatives:
         measured_derivatives = ['']
     
-    # Generate dataset
-    #r1 = np.random.randint(0, 15)
-    r1 = 1
-    region = [r1, r1+5]
     if '' not in measured_derivatives:
         dataset = generate_dataset(target_polynomial, measured_variables.copy(), observed_constants, measured_derivatives, True, True, region)
     else:
@@ -414,71 +406,3 @@ def run_consequence_noisy_data_generation(input_file):
     for epsilon in epsilon_list:
         output_file = input_file.replace('.dat', f'_{epsilon}.dat')
         add_gaussian_noise(input_file, output_file,epsilon)
-
-
-"""
-
-import numpy as np
-from sympy import symbols, sympify, solve, Poly
-
-# Your polynomial and parameters
-target_polynomial = "6*m2^2*dx2dt^2*d2x1dt2^2*G*Fg+2*m2*d2x1dt2^2*G*W*Fc+d2*dx2dt*dx1dt*d2x2dt2^2*W*Fc-d2*dx1dt^2*d2x2dt2^2*W*Fc-2*p^2*d2x1dt2^2*G*Fc"
-measured_variables = ['d2', 'm2', 'p', 'Fc', 'Fg', 'W']
-observed_constants = ['G']
-measured_derivatives = ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']
-
-# Generate dataset (using your existing function)
-dataset = generate_dataset(
-    target_polynomial=target_polynomial,
-    measured_variables=measured_variables.copy(),
-    observed_constants=observed_constants,
-    measured_derivatives=measured_derivatives,
-    constant_data=True,
-    derivative_data=True,
-    region=[1, 5]
-)
-
-# Get first data point
-first_row = dataset[0]
-var_order = measured_derivatives + measured_variables
-data_dict = dict(zip(var_order, first_row))
-
-
-
-
-from sympy import symbols, sympify
-
-def evaluate_polynomial_row(target_polynomial, row_data, variable_order):
-
-
-    # Create a symbol dictionary
-    sym_dict = {var: val for var, val in zip(variable_order, row_data)}
-    
-    # Convert polynomial string to sympy expression
-    try:
-        expr = sympify(target_polynomial.replace('^', '**'))
-        # Substitute all variable values
-        evaluated = expr.subs(sym_dict)
-        return float(evaluated.evalf())
-    except Exception as e:
-        print(f"Evaluation error: {e}")
-        return float('nan')
-
-# Example usage:
-# Define your variable order (must match dataset column order)
-variable_order = ['G', 'dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2', 'd2', 'm2', 'p', 'Fc', 'Fg', 'W']
-
-# For each row in your dataset:
-for i in range(10):
-    row = dataset[i]
-    value = evaluate_polynomial_row(target_polynomial, row, variable_order)
-    print(f"Row {i} evaluation: {value:.12e}")
-
-
-print(evaluate_polynomial(target_polynomial, dataset, observed_constants, measured_derivatives, measured_variables))
-
-
-
-
-"""
-

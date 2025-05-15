@@ -15,6 +15,75 @@ from pathlib import Path
 import shutil
 import time
 import psutil 
+import argparse
+import ast
+import signal
+from contextlib import contextmanager
+
+class TimeoutException(Exception):
+    pass
+
+@contextmanager
+def time_limit(seconds):
+    def signal_handler(signum, frame):
+        raise TimeoutException("Timed out!")
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Generate dimensionally consistent systems for benchmarking.")
+
+    parser.add_argument('--numVars', type=ast.literal_eval, default="[6,7,8,9]",
+                        help="List or single number of variables, e.g., '[6,7]' or '[6]'")
+    parser.add_argument('--numDerivs', type=ast.literal_eval, default="[2,3,4]",
+                        help="List or single number of derivatives, e.g., '[2,3]' or '[2]'")
+    parser.add_argument('--numEquations', type=ast.literal_eval, default="[4,5,6]",
+        help="List of number of equations to try")
+    parser.add_argument('--vars', type=ast.literal_eval,
+        default="['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T', 'E']",
+        help="List of variables to use, e.g. ['Fc','Fg','d1']")
+    parser.add_argument('--derivs', type=ast.literal_eval,
+        default="['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']",
+        help="List of derivatives to use, e.g. ['dx1dt','d2x1dt2']")
+
+    parser.add_argument('--numReplacements', type=int, default=5)
+    parser.add_argument('--numSystems', type=int, default=3)
+
+    parser.add_argument('--genReplacements', type=ast.literal_eval, default=True)
+    parser.add_argument('--genSysData', type=ast.literal_eval, default=True)
+    parser.add_argument('--genConsequence', type=ast.literal_eval, default=True)
+    parser.add_argument('--genConsequenceData', type=ast.literal_eval, default=True)
+
+    parser.add_argument('--conseqDataRange', type=ast.literal_eval, default="[1, 10]",
+        help='Range over which to sample variables when generating consequence data, e.g., "[1, 10]"'
+    )
+    parser.add_argument("--sysDataRange", type=ast.literal_eval, default="[1, 10]",
+        help='Variable range for system data generation, e.g., "[1, 10]"'
+    )
+
+    parser.add_argument('--timeout', type=int, default=3600,
+    help="Max number of seconds to allow for generating a single system. None for no timeout.")
+
+    parser.add_argument('--seed', type=int, default=42, help='Random seed for reproducibility')
+
+    return parser.parse_args()
+
+def parse_and_validate_range(range_str, flag_name):
+    try:
+        r = range_str
+        assert (
+            isinstance(r, list)
+            and len(r) == 2
+            and all(isinstance(x, (int, float)) for x in r)
+            and r[0] < r[1]
+        )
+        return r
+    except Exception:
+        raise ValueError(f"Invalid {flag_name}. Use format like \"[1, 5]\" with start < end.")
 
 def save_equation_system_to_file(eqn_system_str, filename="temp.txt"):
     # Initialize dictionaries to store parsed data
@@ -113,10 +182,24 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
                 replacements.append(current_replacement)
             current_replacement = {'index': int(line) - 1}  # Convert to 0-based index
         elif '(U of M:' in line:  # Unit of measure
-            # Extract the equation and unit
+            # Extract the equation and unit - handle nested parentheses in units
             parts = line.split('(U of M:')
             current_replacement['equation'] = parts[0].strip().replace('**', '^')
-            unit = parts[1].split(')')[0].strip()
+            
+            # Find the matching closing parenthesis for the unit
+            unit_part = parts[1]
+            open_parens = 1
+            end_pos = 0
+            for i, c in enumerate(unit_part):
+                if c == '(':
+                    open_parens += 1
+                elif c == ')':
+                    open_parens -= 1
+                    if open_parens == 0:
+                        end_pos = i
+                        break
+            
+            unit = unit_part[:end_pos].strip()
             current_replacement['unit'] = unit.replace('**', '^')
     
     if current_replacement:  # Add the last replacement
@@ -128,30 +211,36 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
     # Parse the original file structure
     sections = {}
     current_section = None
+    sections_order = []  # To maintain original section order
     
     for line in original_content.split('\n'):
         if line.startswith('Variables:') or line.startswith('Constants:') or line.startswith('Derivatives:'):
             current_section = line.split(':')[0]
             sections[current_section] = line + '\n'
+            sections_order.append(current_section)
         elif line.startswith('Equations:'):
             current_section = 'Equations'
             sections[current_section] = [line + '\n']  # Start equations list
+            sections_order.append(current_section)
         elif line.startswith('Units of Measure of'):
             current_section = line
             sections[current_section] = line + '\n'
+            sections_order.append(current_section)
         elif current_section == 'Equations' and line.strip():
             sections['Equations'].append(line + '\n')
         elif current_section and current_section.startswith('Units of Measure of'):
-            sections[current_section] += line + '\n'
+            # Only add to units section if it's not the header line
+            if line.strip() and not line.startswith('Units of Measure of'):
+                sections[current_section] += line + '\n'
     
     # For each replacement, create a new file
     for k, replacement in enumerate(replacements[:num_replacements]):
         # Create a copy of the original content
-        new_content = {k: v for k, v in sections.items()}
+        new_content = {k: v[:] if isinstance(v, list) else v for k, v in sections.items()}
         
         # Replace the specified equation
         eqn_index = replacement['index']
-        if eqn_index < len(new_content['Equations']) - 1:  # -1 because first line is "Equations:"
+        if 'Equations' in new_content and eqn_index < len(new_content['Equations']) - 1:
             new_content['Equations'][eqn_index + 1] = replacement['equation'] + '\n'
         
         # Replace the corresponding unit of measure
@@ -162,22 +251,29 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
                 break
         
         if units_line:
-            units = new_content[units_line].split('\n')[1:]  # Skip header line
-            if eqn_index < len(units):
-                units[eqn_index] = replacement['unit'] + '\n'
-                new_content[units_line] = 'Units of Measure of Equations:\n' + ''.join(units)
+            # Split units section into lines
+            unit_lines = new_content[units_line].split('\n')
+            # The first line is the header "Units of Measure of Equations:"
+            header = unit_lines[0]
+            unit_values = unit_lines[1:-1]  # Skip header and last empty line
+            
+            if eqn_index < len(unit_values):
+                unit_values[eqn_index] = replacement['unit']
+            
+            # Rebuild the units section
+            new_content[units_line] = header + '\n'
+            for unit in unit_values:
+                if unit.strip():  # Only add non-empty lines
+                    new_content[units_line] += unit + '\n'
         
-        # Reconstruct the file content
+        # Reconstruct the file content in original order
         output_lines = []
-        output_lines.append(new_content['Variables'])
-        output_lines.append(new_content['Constants'])
-        output_lines.append(new_content['Derivatives'])
-        output_lines.extend(new_content['Equations'])
-        
-        # Add all units sections
-        for section in new_content:
-            if section.startswith('Units of Measure of') and section not in ['Variables', 'Constants', 'Derivatives', 'Equations']:
-                output_lines.append(new_content[section])
+        for section in sections_order:
+            if section in new_content:
+                if isinstance(new_content[section], list):
+                    output_lines.extend(new_content[section])
+                else:
+                    output_lines.append(new_content[section])
         
         # Write to replacement file
         replacement_file = f"temp_replacement_{k+1}.txt"
@@ -206,23 +302,252 @@ def cleanup_temp_files(system_num):
             except:
                 pass
 
+def parse_eqnSystem_from_file(file_path):
+    data = {
+        'variables': [],
+        'constants': [],
+        'derivatives': [],
+        'equations': [],
+    }
+    
+    with open(file_path, 'r') as file:
+        content = file.read()
+    
+    # Helper function to extract list data
+    def extract_list(section, prefix):
+        list_str = section.split(prefix, 1)[1].split('\n', 1)[0].strip()
+        try:
+            return eval(list_str)
+        except:
+            return []
+    
+    # Split into main sections
+    sections = re.split(r'\n(?=\w+:)', content)
+    
+    # Process each section
+    for section in sections:
+        if section.startswith('Variables:'):
+            data['variables'] = extract_list(section, 'Variables:')
+        elif section.startswith('Constants:'):
+            data['constants'] = extract_list(section, 'Constants:')
+        elif section.startswith('Derivatives:'):
+            data['derivatives'] = extract_list(section, 'Derivatives:')
+        elif section.startswith('Equations:'):
+            # Get everything after "Equations:" and before "Units of Measure"
+            eqn_content = section.split('Equations:', 1)[1]
+            if 'Units of Measure of Variables:' in eqn_content:
+                eqn_content = eqn_content.split('Units of Measure of Variables:', 1)[0]
+            
+            # Take all non-empty lines that don't look like units sections
+            equations = []
+            for line in eqn_content.split('\n'):
+                line = line.strip()
+                if line and not line.startswith('Units of Measure of'):
+                    equations.append(line)
+            data['equations'] = equations
+
+    # Create variables
+    vars = variables(','.join(data['variables'])) if data['variables'] else []
+    
+    # Create derivatives
+    derivs = derivatives(','.join(data['derivatives'])) if data['derivatives'] else []
+    
+    # Create constants
+    consts = constants(','.join(data['constants'])) if data['constants'] else []
+    
+    # Create equations by parsing the equation strings
+    eqns = []
+    for eqn_str in data['equations']:
+        try:
+            # Skip any lines that look like units
+            if 'Units of Measure of' in eqn_str:
+                continue
+                
+            # Convert ^ to ** for Python exponentiation
+            eqn_str = eqn_str.replace('^', '**')
+            
+            # Create a dictionary of all symbols for evaluation
+            symbols_dict = {}
+            for var in vars:
+                symbols_dict[var.name] = var
+            for deriv in derivs:
+                symbols_dict[deriv.name] = deriv
+            for const in consts:
+                symbols_dict[const.name] = const
+            
+            # Evaluate the equation string in the context of our symbols
+            eqn_expr = eval(eqn_str, {'__builtins__': None}, symbols_dict)
+            eqn = Equation(eqn_expr)
+            eqns.append(eqn)
+        except Exception as e:
+            print(f"Error parsing equation '{eqn_str}': {str(e)}")
+            continue
+    
+    # Create and return the EquationSystem
+    eqnSys = EquationSystem(
+        vars=vars,
+        derivatives=derivs,
+        constants=consts,
+        equations=eqns,
+        max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX
+    )
+    
+    return eqnSys
+
 def get_next_system_num():
     system_num = 1
     while Path(f"Benchmarking/System_{system_num}").exists():
         system_num += 1
     return system_num
 
-def main():
-    # Start timing
-    start_time = time.time()
+def run_generation_from_prior_file(system_directory, args):
+
+    genReplacement = args.genReplacements
+    genSysData = args.genSysData
+    genConsequence = args.genConsequence
+    genConsequenceData = args.genConsequenceData
+    conseqDataRange = args.conseqDataRange
+    sysDataRange = args.sysDataRange
+    timeout_limit = args.timeout
+
+    start_time = time.process_time()
     process = psutil.Process(os.getpid())
     Equation.SetLogging()
 
-    # Define parameter ranges
-    num_vars_options = [6, 7, 8, 9]        # Approximate range 6-10
-    num_derivs_options = [2, 3, 4]       # Range 2-4
-    num_eqns_options = [4, 5]         # Range 4-6
-    numReplacements = 0
+    stage_times = {}
+    mem_usage = {}
+
+    if not Path(system_directory).exists():
+        print(f"Directory {system_directory} does not exist")
+        return
+
+    config_key = Path(system_directory).parent.name
+    system_num = int(Path(system_directory).name.split('_')[-1])
+
+    print(f"\n=== Processing existing system: {system_directory} ===")
+
+    temp_system_file = f"temp_system_{system_num}.txt"
+    temp_system_dat = f"temp_system_{system_num}.dat"
+    temp_consequence = f"temp_consequence_{system_num}.txt"
+    temp_data_dat = f"temp_data_{system_num}.dat"
+
+    try:
+        if not Path(f"{system_directory}/system.txt").exists():
+            print("System file not found in directory")
+            return
+
+        eqnSystem = parse_eqnSystem_from_file(f"{system_directory}/system.txt")
+        save_equation_system_to_file(str(eqnSystem), temp_system_file)
+
+        with time_limit(timeout_limit):
+            # Replacement Axioms
+            t = time.process_time()
+            if genReplacement:
+                print(" Now generating replacement axioms. \n")
+                replacement_info = ""
+                for j in range(3):
+                    index, eqn = eqnSystem.copy().replaceRandomDimensionallyConsistentEqn()
+                    replacement_info += f"{index+1}\n{eqn}\n"
+                    print(f"Replacement {j+1}: Equation {index+1} with {eqn}")
+                create_replacement_files(replacement_info, 3, temp_system_file)
+                print("Replacement Axioms Created. \n")
+            stage_times['replacement_generation'] = time.process_time() - t
+            mem_usage['replacement_generation'] = process.memory_info().rss / (1024 * 1024)
+
+            # System data
+            t = time.process_time()
+            if genSysData:
+                print("Generating system data. Searching for roots. \n")
+                found_roots = run_noiseless_system_data_generation(temp_system_file, temp_system_dat, sysDataRange)
+                if not found_roots:
+                    print("Could not find roots to the system. Skipping. \n")
+                    cleanup_temp_files(system_num)
+                    return
+                run_noisy_system_data_generation(temp_system_file, temp_system_dat)
+                print("Noisy System Data Generated. \n")
+            stage_times['system_root_search'] = time.process_time() - t
+            mem_usage['system_root_search'] = process.memory_info().rss / (1024 * 1024)
+
+            # Consequence
+            t = time.process_time()
+            if genConsequence:
+                print("Generating consequence. \n")
+                found_consequence = run_consequence_generation(temp_system_file, temp_consequence)
+                if not found_consequence:
+                    print("Could not find a consequence. Skipping. \n")
+                    cleanup_temp_files(system_num)
+                    return
+                print("Consequence generated. \n")
+            stage_times['consequence_generation'] = time.process_time() - t
+            mem_usage['consequence_generation'] = process.memory_info().rss / (1024 * 1024)
+
+            # Consequence data
+            t = time.process_time()
+            if genConsequenceData:
+                print("Generating noiseless data for consequence. ")
+                if not Path(temp_consequence).exists():
+                    print("No consequence found in dataset. Skipping")
+                    cleanup_temp_files(system_num)
+                    return
+                found_roots = run_consequence_noiseless_data_generation(temp_consequence, temp_data_dat, conseqDataRange)
+                if not found_roots:
+                    print("Could not solve equation for roots. Skipping")
+                    cleanup_temp_files(system_num)
+                    return
+                run_consequence_noisy_data_generation(temp_data_dat)
+                print("Noisy consequence data generated. System Complete. \n")
+            stage_times['consequence_data_generation'] = time.process_time() - t
+            mem_usage['consequence_data_generation'] = process.memory_info().rss / (1024 * 1024)
+
+            total_time = time.process_time() - start_time
+            peak_memory = max(mem_usage.values())
+
+            print("\nPerformance Summary:")
+            print(f"Total time: {total_time:.2f} seconds")
+            print(f"Peak memory: {peak_memory:.2f} MB")
+            print("Stage times:")
+            for stage, t in stage_times.items():
+                print(f"  {stage}: {t:.2f}s")
+
+            with open(f"{system_directory}/performance.txt", "a") as f:
+                f.write(f"\n--- RERUN STATS ---\n")
+                f.write(f"Total time: {total_time:.2f} seconds\n")
+                f.write(f"Peak memory: {peak_memory:.2f} MB\n")
+                for stage, t in stage_times.items():
+                    f.write(f"{stage}_time: {t:.2f}\n")
+                for stage, m in mem_usage.items():
+                    f.write(f"{stage}_memory: {m:.2f} MB\n")
+
+    except TimeoutException:
+        print(f"Timeout reached after {timeout_limit} seconds, skipping this rerun.")
+        cleanup_temp_files(system_num)
+
+    except Exception as e:
+        print(f"Error during rerun: {str(e)}")
+        cleanup_temp_files(system_num)
+
+def run_generation(args):
+    Equation.SetLogging()
+
+    if args.seed is not None:
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+        print(f"Using random seed: {args.seed}")
+
+    variable_options = args.vars
+    derivative_options = args.derivs
+    num_vars_options = args.numVars
+    num_derivs_options = args.numDerivs
+    num_eqns_options = args.numEquations
+    numReplacements = args.numReplacements
+    numSystems = args.numSystems
+    genReplacement = args.genReplacements
+    genSysData = args.genSysData
+    genConsequence = args.genConsequence
+    genConsequenceData = args.genConsequenceData
+    conseqDataRange = args.conseqDataRange
+    sysDataRange = args.sysDataRange
+    timeout_limit = args.timeout
 
     # Create Benchmarking directory if it doesn't exist
     Path("Benchmarking").mkdir(exist_ok=True)
@@ -247,19 +572,22 @@ def main():
         print(f"\n=== Starting configuration: {num_vars} vars, {num_derivs} derivs, {num_eqns} eqns ===")
         attempts = 1
 
-        while config_counts[config_key] < 3 and attempts < 10:
+        while config_counts[config_key] < numSystems and attempts < 10:
+            # Start timing
+            start_time = time.process_time()
+            process = psutil.Process(os.getpid())
             print("Attempt ", attempts, "\n")
             attempts+=1
             # Generate variables and derivatives dynamically based on current config
-            var_names = ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T', 'E'][:num_vars]
-            deriv_names = ['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2'][:num_derivs]
+            var_names = variable_options[:num_vars]
+            deriv_names = derivative_options[:num_derivs]
             
             # Create the symbols
             vars = variables(','.join(var_names))
             derivs = derivatives(','.join(deriv_names))
             G, c, pi = constants('G,c,pi')
             
-            print(f"\nGenerating system {config_counts[config_key]+1}/3 for config {config_key}")
+            print(f"\nGenerating system {config_counts[config_key]+1}/{numSystems} for config {config_key}")
 
             # Track time and memory at key stages
             stage_times = {}
@@ -276,342 +604,193 @@ def main():
             system_num = get_next_system_num_with_config()
             
             try:
-                t = time.time()
-                eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(
-                    vars=vars, 
-                    derivatives=derivs,
-                    constants=[G, c],
-                    measuredVars=vars, 
-                    numEqns=num_eqns,
-                    max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX
-                )
-                eqn_system_str = str(eqnSystem)
-                stage_times['generation'] = time.time() - t
-                mem_usage['generation'] = process.memory_info().rss / (1024 * 1024)
+                with time_limit(timeout_limit):
+                    ##### Generating system #####
+                    t = time.process_time()
+                    eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(
+                        vars=vars, 
+                        derivatives=derivs,
+                        constants=[G, c],
+                        measuredVars=vars, 
+                        numEqns=num_eqns,
+                        max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX
+                    )
+                    eqn_system_str = str(eqnSystem)
+                    stage_times['generation'] = time.process_time() - t
+                    mem_usage['generation'] = process.memory_info().rss / (1024 * 1024)
 
-                print(f"System {system_num} generated.")
-                print(f"Variables: {var_names}")
-                print(f"Derivatives: {deriv_names}")
-                print(f"Equations: {num_eqns}")
+                    print(f"System {system_num} generated.")
+                    print(f"Variables: {var_names}")
+                    print(f"Derivatives: {deriv_names}")
+                    print(f"Equations: {num_eqns}")
 
-                temp_system_file = f"temp_system_{system_num}.txt"
-                save_equation_system_to_file(eqn_system_str, temp_system_file)
+                    temp_system_file = f"temp_system_{system_num}.txt"
+                    save_equation_system_to_file(eqn_system_str, temp_system_file)
 
-                print(" Now generating replacement axioms. \n")
-                # Generate replacements first
-                replacement_info = ""
-                t = time.time()
-                if numReplacements > 0:
-                    for j in range(numReplacements):
-                        index, eqn = eqnSystem.copy().replaceRandomDimensionallyConsistentEqn()
-                        replacement_info += f"{index+1}\n{eqn}\n"  # +1 to make it 1-based index
-                        print(f"Replacement {j+1}: Equation {index+1} with {eqn}")
-                stage_times['replacement_generation'] = time.time() - t
-                mem_usage['replacement_generation'] = process.memory_info().rss / (1024 * 1024)
+                    ##### Generating replacement axioms #####
+                    t = time.process_time()
+                    if genReplacement:
+                        print(" Now generating replacement axioms. \n")
+                        replacement_info = ""
+                        
+                        if numReplacements > 0:
+                            for j in range(numReplacements):
+                                index, eqn = eqnSystem.copy().replaceRandomDimensionallyConsistentEqn()
+                                replacement_info += f"{index+1}\n{eqn}\n"  # +1 to make it 1-based index
+                                print(f"Replacement {j+1}: Equation {index+1} with {eqn}")
 
-                # Generate replacement files if needed
-                if numReplacements > 0:
-                    create_replacement_files(replacement_info, numReplacements, temp_system_file)
+                        # Generate replacement files if needed
+                        if numReplacements > 0:
+                            create_replacement_files(replacement_info, numReplacements, temp_system_file)
 
-                print("Replacement Axioms Created. Now searching for roots. \n")
-                
-                # Step 1: Generate noiseless system data
-                temp_system_dat = f"temp_system_{system_num}.dat"
-                t = time.time()
-                found_system_roots = run_noiseless_system_data_generation(temp_system_file, temp_system_dat)
-                stage_times['system_root_search'] = time.time() - t
-                mem_usage['system_root_search'] = process.memory_info().rss / (1024 * 1024)
-                if not found_system_roots:
-                    print("Could not find roots to the system. Skipping. \n")
-                    #cleanup_temp_files(system_num)
-                    continue
-                print("System Data Generated. Now adding noise \n")
+                        print("Replacement Axioms Created. \n")
+                    stage_times['replacement_generation'] = time.process_time() - t
+                    mem_usage['replacement_generation'] = process.memory_info().rss / (1024 * 1024)
                     
-                # Step 2: Add noise to system data
-                t = time.time()
-                added_system_noise = run_noisy_system_data_generation(temp_system_file, temp_system_dat)
-                stage_times['system_noise_addition'] = time.time() - t
-                mem_usage['system_noise_addition'] = process.memory_info().rss / (1024 * 1024)
-                if not added_system_noise:
-                    print("Failed to add noise")
-                    #cleanup_temp_files(system_num)
-                    continue
-                print("Noisy System Data Generated. Now searching for consequence \n")
+                    ##### Generating system data #####
+                    t = time.process_time()
+                    if genSysData:
+                        print("Generating system data. Searching for roots. \n")
+                        temp_system_dat = f"temp_system_{system_num}.dat"
+                        found_system_roots = run_noiseless_system_data_generation(temp_system_file, temp_system_dat, sysDataRange)
+                        if not found_system_roots:
+                            print("Could not find roots to the system. Skipping. \n")
+                            cleanup_temp_files(system_num)
+                            continue
+                        print("System data generated. Now adding noise. \n")
+                        
+                        added_system_noise = run_noisy_system_data_generation(temp_system_file, temp_system_dat)
+                        if not added_system_noise:
+                            print("Failed to add noise")
+                            cleanup_temp_files(system_num)
+                            continue
+                        print("Noisy System Data Generated. \n")
+                    stage_times['system_root_search'] = time.process_time() - t
+                    mem_usage['system_root_search'] = process.memory_info().rss / (1024 * 1024)
                     
-                # Step 3: Generate consequence
-                temp_consequence = f"temp_consequence_{system_num}.txt"
-                t = time.time()
-                found_consequence = run_consequence_generation(temp_system_file, temp_consequence)
-                stage_times['consequence_generation'] = time.time() - t
-                mem_usage['consequence_generation'] = process.memory_info().rss / (1024 * 1024)
-                if not found_consequence:
-                    print("Could not find a consequence. Skipping. \n")
-                    #cleanup_temp_files(system_num)
-                    continue
-                print("Consequence generated. Now generating noiseless data for consequence \n")
+                    ##### Generating consequence #####
+                    t = time.process_time()
+                    if genConsequence:
+                        print("Generating consequence. \n")
+                        temp_consequence = f"temp_consequence_{system_num}.txt"
+                        found_consequence = run_consequence_generation(temp_system_file, temp_consequence)
+                        if not found_consequence:
+                            print("Could not find a consequence. Skipping. \n")
+                            cleanup_temp_files(system_num)
+                            continue
+                        print("Consequence generated. \n")
+                    stage_times['consequence_generation'] = time.process_time() - t
+                    mem_usage['consequence_generation'] = process.memory_info().rss / (1024 * 1024)
 
-                # Step 4: Generate noiseless consequence data
-                temp_data_dat = f"temp_data_{system_num}.dat"
-                t = time.time()
-                found_roots = run_consequence_noiseless_data_generation(temp_consequence, temp_data_dat)
-                stage_times['consequence_data_generation'] = time.time() - t
-                mem_usage['consequence_data_generation'] = process.memory_info().rss / (1024 * 1024)
-                if not found_roots:
-                    print("Could not solve equation for roots. Skipping")
-                    #cleanup_temp_files(system_num)
-                    continue
-                
+                    ##### Generating data for consequence #####
+                    t = time.process_time()
+                    if genConsequenceData:
+                        print("Generating noiseless data for consequence. ")
+                        temp_data_dat = f"temp_data_{system_num}.dat"
+                        temp_consequence = f"temp_consequence_{system_num}.txt"
+                        if not os.path.exists(temp_consequence):
+                            print("No consequence found in dataset. Skipping")
+                            cleanup_temp_files(system_num)
+                            continue
+                        found_roots = run_consequence_noiseless_data_generation(temp_consequence, temp_data_dat, conseqDataRange)
+                        if not found_roots:
+                            print("Could not solve equation for roots. Skipping")
+                            cleanup_temp_files(system_num)
+                            continue
+                        print("Noiseless consequence data generated. Adding noise \n")
 
-                reordered_consequence = temp_consequence.replace('.txt', '_reordered.txt')
-                if os.path.exists(reordered_consequence):
-                    # Remove the original consequence file
-                    if os.path.exists(temp_consequence):
-                        os.remove(temp_consequence)
-                    # Rename the reordered file to take its place
-                    os.rename(reordered_consequence, temp_consequence)
-                    print("Used reordered consequence file")
-                
-                print("Noiseless Data Generated. Now adding noise \n")
+                        run_consequence_noisy_data_generation(temp_data_dat)
+                        print("Noisy consequence data generated. System Complete. \n")
+                    stage_times['consequence_data_generation'] = time.process_time() - t
+                    mem_usage['consequence_data_generation'] = process.memory_info().rss / (1024 * 1024)
 
-                # Step 5: Add noise to consequence data
-                t = time.time()
-                run_consequence_noisy_data_generation(temp_data_dat)
-                stage_times['consequence_data_noise_addition'] = time.time() - t
-                mem_usage['consequence_data_noise_addition'] = process.memory_info().rss / (1024 * 1024)
-                print("Generated Noisy Data. System Complete. \n")
-
-                total_time = time.time() - start_time
-                peak_memory = max(mem_usage.values())
-                print("\nPerformance Summary:")
-                print(f"Total time: {total_time:.2f} seconds")
-                print(f"Peak memory: {peak_memory:.2f} MB")
-                print("Stage times:")
-                for stage, t in stage_times.items():
-                    print(f"  {stage}: {t:.2f}s")
-                
-                # All steps succeeded - create system directory within config directory
-                system_dir = f"{config_dir}/System_{system_num}"
-                Path(system_dir).mkdir(exist_ok=True)
-                
-                # Move system files
-                shutil.move(temp_system_file, f"{system_dir}/system.txt")
-                shutil.move(temp_system_dat, f"{system_dir}/system.dat")
-                
-                # Move noisy system data files
-                for f in Path(".").glob(f"temp_system_{system_num}_*.dat"):
-                    noise_level = f.stem.split('_')[-1]
-                    shutil.move(str(f), f"{system_dir}/system_{noise_level}.dat")
-                    
-                # Move consequence files
-                shutil.move(temp_consequence, f"{system_dir}/consequence.txt")
-                shutil.move(temp_data_dat, f"{system_dir}/consequence.dat")
-                
-                # Move noisy consequence data files
-                for f in Path(".").glob(f"temp_data_{system_num}_*.dat"):
-                    noise_level = f.stem.split('_')[-1]
-                    shutil.move(str(f), f"{system_dir}/consequence_{noise_level}.dat")
-                
-                # Move replacement files if they exist
-                for f in Path(".").glob(f"temp_replacement_*.txt"):
-                    replacement_num = f.stem.split('_')[-1]
-                    shutil.move(str(f), f"{system_dir}/replacement_{replacement_num}.txt")
-                
-                # Save Performance to file
-                with open(f"{system_dir}/performance.txt", "w") as f:
-                    f.write(f"Total time: {total_time:.2f} seconds\n")
-                    f.write(f"Peak memory: {peak_memory:.2f} MB\n")
+                    total_time = time.process_time() - start_time
+                    peak_memory = max(mem_usage.values())
+                    print("\nPerformance Summary:")
+                    print(f"Total time: {total_time:.2f} seconds")
+                    print(f"Peak memory: {peak_memory:.2f} MB")
+                    print("Stage times:")
                     for stage, t in stage_times.items():
-                        f.write(f"{stage}_time: {t:.2f}\n")
-                    for stage, m in mem_usage.items():
-                        f.write(f"{stage}_memory: {m:.2f} MB\n")
-                
-                config_counts[config_key] += 1
-                print(f"Successfully completed system {config_counts[config_key]}/3 for this configuration")
-                attempts = 1
+                        print(f"  {stage}: {t:.2f}s")
+                    
+                    # All steps succeeded - create system directory within config directory
+                    system_dir = f"{config_dir}/System_{system_num}"
+                    Path(system_dir).mkdir(exist_ok=True)
+                    
+                    def safe_move(src, dst):
+                        if Path(src).exists():
+                            shutil.move(src, dst)
+
+                    # Move system files
+                    safe_move(temp_system_file, f"{system_dir}/system.txt")
+                    safe_move(f"temp_system_{system_num}.dat", f"{system_dir}/system.dat")
+
+                    # Move noisy system data files
+                    for f in Path(".").glob(f"temp_system_{system_num}_*.dat"):
+                        noise_level = f.stem.split('_')[-1]
+                        safe_move(str(f), f"{system_dir}/system_{noise_level}.dat")
+
+                    # Move consequence files
+                    safe_move(f"temp_consequence_{system_num}.txt", f"{system_dir}/consequence.txt")
+                    safe_move(f"temp_data_{system_num}.dat", f"{system_dir}/consequence.dat")
+
+                    # Move noisy consequence data files
+                    for f in Path(".").glob(f"temp_data_{system_num}_*.dat"):
+                        noise_level = f.stem.split('_')[-1]
+                        safe_move(str(f), f"{system_dir}/consequence_{noise_level}.dat")
+
+                    # Move replacement files
+                    for f in Path(".").glob("temp_replacement_*.txt"):
+                        replacement_num = f.stem.split('_')[-1]
+                        safe_move(str(f), f"{system_dir}/replacement_{replacement_num}.txt")
+
+                    
+                    stats_dir = f"Data_Gen_Statistics/{config_key}/System_{system_num}"
+                    Path(stats_dir).mkdir(parents=True, exist_ok=True)
+
+                    with open(f"{stats_dir}/performance.txt", "w") as f:
+                        f.write(f"Total time: {total_time:.2f} seconds\n")
+                        f.write(f"Peak memory: {peak_memory:.2f} MB\n")
+                        for stage, t in stage_times.items():
+                            f.write(f"{stage}_time: {t:.2f}\n")
+                        for stage, m in mem_usage.items():
+                            f.write(f"{stage}_memory: {m:.2f} MB\n")
+                    
+                    config_counts[config_key] += 1
+                    print(f"Successfully completed system {config_counts[config_key]}/{numSystems} for this configuration")
+                    attempts = 1
+
+            except TimeoutException:
+                print(f"Timeout reached after {timeout_limit} seconds, skipping this attempt.")
+                cleanup_temp_files(system_num)
+                continue
 
             except Exception as e:
                 print(f"Error generating system: {str(e)}")
                 cleanup_temp_files(system_num)
                 continue
 
-"""
-def old_main_for_individual_systems():
-    # Start timing
-    start_time = time.time()
-    process = psutil.Process(os.getpid())
-    Equation.SetLogging()
-
-    d1, d2, m1, m2, W, p, Fc, Fg, T, E = variables('d1,d2,m1,m2,W,p,Fc,Fg,T,E')
-    dxdt, d2xdt2 = derivatives('dxdt,d2xdt2')
-    dx1dt, d2x1dt2, dx2dt, d2x2dt2 = derivatives('dx1dt,d2x1dt2,dx2dt,d2x2dt2')
-    G, c, pi = constants('G,c,pi')
-    vars = [Fc, Fg, W, d1, d2, m1, m2, p]
-    derivs = [dx1dt, d2x1dt2, dx2dt, d2x2dt2]
-    consts = [G, c]
-    numReplacements = 0
-
-    print("Dimensionally Consistent Set:\n")
-    Path("Benchmarking").mkdir(exist_ok=True)
-    
-    # Find the next available system number
-    def get_next_system_num():
-        system_num = 1
-        while Path(f"Benchmarking/System_{system_num}").exists():
-            system_num += 1
-        return system_num
-    
-    for _ in range(10):  
-        
-        system_num = get_next_system_num()
-        print(f"Generating system {system_num} \n")
-
-        # Track time and memory at key stages
-        stage_times = {}
-        mem_usage = {}
-
-        t = time.time()
-        eqnSystem = EquationSystem.GenerateRandomDimensionallyConsistent(vars=vars, derivatives=derivs,
-                                                                     constants=consts,
-                                                                     measuredVars=vars, numEqns=4,
-                                                                     max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
-        eqn_system_str = str(eqnSystem)
-        stage_times['generation'] = time.time() - t
-        mem_usage['generation'] = process.memory_info().rss / (1024 * 1024)
-
-        print(f"{system_num}: {eqn_system_str}\n")
-        print(f"System {system_num} generated. Now generating replacement axioms. \n")
-
-        temp_system_file = f"temp_system_{system_num}.txt"
-        save_equation_system_to_file(eqn_system_str, temp_system_file)
-
-        # Generate replacements first
-        replacement_info = ""
-        t = time.time()
-        if numReplacements > 0:
-            for j in range(numReplacements):
-                index, eqn = eqnSystem.copy().replaceRandomDimensionallyConsistentEqn()
-                replacement_info += f"{index+1}\n{eqn}\n"  # +1 to make it 1-based index
-                print(f"Replacement {j+1}: Equation {index+1} with {eqn}")
-        stage_times['replacement_generation'] = time.time() - t
-        mem_usage['replacement_generation'] = process.memory_info().rss / (1024 * 1024)
-
-        # Generate replacement files if needed
-        if numReplacements > 0:
-            create_replacement_files(replacement_info, numReplacements, temp_system_file)
-
-        print("Replacement Axioms Created. Now searching for roots. \n")
-        
-
-        # Step 1: Generate noiseless system data
-        temp_system_dat = f"temp_system_{system_num}.dat"
-        t = time.time()
-        found_system_roots = run_noiseless_system_data_generation(temp_system_file, temp_system_dat)
-        stage_times['system_root_search'] = time.time() - t
-        mem_usage['system_root_search'] = process.memory_info().rss / (1024 * 1024)
-        if not found_system_roots:
-            print("Could not find roots to the system. Skipping. \n")
-            #cleanup_temp_files(system_num)
-            continue
-        print("System Data Generated. Now adding noise \n")
-
-            
-        # Step 2: Add noise to system data
-        t = time.time()
-        added_system_noise = run_noisy_system_data_generation(temp_system_file, temp_system_dat)
-        stage_times['system_noise_addition'] = time.time() - t
-        mem_usage['system_noise_addition'] = process.memory_info().rss / (1024 * 1024)
-        if not added_system_noise:
-            print("Failed to add noise")
-            #cleanup_temp_files(system_num)
-            continue
-        print("Noisy System Data Generated. Now searching for consequence \n")
-        
-        # Step 3: Generate consequence
-        temp_consequence = f"temp_consequence_{system_num}.txt"
-        t = time.time()
-        found_consequence = run_consequence_generation(temp_system_file, temp_consequence)
-        stage_times['consequence_generation'] = time.time() - t
-        mem_usage['consequence_generation'] = process.memory_info().rss / (1024 * 1024)
-        if not found_consequence:
-            print("Could not find a consequence. Skipping. \n")
-            #cleanup_temp_files(system_num)
-            continue
-        print("Consequence generated. Now generating noiseless data for consequence \n")
-        
-        # Step 4: Generate noiseless consequence data
-        temp_data_dat = f"temp_data_{system_num}.dat"
-        t = time.time()
-        found_roots = run_consequence_noiseless_data_generation(temp_consequence, temp_data_dat)
-        stage_times['consequence_data_generation'] = time.time() - t
-        mem_usage['consequence_data_generation'] = process.memory_info().rss / (1024 * 1024)
-        if not found_roots:
-            print("Could not solve equation for roots. Skipping")
-            #cleanup_temp_files(system_num)
-            continue
-        
-        reordered_consequence = temp_consequence.replace('.txt', '_reordered.txt')
-        if os.path.exists(reordered_consequence):
-            # Remove the original consequence file
-            if os.path.exists(temp_consequence):
-                os.remove(temp_consequence)
-            # Rename the reordered file to take its place
-            os.rename(reordered_consequence, temp_consequence)
-            print("Used reordered consequence file")
-        
-        print("Noiseless Data Generated. Now adding noise \n")
-
-        # Step 5: Add noise to consequence data
-        t = time.time()
-        run_consequence_noisy_data_generation(temp_data_dat)
-        stage_times['consequence_data_noise_addition'] = time.time() - t
-        mem_usage['consequence_data_noise_addition'] = process.memory_info().rss / (1024 * 1024)
-        print("Generated Noisy Data. System Complete \n")
-
-        total_time = time.time() - start_time
-        peak_memory = max(mem_usage.values())
-        print("\nPerformance Summary:")
-        print(f"Total time: {total_time:.2f} seconds")
-        print(f"Peak memory: {peak_memory:.2f} MB")
-        print("Stage times:")
-        for stage, t in stage_times.items():
-            print(f"  {stage}: {t:.2f}s")
-        
-        # All steps succeeded - create directory and move files
-        system_dir = f"Benchmarking/System_{system_num}"
-        Path(system_dir).mkdir(exist_ok=True)
-        
-        # Move system files
-        shutil.move(temp_system_file, f"{system_dir}/system.txt")
-        shutil.move(temp_system_dat, f"{system_dir}/system.dat")
-        
-        # Move noisy system data files
-        for f in Path(".").glob(f"temp_system_{system_num}_*.dat"):
-            noise_level = f.stem.split('_')[-1]
-            shutil.move(str(f), f"{system_dir}/system_{noise_level}.dat")
-            
-        # Move consequence files
-        shutil.move(temp_consequence, f"{system_dir}/consequence.txt")
-        shutil.move(temp_data_dat, f"{system_dir}/consequence.dat")
-        
-        # Move noisy consequence data files
-        for f in Path(".").glob(f"temp_data_{system_num}_*.dat"):
-            noise_level = f.stem.split('_')[-1]
-            shutil.move(str(f), f"{system_dir}/consequence_{noise_level}.dat")
-        
-        # Move replacement files if they exist
-        for f in Path(".").glob(f"temp_replacement_*.txt"):
-            replacement_num = f.stem.split('_')[-1]
-            shutil.move(str(f), f"{system_dir}/replacement_{replacement_num}.txt")
-        
-        # Save Performance to file
-        with open(f"Benchmarking/System_{system_num}/performance.txt", "w") as f:
-            f.write(f"Total time: {total_time:.2f} seconds\n")
-            f.write(f"Peak memory: {peak_memory:.2f} MB\n")
-            for stage, t in stage_times.items():
-                f.write(f"{stage}_time: {t:.2f}\n")
-            for stage, m in mem_usage.items():
-                f.write(f"{stage}_memory: {m:.2f} MB\n")
-"""
-
 if __name__ == "__main__":
-    main()
+
+    args = parse_args()
+    args.conseqDataRange = parse_and_validate_range(args.conseqDataRange, "--conseqDataRange")
+    args.sysDataRange = parse_and_validate_range(args.sysDataRange, "--sysDataRange")
+    run_generation(args)
+
+    """
+    base_dir = "Benchmarking"
+    all_system_dirs = []
+
+    # First collect all directories
+    for config_dir in Path(base_dir).iterdir():
+        if config_dir.is_dir():
+            for system_dir in config_dir.iterdir():
+                if system_dir.is_dir() and system_dir.name.startswith("System_"):
+                    all_system_dirs.append(system_dir)
+
+    # Then process them
+    for current_directory in all_system_dirs:
+        print(f"\nProcessing directory: {current_directory} \n")
+        run_generation_from_prior_file(current_directory)
+    """
+                    

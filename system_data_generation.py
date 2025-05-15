@@ -2,7 +2,6 @@ import numpy as np
 import sympy as sp
 from sympy import symbols, sympify, Poly
 import os
-from collections import defaultdict
 from m2_functions import *
 import re
 import ast
@@ -231,9 +230,8 @@ def evaluate_polynomials(dataset, equations, variable_order, tolerance=1e-5):
         'valid_indices': np.where(valid_mask)[0].tolist()
     }
 
-
 def generate_dataset_from_grobner_basis(grobner_basis, variables, observed_constants, measured_derivatives,
-                                        constant_data=True, derivative_data=True, region=[1, 5],
+                                        constant_data=True, derivative_data=True, region=[1, 10],
                                         num_points=10000, seed=42, tol=1e-6):
     np.random.seed(seed)
     data = {}
@@ -323,7 +321,7 @@ def generate_dataset_from_grobner_basis(grobner_basis, variables, observed_const
     return data
 
 def generate_data_for_system(equations, observed_constants, measured_derivatives, num_points=1000, seed=42,
-                             constant_data=True, derivative_data=True, region=[1, 5]):
+                             constant_data=True, derivative_data=True, region=[1, 10]):
     variables = collect_variables_in_sequence_and_reverse(equations)
     projection(variables, equations, variables, [], filename='temp_grobner.txt')
 
@@ -354,7 +352,7 @@ def generate_data_for_system(equations, observed_constants, measured_derivatives
     return generate_dataset_from_grobner_basis(grobner_basis, variables, observed_constants, measured_derivatives,
                                               constant_data, derivative_data, region, num_points, seed)
 
-def run_noiseless_system_data_generation(input_file, output_file):
+def run_noiseless_system_data_generation(input_file, output_file, region = [1,10]):
     
     # Parse system data from original file
     parsed_system = parse_system_data(input_file)
@@ -368,7 +366,7 @@ def run_noiseless_system_data_generation(input_file, output_file):
             seed=42,
             constant_data=True,
             derivative_data=True,
-            region=[1, 10]
+            region=region
         )
         
         # Check if dataset has sufficient points
