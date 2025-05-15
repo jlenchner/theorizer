@@ -1,0 +1,27 @@
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2']
+Constants: ['G', 'c']
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt']
+Equations:
+c*dx1dt*m1^2 - 3*d2x1dt2*d1*m1*m2 + 2*W*m2
+2*c*W*m2 - dx2dt*Fc*d1*m1
+G*Fc*d2*m2 + dx2dt^2*W*d1
+2*d2x1dt2*Fc*m2 - d2x1dt2*Fg*m2 + 2*Fc*Fg
+-G*m2 + 3*c*dx1dt*d1
+d2x1dt2*d1*m1 - Fc*d2 + Fg*d1
+Units of Measure of Variables: ['s^(-2)*kg*m', 's^(-2)*kg*m', 'm^2*s^(-2)*kg', 'm', 'm', 'kg', 'kg']
+Units of Measure of Constants: ['1/kg*m^3*s^(-2)', '1/s*m']
+Units of Measure of Derivatives: ['1/s*m', 's^(-2)*m', '1/s*m']
+Units of Measure of Equations:
+kg^2*m^2*s^(-2)
+kg^2*m^3*s^(-3)
+m^5*s^(-4)*kg
+kg^2*m^2*s^(-4)
+m^3*s^(-2)
+m^2*s^(-2)*kg
+
+Measured Variables: ['d2', 'm1', 'm2']
+Observed Constants: ['c']
+Measured Derivatives: ['dx2dt', 'dx1dt', 'd2x1dt2']
+
+Target Polynomial:
+648*dx1dt^4*c^6*d2^2*m1^4*d2x1dt2^2*m2^4-648*dx1dt^4*c^6*d2^2*m1^3*d2x1dt2^2*m2^5-108*dx1dt^4*c^5*d2^2*dx2dt*m1^4*d2x1dt2^2*m2^4+36*dx1dt^4*c^5*d2*dx2dt^3*m1^6*d2x1dt2*m2^2-36*dx1dt^4*c^5*d2*dx2dt^3*m1^5*d2x1dt2*m2^3+324*dx1dt^3*c^5*d2^2*dx2dt^2*m1^4*d2x1dt2^2*m2^4-54*dx1dt^3*c^4*d2^2*dx2dt^3*m1^4*d2x1dt2^2*m2^4+36*dx1dt^3*c^4*d2*dx2dt^5*m1^6*d2x1dt2*m2^2-3*dx1dt^3*c^3*d2*dx2dt^6*m1^6*d2x1dt2*m2^2+dx1dt^3*c^3*dx2dt^8*m1^8
