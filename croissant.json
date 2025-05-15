@@ -1,0 +1,4145 @@
+{
+  "@context": {
+    "schema": "https://schema.org/",
+    "@vocab": "https://schema.org/",
+    "croissant": "https://w3id.org/croissant/schema/1.0/"
+  },
+  "@type": "schema:Dataset",
+  "name": "SynPAT_Synthetic_Physical_Theories_Data",
+  "description": "This dataset contains systems of dimensionally consistent equations generated across different configurations of variable count, derivative count, and equation count. Each configuration includes three generated systems with associated replacements, system data, noisy variants, and consequences. The dataset is designed to benchmark symbolic regression models on machine-assisted physical discovery tasks.",
+  "url": "https://github.com/jlenchner/theorizer",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "citation": "Srivastava et al., SynPAT: A System for Generating Synthetic Physical Theories with Data, NeurIPS 2025 (submitted)",
+  "version": "1.0",
+  "authors": [
+    {
+      "name": "Karan Srivastava",
+      "affiliation": "University of Wisconsin-Madison",
+      "email": "ksrivastava4@wisc.edu"
+    },
+    {
+      "name": "Jonathan Lenchner",
+      "affiliation": "IBM T.J. Watson Research Center",
+      "email": "lenchner@us.ibm.com"
+    },
+    {
+      "name": "Joao Goncalves",
+      "affiliation": "IBM T.J. Watson Research Center",
+      "email": "jpgoncal@us.ibm.com"
+    },
+    {
+      "name": "Lior Horesh",
+      "affiliation": "IBM T.J. Watson Research Center",
+      "email": "lhoresh@us.ibm.com"
+    }
+  ],
+  "datePublished": "2025-05-15",
+  "distribution": [
+    {
+      "@type": "https://schema.org/FileObject",
+      "name": "dataset.zip",
+      "description": "Complete dataset download",
+      "encodingFormat": "application/zip",
+      "contentUrl": "https://github.com/jlenchner/theorizer/blob/main/dataset.zip",
+      "sha256": "74cea2f2325531937524ba35fb592e8f95da43663ae5a93b6077806c1d4f5d13"
+    }
+  ],
+  "keywords": [
+    "symbolic regression",
+    "synthetic generation",
+    "physical theories",
+    "synthetic theory generation"
+  ],
+  "variables": [
+    {
+      "name": "num_variables",
+      "description": "Number of variables in the generated system",
+      "unitText": "count"
+    },
+    {
+      "name": "num_derivatives",
+      "description": "Number of derivatives included",
+      "unitText": "count"
+    },
+    {
+      "name": "num_equations",
+      "description": "Number of equations in each system",
+      "unitText": "count"
+    },
+    {
+      "name": "noise_level",
+      "description": "Standard deviation of Gaussian noise added to the system or consequence data",
+      "unitText": "unitless"
+    }
+  ],
+  "parts": [
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_2_eqns_4",
+      "description": "Systems with 6 variables, 2 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_2_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_2_eqns_5",
+      "description": "Systems with 6 variables, 2 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_2_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_2_eqns_6",
+      "description": "Systems with 6 variables, 2 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_2_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_2_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_3_eqns_4",
+      "description": "Systems with 6 variables, 3 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_3_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_3_eqns_5",
+      "description": "Systems with 6 variables, 3 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_3_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_3_eqns_6",
+      "description": "Systems with 6 variables, 3 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_3_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_3_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_4_eqns_4",
+      "description": "Systems with 6 variables, 4 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_4_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_4_eqns_5",
+      "description": "Systems with 6 variables, 4 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_4_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_6_derivs_4_eqns_6",
+      "description": "Systems with 6 variables, 4 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_6_derivs_4_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 6,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_6_derivs_4_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_2_eqns_4",
+      "description": "Systems with 7 variables, 2 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_2_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_2_eqns_5",
+      "description": "Systems with 7 variables, 2 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_2_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_2_eqns_6",
+      "description": "Systems with 7 variables, 2 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_2_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_2_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_3_eqns_4",
+      "description": "Systems with 7 variables, 3 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_3_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_3_eqns_5",
+      "description": "Systems with 7 variables, 3 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_3_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_3_eqns_6",
+      "description": "Systems with 7 variables, 3 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_3_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_3_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_4_eqns_4",
+      "description": "Systems with 7 variables, 4 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_4_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_4_eqns_5",
+      "description": "Systems with 7 variables, 4 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_4_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_7_derivs_4_eqns_6",
+      "description": "Systems with 7 variables, 4 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_7_derivs_4_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 7,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_7_derivs_4_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_2_eqns_4",
+      "description": "Systems with 8 variables, 2 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_2_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_2_eqns_5",
+      "description": "Systems with 8 variables, 2 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_2_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_2_eqns_6",
+      "description": "Systems with 8 variables, 2 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_2_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_2_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_3_eqns_4",
+      "description": "Systems with 8 variables, 3 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_3_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_3_eqns_5",
+      "description": "Systems with 8 variables, 3 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_3_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_3_eqns_6",
+      "description": "Systems with 8 variables, 3 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_3_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_3_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_4_eqns_4",
+      "description": "Systems with 8 variables, 4 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_4_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_4_eqns_5",
+      "description": "Systems with 8 variables, 4 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_4_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_8_derivs_4_eqns_6",
+      "description": "Systems with 8 variables, 4 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_8_derivs_4_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 8,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_8_derivs_4_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_2_eqns_4",
+      "description": "Systems with 9 variables, 2 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_2_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_2_eqns_5",
+      "description": "Systems with 9 variables, 2 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_2_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_2_eqns_6",
+      "description": "Systems with 9 variables, 2 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_2_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 2,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_2_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_3_eqns_4",
+      "description": "Systems with 9 variables, 3 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_3_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_3_eqns_5",
+      "description": "Systems with 9 variables, 3 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_3_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_3_eqns_6",
+      "description": "Systems with 9 variables, 3 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_3_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 3,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_3_eqns_6/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_4_eqns_4",
+      "description": "Systems with 9 variables, 4 derivatives, and 4 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_4/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_4/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_4/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 4,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_4_eqns_4/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_4_eqns_5",
+      "description": "Systems with 9 variables, 4 derivatives, and 5 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_5/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_5/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_5/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 5,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_4_eqns_5/System_{i}/"
+    },
+    {
+      "@type": "https://schema.org/Dataset",
+      "name": "vars_9_derivs_4_eqns_6",
+      "description": "Systems with 9 variables, 4 derivatives, and 6 equations",
+      "hasPart": [
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_1",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_6/System_1/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_2",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_6/System_2/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        },
+        {
+          "@type": "https://schema.org/FileSet",
+          "name": "System_3",
+          "description": "Equation system with symbolic description, replacements, and data files.",
+          "encodingFormat": [
+            "text/plain",
+            "application/octet-stream"
+          ],
+          "contentUrl": "https://github.com/jlenchner/theorizer/tree/main/dataset/vars_9_derivs_4_eqns_6/System_3/",
+          "additionalProperties": {
+            "variables": 9,
+            "derivatives": 4,
+            "equations": 6,
+            "numReplacements": 5,
+            "files": [
+              "system.txt",
+              "system.dat",
+              "consequence.txt",
+              "consequence.dat",
+              "system_0.001.dat",
+              "system_0.01.dat",
+              "system_0.05.dat",
+              "system_0.1.dat",
+              "consequence_0.001.dat",
+              "consequence_0.01.dat",
+              "consequence_0.05.dat",
+              "consequence_0.1.dat",
+              "replacement_1.txt",
+              "replacement_2.txt",
+              "replacement_3.txt",
+              "replacement_4.txt",
+              "replacement_5.txt"
+            ]
+          }
+        }
+      ],
+      "includedIn": "dataset/vars_9_derivs_4_eqns_6/System_{i}/"
+    }
+  ]
+}
