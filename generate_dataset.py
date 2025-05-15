@@ -42,31 +42,36 @@ def parse_args():
     parser.add_argument('--numDerivs', type=ast.literal_eval, default="[2,3,4]",
                         help="List or single number of derivatives, e.g., '[2,3]' or '[2]'")
     parser.add_argument('--numEquations', type=ast.literal_eval, default="[4,5,6]",
-        help="List of number of equations to try")
+                        help="List of number of equations to try")
     parser.add_argument('--vars', type=ast.literal_eval,
-        default="['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T', 'E']",
-        help="List of variables to use, e.g. ['Fc','Fg','d1']")
+                        default="['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T', 'E']",
+                        help="List of variables to use, e.g. ['Fc','Fg','d1']")
     parser.add_argument('--derivs', type=ast.literal_eval,
-        default="['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']",
-        help="List of derivatives to use, e.g. ['dx1dt','d2x1dt2']")
+                        default="['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']",
+                        help="List of derivatives to use, e.g. ['dx1dt','d2x1dt2']")
 
     parser.add_argument('--numReplacements', type=int, default=5)
     parser.add_argument('--numSystems', type=int, default=3)
+
+    parser.add_argument('--numConstConseq', type=ast.literal_eval, default="[1]",
+    help="List of allowed numbers of constants in consequence measured vars, e.g. '[0,1]'"
+)
+
+
+    parser.add_argument('--conseqDataRange', type=ast.literal_eval, default="[1, 10]",
+                        help='Range over which to sample variables when generating consequence data, e.g., "[1, 10]"'
+    )
+    parser.add_argument("--sysDataRange", type=ast.literal_eval, default="[1, 10]",
+                        help='Variable range for system data generation, e.g., "[1, 10]"'
+    )
 
     parser.add_argument('--genReplacements', type=ast.literal_eval, default=True)
     parser.add_argument('--genSysData', type=ast.literal_eval, default=True)
     parser.add_argument('--genConsequence', type=ast.literal_eval, default=True)
     parser.add_argument('--genConsequenceData', type=ast.literal_eval, default=True)
 
-    parser.add_argument('--conseqDataRange', type=ast.literal_eval, default="[1, 10]",
-        help='Range over which to sample variables when generating consequence data, e.g., "[1, 10]"'
-    )
-    parser.add_argument("--sysDataRange", type=ast.literal_eval, default="[1, 10]",
-        help='Variable range for system data generation, e.g., "[1, 10]"'
-    )
-
     parser.add_argument('--timeout', type=int, default=3600,
-    help="Max number of seconds to allow for generating a single system. None for no timeout.")
+                        help="Max number of seconds to allow for generating a single system. None for no timeout.")
 
     parser.add_argument('--seed', type=int, default=42, help='Random seed for reproducibility')
 
@@ -541,12 +546,14 @@ def run_generation(args):
     num_eqns_options = args.numEquations
     numReplacements = args.numReplacements
     numSystems = args.numSystems
+    numConstConseq = args.numConstConseq
+    conseqDataRange = args.conseqDataRange
+    sysDataRange = args.sysDataRange
     genReplacement = args.genReplacements
     genSysData = args.genSysData
     genConsequence = args.genConsequence
     genConsequenceData = args.genConsequenceData
-    conseqDataRange = args.conseqDataRange
-    sysDataRange = args.sysDataRange
+    seed = args.seed
     timeout_limit = args.timeout
 
     # Create Benchmarking directory if it doesn't exist
@@ -673,7 +680,7 @@ def run_generation(args):
                     if genConsequence:
                         print("Generating consequence. \n")
                         temp_consequence = f"temp_consequence_{system_num}.txt"
-                        found_consequence = run_consequence_generation(temp_system_file, temp_consequence)
+                        found_consequence = run_consequence_generation(temp_system_file, temp_consequence, numConstConseq)
                         if not found_consequence:
                             print("Could not find a consequence. Skipping. \n")
                             cleanup_temp_files(system_num)
@@ -791,6 +798,6 @@ if __name__ == "__main__":
     # Then process them
     for current_directory in all_system_dirs:
         print(f"\nProcessing directory: {current_directory} \n")
-        run_generation_from_prior_file(current_directory)
+        run_generation_from_prior_file(current_directory, args)
     """
                     

@@ -55,6 +55,7 @@ python run_generation.py \
     --genSysData \
     --genConsequence \
     --genConsequenceData \
+    --numConstConseq "[0,1]" \
     --conseqDataRange "[1, 5]" \
     --sysDataRange "[2, 6]" \
     --timeout 3600 \
@@ -63,23 +64,24 @@ python run_generation.py \
 
 ### Argument Descriptions
 
-| Argument               | Description | Default |
-|------------------------|-------------|---------|
-| `--vars`               | List of symbolic base variables used to construct the system. | `['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T', 'E']` |
-| `--derivs`             | List of symbolic derivative names used as inputs. | `['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']` |
-| `--numVars`            | List of integers specifying how many base variables to include. | `[6, 7, 8, 9]` |
-| `--numDerivs`          | List of integers specifying how many derivatives to include. | `[2, 3, 4]` |
+| Argument               | Description                                                                 | Default |
+|------------------------|-----------------------------------------------------------------------------|---------|
+| `--vars`               | List of symbolic base variables used to construct the system.              | `['Fc', 'Fg', 'W', 'd1', 'd2', 'm1', 'm2', 'p', 'T', 'E']` |
+| `--derivs`             | List of symbolic derivative names used as inputs.                          | `['dx1dt', 'd2x1dt2', 'dx2dt', 'd2x2dt2']` |
+| `--numVars`            | List of integers specifying how many base variables to include.            | `[6, 7, 8, 9]` |
+| `--numDerivs`          | List of integers specifying how many derivatives to include.               | `[2, 3, 4]` |
 | `--numEquations`       | List of integers specifying how many equations should appear in each system. | `[4, 5, 6]` |
-| `--numReplacements`    | Number of replacement axioms to generate per system. | `5` |
-| `--numSystems`         | Number of independent systems to generate. | `3` |
-| `--genReplacements`    | Enable generation of dimensionally consistent replacement axioms. | `True` |
-| `--genSysData`         | Generate synthetic data for each axiom system. | `True` |
-| `--genConsequence`     | Compute an algebraic consequence using Macaulay2. | `True` |
-| `--genConsequenceData` | Generate data for the derived consequence. | `True` |
-| `--conseqDataRange`    | Range `[start, end]` for consequence data sampling. | `[1, 10]` |
-| `--sysDataRange`       | Range `[start, end]` for system data sampling. | `[1, 10]` |
-| `--seed`               | Random seed for reproducibility. | `42` |
+| `--numReplacements`    | Number of replacement axioms to generate per system.                       | `5` |
+| `--numSystems`         | Number of independent systems to generate.                                 | `3` |
+| `--numConstConseq`     | List of allowed numbers of constants in the consequence measured variable subset. Only subsets with these counts will be accepted. | `[1]` |
+| `--genReplacements`    | Enable generation of dimensionally consistent replacement axioms.          | `True` |
+| `--genSysData`         | Generate synthetic data for each axiom system.                             | `True` |
+| `--genConsequence`     | Compute an algebraic consequence using Macaulay2.                          | `True` |
+| `--genConsequenceData` | Generate data for the derived consequence.                                 | `True` |
+| `--conseqDataRange`    | Range `[start, end]` for consequence data sampling.                        | `[1, 10]` |
+| `--sysDataRange`       | Range `[start, end]` for system data sampling.                             | `[1, 10]` |
 | `--timeout`            | Max number of seconds to allow for generating a single system. `None` disables the timeout. | `3600` |
+| `--seed`               | Random seed for reproducibility.                                           | `42` |
 
 ---
 

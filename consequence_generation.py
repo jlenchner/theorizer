@@ -137,50 +137,42 @@ def sort_measured_components_by_degree(polynomial, parsed_data):
             sort_by_degree(all_consts),
             sort_by_degree(all_derivs))
 
-def run_consequence_generation(input_filepath, output_filepath, exists_constant = True):
+def run_consequence_generation(input_filepath, output_filepath, numConstConseq=[1]):
     parsed_data = parse_data(input_filepath)
-    
-    # Combine all variables, derivatives, and constants
+
     all_vars = parsed_data['variables'] + parsed_data['derivatives'] + parsed_data['constants']
     equations = parsed_data['equations']
     axiom_variables = [extract_variables(eq) for eq in equations]
-    
-    max_attempts = 10  # Limit attempts to prevent infinite loops
+
+    max_attempts = 10
     attempt = 0
-    
+
     while attempt < max_attempts:
-        print(attempt)
-        # Select one random constant to include in measured variables
-        if parsed_data['constants']:
-            selected_constant = random.choice(parsed_data['constants'])
-            other_constants = [c for c in parsed_data['constants'] if c != selected_constant]
-            
-            # First shuffle all variables
-            np.random.shuffle(all_vars)
-            
-            # Then move non-selected constants to the end while preserving the rest of the order
-            all_vars_reordered = [v for v in all_vars if v not in other_constants] + other_constants
+        print(f"Consequence generation attempt {attempt+1} out of {max_attempts}.")
+        constants = parsed_data['constants']
+        if constants:
+            # Select a random subset of constants (could be more than 1)
+            max_allowed = max(numConstConseq)
+            selected_constants = random.sample(constants, min(max_allowed, len(constants)))
+            other_constants = [c for c in constants if c not in selected_constants]
         else:
-            # Just shuffle all variables if no constants
-            all_vars_reordered = all_vars.copy()
-            np.random.shuffle(all_vars_reordered)
-            selected_constant = None
-        
-        # Try different subsets of measured variables
+            selected_constants = []
+            other_constants = []
+
+        np.random.shuffle(all_vars)
+        all_vars_reordered = [v for v in all_vars if v not in other_constants] + other_constants
+
         for j in range(1, len(all_vars_reordered)):
-            # Ensure we include exactly one constant in measured variables
-            if selected_constant:
-                if selected_constant not in all_vars_reordered[:j]:
-                    continue
-                if any(c in all_vars_reordered[:j] for c in other_constants):
-                    continue
-            
             temp_measured_vars = all_vars_reordered[:j]
-            
-            # Separate into variables, derivatives, and constants
-            measured_vars = [v for v in temp_measured_vars if v in parsed_data['variables']]
-            measured_derivs = [v for v in temp_measured_vars if v in parsed_data['derivatives']]
-            observed_consts = [v for v in temp_measured_vars if v in parsed_data['constants']]
+            num_constants_used = sum(1 for c in selected_constants if c in temp_measured_vars)
+
+            # If the number of selected constants used is not in the allowed list, skip
+            if num_constants_used not in numConstConseq:
+                continue
+
+            # Also ensure that none of the unselected constants sneak in
+            if any(c in temp_measured_vars for c in other_constants):
+                continue
             
             # Check validity
             if any(set(temp_measured_vars).issubset(set(axiom_vars)) for axiom_vars in axiom_variables) or any(set(axiom_vars).issubset(set(temp_measured_vars)) for axiom_vars in axiom_variables):
