@@ -137,7 +137,7 @@ def sort_measured_components_by_degree(polynomial, parsed_data):
             sort_by_degree(all_consts),
             sort_by_degree(all_derivs))
 
-def run_consequence_generation(input_filepath, output_filepath, numConstConseq=[1]):
+def run_consequence_generation(input_filepath, output_filepath, numConstConseq=1):
     parsed_data = parse_data(input_filepath)
 
     all_vars = parsed_data['variables'] + parsed_data['derivatives'] + parsed_data['constants']
@@ -148,12 +148,11 @@ def run_consequence_generation(input_filepath, output_filepath, numConstConseq=[
     attempt = 0
 
     while attempt < max_attempts:
-        print(f"Consequence generation attempt {attempt+1} out of {max_attempts}.")
+        print(f"Consequence generation attempt {attempt + 1} out of {max_attempts}.")
         constants = parsed_data['constants']
         if constants:
-            # Select a random subset of constants (could be more than 1)
-            max_allowed = max(numConstConseq)
-            selected_constants = random.sample(constants, min(max_allowed, len(constants)))
+            # Select a random subset of constants up to the allowed maximum
+            selected_constants = random.sample(constants, min(numConstConseq, len(constants)))
             other_constants = [c for c in constants if c not in selected_constants]
         else:
             selected_constants = []
@@ -166,8 +165,8 @@ def run_consequence_generation(input_filepath, output_filepath, numConstConseq=[
             temp_measured_vars = all_vars_reordered[:j]
             num_constants_used = sum(1 for c in selected_constants if c in temp_measured_vars)
 
-            # If the number of selected constants used is not in the allowed list, skip
-            if num_constants_used not in numConstConseq:
+            # Enforce that the number of constants used is within the allowed maximum
+            if num_constants_used > numConstConseq:
                 continue
 
             # Also ensure that none of the unselected constants sneak in

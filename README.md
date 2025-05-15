@@ -55,7 +55,7 @@ python run_generation.py \
     --genSysData \
     --genConsequence \
     --genConsequenceData \
-    --numConstConseq "[0,1]" \
+    --numConstConseq 1 \
     --conseqDataRange "[1, 5]" \
     --sysDataRange "[2, 6]" \
     --timeout 3600 \
@@ -73,7 +73,7 @@ python run_generation.py \
 | `--numEquations`       | List of integers specifying how many equations should appear in each system. | `[4, 5, 6]` |
 | `--numReplacements`    | Number of replacement axioms to generate per system.                       | `5` |
 | `--numSystems`         | Number of independent systems to generate.                                 | `3` |
-| `--numConstConseq`     | List of allowed numbers of constants in the consequence measured variable subset. Only subsets with these counts will be accepted. | `[1]` |
+| `--numConstConseq`     | Maximum number of constants allowed in the consequence measured variable subset. | `1` |
 | `--genReplacements`    | Enable generation of dimensionally consistent replacement axioms.          | `True` |
 | `--genSysData`         | Generate synthetic data for each axiom system.                             | `True` |
 | `--genConsequence`     | Compute an algebraic consequence using Macaulay2.                          | `True` |

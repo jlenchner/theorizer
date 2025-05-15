@@ -53,8 +53,8 @@ def parse_args():
     parser.add_argument('--numReplacements', type=int, default=5)
     parser.add_argument('--numSystems', type=int, default=3)
 
-    parser.add_argument('--numConstConseq', type=ast.literal_eval, default="[1]",
-    help="List of allowed numbers of constants in consequence measured vars, e.g. '[0,1]'"
+    parser.add_argument('--numConstConseq', type=ast.literal_eval, default="1",
+    help="Maximum number of constants allowed in the consequence. E.g 0 or 1"
 )
 
 
