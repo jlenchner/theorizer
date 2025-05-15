@@ -1,0 +1,18 @@
+Variables: ['Fc', 'Fg', 'W', 'd1', 'd2', 'm1']
+Constants: ['G', 'c']
+Derivatives: ['dx1dt', 'd2x1dt2', 'dx2dt']
+Equations:
+G*c*W + G*dx2dt*Fg*d1 - d2x1dt2^2*dx2dt*d2^3
+-d2x1dt2*Fc*m1 + Fg^2
+c*dx2dt*W - d2x1dt2*Fc*d1^2
+4*c*dx1dt + d2x1dt2*d1
+c*W*d2 - dx2dt*Fc*d1^2
+Units of Measure of Variables: ['s^(-2)*kg*m', 's^(-2)*kg*m', 'm^2*s^(-2)*kg', 'm', 'm', 'kg']
+Units of Measure of Constants: ['1/kg*m^3*s^(-2)', '1/s*m']
+Units of Measure of Derivatives: ['1/s*m', 's^(-2)*m', '1/s*m']
+Units of Measure of Equations:
+m^6*s^(-5)
+kg^2*m^2*s^(-4)
+m^4*s^(-4)*kg
+m^2*s^(-2)
+m^4*s^(-3)*kg
