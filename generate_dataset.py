@@ -35,7 +35,7 @@ def time_limit(seconds):
         signal.alarm(0)
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Generate dimensionally consistent systems for benchmarking.")
+    parser = argparse.ArgumentParser(description="Generate dimensionally consistent systems for dataset.")
 
     parser.add_argument('--numVars', type=ast.literal_eval, default="[6,7,8,9]",
                         help="List or single number of variables, e.g., '[6,7]' or '[6]'")
@@ -401,7 +401,7 @@ def parse_eqnSystem_from_file(file_path):
 
 def get_next_system_num():
     system_num = 1
-    while Path(f"Benchmarking/System_{system_num}").exists():
+    while Path(f"dataset/System_{system_num}").exists():
         system_num += 1
     return system_num
 
@@ -513,8 +513,11 @@ def run_generation_from_prior_file(system_directory, args):
             print("Stage times:")
             for stage, t in stage_times.items():
                 print(f"  {stage}: {t:.2f}s")
+            
+            stats_dir = f"dataset_gen_statistics/{config_key}/System_{system_num}"
+            Path(stats_dir).mkdir(parents=True, exist_ok=True)
 
-            with open(f"{system_directory}/performance.txt", "a") as f:
+            with open(f"{stats_dir}/performance.txt", "a") as f:
                 f.write(f"\n--- RERUN STATS ---\n")
                 f.write(f"Total time: {total_time:.2f} seconds\n")
                 f.write(f"Peak memory: {peak_memory:.2f} MB\n")
@@ -534,11 +537,6 @@ def run_generation_from_prior_file(system_directory, args):
 def run_generation(args):
     Equation.SetLogging()
 
-    if args.seed is not None:
-        random.seed(args.seed)
-        np.random.seed(args.seed)
-        print(f"Using random seed: {args.seed}")
-
     variable_options = args.vars
     derivative_options = args.derivs
     num_vars_options = args.numVars
@@ -556,8 +554,13 @@ def run_generation(args):
     seed = args.seed
     timeout_limit = args.timeout
 
-    # Create Benchmarking directory if it doesn't exist
-    Path("Benchmarking").mkdir(exist_ok=True)
+    if seed is not None:
+        random.seed(seed)
+        np.random.seed(seed)
+        print(f"Using random seed: {seed}")
+
+    # Create dataset directory if it doesn't exist
+    Path("dataset").mkdir(exist_ok=True)
 
     # Track completed systems per configuration
     config_counts = {}
@@ -567,7 +570,7 @@ def run_generation(args):
 
     for num_vars, num_derivs, num_eqns in param_combinations:
         config_key = f"vars_{num_vars}_derivs_{num_derivs}_eqns_{num_eqns}"
-        config_dir = f"Benchmarking/{config_key}"
+        config_dir = f"dataset/{config_key}"
         Path(config_dir).mkdir(exist_ok=True)
 
         existing_systems = 0
@@ -752,7 +755,7 @@ def run_generation(args):
                         safe_move(str(f), f"{system_dir}/replacement_{replacement_num}.txt")
 
                     
-                    stats_dir = f"Data_Gen_Statistics/{config_key}/System_{system_num}"
+                    stats_dir = f"dataset_gen_statistics/{config_key}/System_{system_num}"
                     Path(stats_dir).mkdir(parents=True, exist_ok=True)
 
                     with open(f"{stats_dir}/performance.txt", "w") as f:
@@ -785,7 +788,7 @@ if __name__ == "__main__":
     run_generation(args)
 
     """
-    base_dir = "Benchmarking"
+    base_dir = "dataset"
     all_system_dirs = []
 
     # First collect all directories
