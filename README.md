@@ -114,6 +114,14 @@ Data_Gen_Statistics/{config}/System_{n}/performance.txt
 
 ---
 
+## Dataset Download
+
+The generated datasets are now hosted and available for download at [Huggingface SynPAT Dataset](https://huggingface.co/datasets/Karan0901/synpat-dataset).
+
+You can clone or download the dataset directly from there as well. 
+
+---
+
 ## Notes
 
 - All ranges such as `--conseqDataRange` and `--sysDataRange` must be valid `[start, end]` pairs with `start < end`. Invalid formats will raise an error.
