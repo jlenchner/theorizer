@@ -109,7 +109,7 @@ replacement_i.txt       # ith system with replaced axiom
 Performance metrics (runtime and memory usage) are saved to:
 
 ```
-Data_Gen_Statistics/{config}/System_{n}/performance.txt
+dataset_gen_statistics/{config}/System_{n}/performance.txt
 ```
 
 ---
