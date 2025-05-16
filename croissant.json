@@ -7,7 +7,7 @@
   "@type": "schema:Dataset",
   "name": "SynPAT_Synthetic_Physical_Theories_Data",
   "description": "This dataset contains systems of dimensionally consistent equations generated across different configurations of variable count, derivative count, and equation count. Each configuration includes three generated systems with associated replacements, system data, noisy variants, and consequences. The dataset is designed to benchmark symbolic regression models on machine-assisted physical discovery tasks.",
-  "url": "https://github.com/jlenchner/theorizer",
+  "url": "https://doi.org/10.5281/zenodo.15429369",
   "license": "https://creativecommons.org/licenses/by/4.0/",
   "citation": "Srivastava et al., SynPAT: A System for Generating Synthetic Physical Theories with Data, NeurIPS 2025 (submitted)",
   "version": "1.0",
@@ -40,7 +40,7 @@
       "name": "dataset.zip",
       "description": "Complete dataset download",
       "encodingFormat": "application/zip",
-      "contentUrl": "https://github.com/jlenchner/theorizer/blob/main/dataset.zip",
+      "contentUrl": "https://zenodo.org/records/15429369/files/dataset.zip",
       "sha256": "74cea2f2325531937524ba35fb592e8f95da43663ae5a93b6077806c1d4f5d13"
     }
   ],
