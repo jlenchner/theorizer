@@ -90,7 +90,7 @@ python run_generation.py \
 Generated systems and data are saved under:
 
 ```
-Benchmarking/{config}/System_{n}/
+dataset/{config}/System_{n}/
 ```
 
 Example contents:
