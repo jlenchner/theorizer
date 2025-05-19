@@ -96,14 +96,21 @@ dataset/{config}/System_{n}/
 Example contents:
 
 ```
-system.txt              # Symbolic equation system
-system.dat              # Clean solution data
-system_1e-1.dat         # Noisy data (ε = 1e-1)
-system_1e-4.dat         # Noisy data (ε = 1e-4)
-consequence.txt         # Derived symbolic consequence
-consequence.dat         # Clean solution for consequence
-consequence_1e-1.dat    # Noisy consequence data
-replacement_i.txt       # ith system with replaced axiom 
+- **Symbolic System**
+  - `system.txt` — Base symbolic system with variable types, units, constants, and equations
+  - `consequence.txt` — Derived consequence polynomial with metadata
+
+- **Noiseless Data**
+  - `system.dat` — Clean data for `system.txt`
+  - `consequence.dat` — Clean data for `consequence.txt`
+
+- **Noisy Data** (Gaussian noise with ε ∈ {0.001, 0.01, 0.05, 0.1}):
+  - `system_ε.dat` — Noisy system data
+  - `consequence_ε.dat` — Noisy consequence data
+
+- **Replacement Systems**
+  - `replacement_1.txt` to `replacement_5.txt` — `system.txt` with one axiom replaced (for ablation studies)
+
 ```
 
 Performance metrics (runtime and memory usage) are saved to:
