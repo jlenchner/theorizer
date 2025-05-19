@@ -93,7 +93,7 @@ Generated systems and data are saved under:
 dataset/{config}/System_{n}/
 ```
 
-Example contents:
+Dataset contents:
 
 ```
 - **Symbolic System**
