@@ -51,10 +51,10 @@ python run_generation.py \
     --numEquations "[4,5]" \
     --numReplacements 5 \
     --numSystems 2 \
-    --genReplacements \
-    --genSysData \
-    --genConsequence \
-    --genConsequenceData \
+    --genReplacements True\
+    --genSysData False\
+    --genConsequence True\
+    --genConsequenceData True\
     --numConstConseq 1 \
     --conseqDataRange "[1, 5]" \
     --sysDataRange "[2, 6]" \
