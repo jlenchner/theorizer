@@ -24,7 +24,7 @@ pip install numpy sympy
 
 - **macOS (Homebrew):**
   ```bash
-  brew install macaulay2
+  brew install Macaulay2/tap/M2
   ```
 - **Linux (Debian/Ubuntu):** Download and install from [Macaulay2's official website](https://macaulay2.com/Downloads/)
 - **Windows:** Use the Windows installer from [Macaulay2's official website](https://macaulay2.com/Downloads/)
