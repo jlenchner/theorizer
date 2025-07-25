@@ -43,7 +43,7 @@ The main script is `run_generation.py`. It generates symbolic systems, derivativ
 ### Example Run
 
 ```bash
-python run_generation.py \
+python generate_dataset.py \
     --vars "['m1', 'm2', 'd1', 'd2', 'W', 'p', 'Fc', 'Fg']" \
     --derivs "['dx1dt', 'dx2dt', 'd2x1dt2', 'd2x2dt2']" \
     --numVars "[6,7,8]" \
