@@ -172,7 +172,6 @@ def generate_dataset(target_polynomial, measured_variables, observed_constants, 
         else:
             degree_dict[var] = 1
     sorted_variables = measured_variables #sorted(measured_variables, key=lambda x: degree_dict[x], reverse=True)
-    print(sorted_variables)
     # Generate data for all but the last variable
     for var in sorted_variables[:-1]:
         var_data = np.random.uniform(region[0], region[1], 1000)

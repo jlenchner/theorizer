@@ -579,14 +579,18 @@ def run_generation(args):
         
         config_counts[config_key] = existing_systems
         
-        print(f"\n=== Starting configuration: {num_vars} vars, {num_derivs} derivs, {num_eqns} eqns ===")
+        print(f"\n=== Configuration: {num_vars} vars, {num_derivs} derivs, {num_eqns} eqns ===")
+        print(f"Found {existing_systems} existing systems in {config_dir}")
+        print(f"Adding {numSystems} new systems to this configuration")
+        
+        systems_added = 0
         attempts = 1
 
-        while config_counts[config_key] < numSystems and attempts < 10:
+        while config_counts[config_key] < (numSystems + existing_systems) and attempts < 10:
             # Start timing
             start_time = time.process_time()
             process = psutil.Process(os.getpid())
-            print("Attempt ", attempts, "\n")
+            print(f"\nAttempt {attempts} (Adding system: {systems_added+1}/{numSystems})")
             attempts+=1
             # Generate variables and derivatives dynamically based on current config
             var_names = variable_options[:num_vars]
@@ -597,7 +601,7 @@ def run_generation(args):
             derivs = derivatives(','.join(deriv_names))
             G, c, pi = constants('G,c,pi')
             
-            print(f"\nGenerating system {config_counts[config_key]+1}/{numSystems} for config {config_key}")
+            print(f"\n Generating axiom system {config_counts[config_key]+1}/{numSystems+existing_systems} for config {config_key}")
 
             # Track time and memory at key stages
             stage_times = {}
@@ -629,10 +633,10 @@ def run_generation(args):
                     stage_times['generation'] = time.process_time() - t
                     mem_usage['generation'] = process.memory_info().rss / (1024 * 1024)
 
-                    print(f"System {system_num} generated.")
+                    print(f"Axiom System {system_num} generated.")
                     print(f"Variables: {var_names}")
                     print(f"Derivatives: {deriv_names}")
-                    print(f"Equations: {num_eqns}")
+                    print(f"Number of Equations: {num_eqns}")
 
                     temp_system_file = f"temp_system_{system_num}.txt"
                     save_equation_system_to_file(eqn_system_str, temp_system_file)
@@ -640,7 +644,7 @@ def run_generation(args):
                     ##### Generating replacement axioms #####
                     t = time.process_time()
                     if genReplacement:
-                        print(" Now generating replacement axioms. \n")
+                        print("\n Now generating replacement axioms. \n")
                         replacement_info = ""
                         
                         if numReplacements > 0:
@@ -653,28 +657,28 @@ def run_generation(args):
                         if numReplacements > 0:
                             create_replacement_files(replacement_info, numReplacements, temp_system_file)
 
-                        print("Replacement Axioms Created. \n")
+                        print(" \n Replacement Axioms Created. \n")
                     stage_times['replacement_generation'] = time.process_time() - t
                     mem_usage['replacement_generation'] = process.memory_info().rss / (1024 * 1024)
                     
                     ##### Generating system data #####
                     t = time.process_time()
                     if genSysData:
-                        print("Generating system data. Searching for roots. \n")
+                        print("\n Generating system data. Searching for roots. \n")
                         temp_system_dat = f"temp_system_{system_num}.dat"
                         found_system_roots = run_noiseless_system_data_generation(temp_system_file, temp_system_dat, sysDataRange)
                         if not found_system_roots:
-                            print("Could not find roots to the system. Skipping. \n")
+                            print("\n Could not find roots to the system. Skipping. \n")
                             cleanup_temp_files(system_num)
                             continue
-                        print("System data generated. Now adding noise. \n")
+                        print("\n System data generated. Now adding noise. \n")
                         
                         added_system_noise = run_noisy_system_data_generation(temp_system_file, temp_system_dat)
                         if not added_system_noise:
                             print("Failed to add noise")
                             cleanup_temp_files(system_num)
                             continue
-                        print("Noisy System Data Generated. \n")
+                        print("\n Noisy System Data Generated. \n")
                     stage_times['system_root_search'] = time.process_time() - t
                     mem_usage['system_root_search'] = process.memory_info().rss / (1024 * 1024)
                     
@@ -688,14 +692,14 @@ def run_generation(args):
                             print("Could not find a consequence. Skipping. \n")
                             cleanup_temp_files(system_num)
                             continue
-                        print("Consequence generated. \n")
+                        print("\n Consequence generated. \n")
                     stage_times['consequence_generation'] = time.process_time() - t
                     mem_usage['consequence_generation'] = process.memory_info().rss / (1024 * 1024)
 
                     ##### Generating data for consequence #####
                     t = time.process_time()
                     if genConsequenceData:
-                        print("Generating noiseless data for consequence. ")
+                        print("\n Generating noiseless data for consequence. ")
                         temp_data_dat = f"temp_data_{system_num}.dat"
                         temp_consequence = f"temp_consequence_{system_num}.txt"
                         if not os.path.exists(temp_consequence):
@@ -767,7 +771,9 @@ def run_generation(args):
                             f.write(f"{stage}_memory: {m:.2f} MB\n")
                     
                     config_counts[config_key] += 1
-                    print(f"Successfully completed system {config_counts[config_key]}/{numSystems} for this configuration")
+                    systems_added += 1
+                    print(f"\n Moved files to: {system_dir}")
+                    print(f"Successfully completed system {config_counts[config_key]}/{numSystems+existing_systems} for this configuration")
                     attempts = 1
 
             except TimeoutException:

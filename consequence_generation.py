@@ -198,7 +198,7 @@ def run_consequence_generation(input_filepath, output_filepath, numConstConseq=1
                                 polynomial = line.strip()
                                 break
                         if "Polynomials of the Gröbner basis of the eliminated ideal:" in line:
-                            print(line)  # Keep the print statement
+                            #print(line)  # Keep the print statement
                             write_poly = True
                     else:
                         polynomial = ""  # If no polynomial found
