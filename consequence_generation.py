@@ -187,7 +187,7 @@ def run_consequence_generation(input_filepath, output_filepath, numConstConseq=1
                 content = temp_file.read()
                 os.remove('temp_proj.txt')
                 
-                if "matrix {}" not in content:
+                if "matrix {}" not in content and "map(R^1, R^0, 0)" not in content:
                     # Extract just the first polynomial from the Gröbner basis
                     poly_lines = []
                     write_poly = False
