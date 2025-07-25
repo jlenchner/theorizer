@@ -7,9 +7,11 @@ This is a GitHub repository for the synthetic theory and data generation system 
 ## Prerequisites
 
 ### System Requirements
-- Python 3.8+
+- Python 3.9+
 - NumPy
 - SymPy
+- Deprecated
+- psutil
 - **Macaulay2** (required for consequence generation via algebraic projection)
 
 ### Installing Dependencies
@@ -17,7 +19,13 @@ This is a GitHub repository for the synthetic theory and data generation system 
 #### Python Dependencies
 Install with:
 ```bash
-pip install numpy sympy
+pip install numpy sympy Deprecated psutil
+```
+
+Alternatively, all python dependencies can be installed using the included requirements file:
+
+```bash
+pip install -r requirements.txt
 ```
 
 #### Macaulay2 Installation
