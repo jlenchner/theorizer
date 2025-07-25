@@ -1,0 +1,6 @@
+# Requires Python >= 3.9
+Deprecated>=1.2.18
+numpy>=2.0.2
+psutil>=7.0.0
+sympy>=1.14.0
+
