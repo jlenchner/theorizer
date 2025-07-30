@@ -42,6 +42,21 @@ To verify the installation, run:
 M2
 ```
 
+If installed correctly, you should see
+
+```bash
+Macaulay2, version <your version number>
+Type "help" to see useful commands
+
+i1 : 
+```
+
+To exit this, you can run
+
+```bash
+i1 : exit()
+```
+
 ---
 
 ## Usage: Generating Synthetic Systems and Data
