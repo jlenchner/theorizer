@@ -32,7 +32,9 @@ class UofM:
     ALL_UNITS = [m,m,m,m,m,kg,s,mol,A,cd,K, kg*m/(s*s), m/s, m/(s*s), kg*m*m/(s*s), kg*m/s, kg/(m*s*s),
                                 m/s, m**3/(kg*s*s), kg*m/s, kg*m/s, kg*m*m/(s*s), kg*m*m/(s*s*K), 1/s, A*s, 1]
 
-
+    ALL_MEASURED_QUANTITIES += ["theta", "sinTheta", "cosTheta", "eTheta"]
+    ALL_UNITS += [1, 1, 1, 1]
+    
     def __init__(self, units):
         """
             Ordinarily BaseUnits are created at the time of construction of a Variable, Derivative

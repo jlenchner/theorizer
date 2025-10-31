@@ -1,6 +1,6 @@
 # SynPAT: Generating Synthetic Physical Theories with Data
 
-This is a GitHub repository for the synthetic theory and data generation system developed for the paper **SynPAT: Generating Synthetic Physical Theories with Data**. It generates symbolic physical systems and corresponding synthetic data to benchmark symbolic regression and scientific discovery algorithms.
+This is a GitHub repository for the synthetic theory and data generation system developed for the paper [**SynPAT: Generating Synthetic Physical Theories with Data**](https://www.arxiv.org/abs/2505.00878). It generates symbolic physical systems and corresponding synthetic data to benchmark symbolic regression and scientific discovery algorithms.
 
 ---
 
@@ -67,7 +67,7 @@ The main script is `run_generation.py`. It generates symbolic systems, derivativ
 
 ```bash
 python generate_dataset.py \
-    --vars "['m1', 'm2', 'd1', 'd2', 'W', 'p', 'Fc', 'Fg']" \
+    --vars "['m1', 'm2', 'd1', 'd2', 'W', 'theta', 'sinTheta', 'p', 'Fc', 'Fg']" \
     --derivs "['dx1dt', 'dx2dt', 'd2x1dt2', 'd2x2dt2']" \
     --numVars "[6,7,8]" \
     --numDerivs "[2,3]" \
@@ -81,6 +81,7 @@ python generate_dataset.py \
     --numConstConseq 1 \
     --conseqDataRange "[1, 5]" \
     --sysDataRange "[2, 6]" \
+    --maxConseqTerms "8" \
     --timeout 3600 \
     --seed 123
 ```
@@ -103,6 +104,7 @@ python generate_dataset.py \
 | `--genConsequenceData` | Generate data for the derived consequence.                                 | `True` |
 | `--conseqDataRange`    | Range `[start, end]` for consequence data sampling.                        | `[1, 10]` |
 | `--sysDataRange`       | Range `[start, end]` for system data sampling.                             | `[1, 10]` |
+| `--maxConseqTerms`     | Upper bound on the number of monomials allowed in the consequence polynomial                             | `8` |
 | `--timeout`            | Max number of seconds to allow for generating a single system. `None` disables the timeout. | `3600` |
 | `--seed`               | Random seed for reproducibility.                                           | `42` |
 
@@ -168,3 +170,38 @@ This code is licensed under the MIT License.
 ---
 
 For questions, issues, or contributions, please open an issue or pull request!
+
+# Third-Party Licenses
+
+Our code is released under the MIT License (see `LICENSE`).
+
+This project uses the following third-party software:
+
+- **SymPy** — BSD 3-Clause  
+  License: https://github.com/sympy/sympy/blob/master/LICENSE
+
+- **Macaulay2** — GNU GPL (v2 or later / v3)  
+  License: https://macaulay2.com/Downloads/Copyright/
+
+---
+
+## How to Cite
+
+If you use **SynPAT** (code or datasets), please cite the paper and (optionally) the dataset.
+
+**Paper**
+
+> Jon Lenchner, Karan Srivastava, Joao Goncalves, Lior Horesh. *SynPAT: Generating Synthetic Physical Theories with Data*. arXiv:2505.00878.
+
+- Preprint: https://www.arxiv.org/abs/2505.00878
+
+```bibtex
+@misc{synpat2025,
+  title         = {SynPAT: Generating Synthetic Physical Theories with Data},
+  author        = {Karan Srivastava},
+  year          = {2025},
+  eprint        = {2505.00878},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url           = {https://arxiv.org/abs/2505.00878}
+}

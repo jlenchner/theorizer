@@ -110,6 +110,8 @@ class Equation:
             return Mul(*args)
         elif isinstance(term, Pow):
             return Pow(term.args[0]._u_of_m._units, term.args[1])
+        elif isinstance(term, (Integer, Rational, Float)):
+            return Integer(1)
         else:
             return None
 

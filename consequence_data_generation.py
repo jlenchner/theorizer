@@ -4,19 +4,25 @@ import numpy as np
 from sympy import symbols, sympify, Poly, solve
 from collections import defaultdict
 
+# ---------------------------------------------------------------------
+# Utility: evaluate a target polynomial on a set of rows (for sanity checks)
+# ---------------------------------------------------------------------
 def evaluate_polynomial(target_polynomial, dataset, observed_constants, measured_derivatives, measured_variables):
     """
-    Evaluates the polynomial for all rows in the dataset.
-    
+    Evaluate the target polynomial on the first axis (rows) of `dataset`.
+
     Args:
-        target_polynomial: String representation of the polynomial
-        dataset: NumPy array containing the data
-        observed_constants: List of constant variable names
-        measured_derivatives: List of derivative variable names
-        measured_variables: List of measured variable names
-        
+        target_polynomial: The target polynomial as a string; '^' is allowed
+                           and will be converted to Python '**'.
+        dataset: 2D array where columns are ordered as
+                 [constants] + [derivatives if any] + [bases used by derivatives (d1/d2) if any] + [measured vars].
+                 (This matches how the dataset is constructed below.)
+        observed_constants: Names of constants (in the order they appear in dataset).
+        measured_derivatives: Names of derivatives (ordered). Use [''] if none.
+        measured_variables: Names of measured variables (ordered).
+
     Returns:
-        NumPy array of evaluated polynomial values
+        1D array of float evaluations (nan where evaluation failed).
     """
     evaluated_values = []
     
@@ -49,7 +55,27 @@ def evaluate_polynomial(target_polynomial, dataset, observed_constants, measured
     
     return np.array(evaluated_values)
 
+# ---------------------------------------------------------------------
+# Parsing of the consequence file emitted by your system
+# ---------------------------------------------------------------------
 def extract_info_from_file(filepath):
+    """
+    Extract target polynomial and variable lists from a consequence file.
+
+    The file is expected to contain lines like:
+      Measured Variables: [...]
+      Observed Constants: [...]
+      Measured Derivatives: [...]
+      Target Polynomial:
+      <one or more lines of the polynomial>
+
+    Args:
+        filepath: Path to the consequence file.
+
+    Returns:
+        (target_polynomial, measured_variables, observed_constants, measured_derivatives)
+        where target_polynomial is a single-line string with '^' preserved.
+    """
     with open(filepath, 'r') as file:
         content = file.readlines()
     
@@ -79,278 +105,385 @@ def extract_info_from_file(filepath):
     
     return target_polynomial, measured_variables, observed_constants, measured_derivatives
 
-def generate_dataset(target_polynomial, measured_variables, observed_constants, measured_derivatives, constant_data=True, derivative_data=True, region=[1,5]):
-    # Initialize dataset as a 2D array with 1000 rows and 0 columns
-    dataset = np.zeros((1000, 0))  # Start with an empty 2D array
 
-    # Step 2a: Generate data for constants
-    if constant_data and observed_constants:  # Only proceed if constants are provided
-        constant_values = {const: np.random.uniform(0, 10) for const in observed_constants}  # Sample once
-        if 'c' in observed_constants:
-            constant_values['c'] = 1
-        if 'G' in observed_constants:
-            constant_values['G'] = 1
-        constant_data_matrix = np.array([[constant_values[const]] * 1000 for const in observed_constants]).T  # Repeat 1000 times
-        dataset = np.hstack((dataset, constant_data_matrix))  # Append constant data
-    elif not constant_data and observed_constants:
-        constant_values = {const: np.random.uniform(region[0], region[1], 1000) for const in observed_constants}  # Generate 1000 samples per constant
-        constant_data_matrix = np.column_stack([constant_values[const] for const in observed_constants])  # Stack properly
-        dataset = np.hstack((dataset, constant_data_matrix))  # Append constant data
+# ---------------------------------------------------------------------
+# Dataset generators (with and without derivatives)
+# ---------------------------------------------------------------------
+def generate_dataset(target_polynomial,measured_variables,observed_constants,measured_derivatives,constant_data=True,derivative_data=True,region=[1, 5]):
+    """
+    Generate a dataset when there are no derivatives.
 
-    derivative_dependent_variable = []
-    derivative_data_matrix = []
-    
-    # Step 2b: Generate data for derivatives only if needed
-    if derivative_data:
-        if 'd1' in measured_variables and ('dx1dt' in measured_derivatives or 'd2x1dt2' in measured_derivatives):
-            d1_data = np.random.uniform(region[0], region[1], 1000)
-            dx1dt_data = np.diff(d1_data, append=d1_data[0]) if 'dx1dt' in measured_derivatives else None
-            if 'dx1dt' in measured_derivatives:
-                d2x1dt2_data = np.diff(dx1dt_data, append=dx1dt_data[0]) if 'd2x1dt2' in measured_derivatives else None
-            else: 
-                d2x1dt2_data = np.random.uniform(region[0],region[1], 1000) if 'd2x1dt2' in measured_derivatives else None
-            
-            if dx1dt_data is not None and 'dx1dt' in measured_derivatives:
-                derivative_data_matrix.append(dx1dt_data)
-            if d2x1dt2_data is not None and 'd2x1dt2' in measured_derivatives:
-                derivative_data_matrix.append(d2x1dt2_data)
+    Column order produced:
+        [constants...] +
+        [measured_variables except the last solved variable, in order] +
+        [last variable solved from the polynomial]
 
-        elif 'd1' not in measured_variables and ('dx1dt' in measured_derivatives or 'd2x1dt2' in measured_derivatives):
-            dx1dt_data = np.random.uniform(region[0],region[1], 1000)
-            if 'dx1dt' in measured_derivatives:
-                d2x1dt2_data = np.diff(dx1dt_data, append=dx1dt_data[0]) if 'd2x1dt2' in measured_derivatives else None
-            else: 
-                d2x1dt2_data = np.random.uniform(region[0],region[1], 1000) if 'd2x1dt2' in measured_derivatives else None
-            if dx1dt_data is not None and 'dx1dt' in measured_derivatives:
-                derivative_data_matrix.append(dx1dt_data)
-            if d2x1dt2_data is not None and 'd2x1dt2' in measured_derivatives:
-                derivative_data_matrix.append(d2x1dt2_data)
-        
-        if 'd2' in measured_variables and ('dx2dt' in measured_derivatives or 'd2x2dt2' in measured_derivatives):
-            d2_data = np.random.uniform(region[0], region[1], 1000)
-            dx2dt_data = np.diff(d2_data, append=d2_data[0]) if 'dx2dt' in measured_derivatives else None
-            if 'dx2dt' in measured_derivatives:
-                d2x2dt2_data = np.diff(dx2dt_data, append=dx2dt_data[0]) if 'd2x2dt2' in measured_derivatives else None
-            else: 
-                d2x2dt2_data = np.random.uniform(region[0],region[1], 1000) if 'd2x2dt2' in measured_derivatives else None
-            
-            if dx2dt_data is not None and 'dx2dt' in measured_derivatives:
-                derivative_data_matrix.append(dx2dt_data)
-            if d2x2dt2_data is not None and 'd2x2dt2' in measured_derivatives:
-                derivative_data_matrix.append(d2x2dt2_data)
+    Args:
+        target_polynomial: Target polynomial as a string; '^' allowed.
+        measured_variables: Measured variable names (may include theta/trig/exponential).
+        observed_constants: Constant names.
+        constant_data: If True, constants are fixed across rows; else per-row sampling.
+        region: [low, high] sampling interval for random draws.
 
-        elif 'd2' not in measured_variables and ('dx2dt' in measured_derivatives or 'd2x2dt2' in measured_derivatives):
-            dx2dt_data = np.random.uniform(region[0],region[1], 1000)
-            if 'dx2dt' in measured_derivatives:
-                d2x2dt2_data = np.diff(dx2dt_data, append=dx2dt_data[0]) if 'd2x2dt2' in measured_derivatives else None
-            else: 
-                d2x2dt2_data = np.random.uniform(region[0],region[1], 1000) if 'd2x2dt2' in measured_derivatives else None
+    Returns:
+        2D array where final column is the solved variable. Rows with complex/no solution are dropped.
+    """
+    N = 1000
+    dataset = np.zeros((N, 0))  # start empty
 
-            if dx2dt_data is not None and 'dx2dt' in measured_derivatives:
-                derivative_data_matrix.append(dx2dt_data)
-            if d2x2dt2_data is not None and 'd2x2dt2' in measured_derivatives:
-                derivative_data_matrix.append(d2x2dt2_data)
+    # ---- Constants ----
+    const_data_cols = []
+    if observed_constants:
+        if constant_data:
+            # One draw per constant, held fixed across N rows
+            constant_values = {const: np.random.uniform(0, 10) for const in observed_constants}
+            if 'c' in observed_constants:
+                constant_values['c'] = 1
+            if 'G' in observed_constants:
+                constant_values['G'] = 1
+            for const in observed_constants:
+                const_data_cols.append(np.full(N, constant_values[const]))
+        else:
+            # Independent draws per row
+            for const in observed_constants:
+                const_data_cols.append(np.random.uniform(region[0], region[1], N))
+    if const_data_cols:
+        dataset = np.hstack([dataset] + [col.reshape(-1, 1) for col in const_data_cols])
 
-        if 'd1' in measured_variables and ('dx1dt' in measured_derivatives or 'd2x1dt2' in measured_derivatives):
-            derivative_data_matrix.append(d1_data)
-            measured_variables.remove('d1')
+    # ---- Derivatives (and their bases d1/d2 when needed) ----
+    derivative_dependent_variable = []  # order of bases (subset of ['d1','d2']) used in derivative construction
+    derivative_arrays = {}              
+
+    # d1-branch
+    if derivative_data and ('dx1dt' in measured_derivatives or 'd2x1dt2' in measured_derivatives):
+        if 'd1' in measured_variables:
+            d1_data      = np.random.uniform(region[0], region[1], N)
+            dx1dt_data   = np.diff(d1_data, append=d1_data[0]) if 'dx1dt' in measured_derivatives else None
+            if 'd2x1dt2' in measured_derivatives:
+                if dx1dt_data is not None:
+                    d2x1dt2_data = np.diff(dx1dt_data, append=dx1dt_data[0])
+                else:
+                    d2x1dt2_data = np.random.uniform(region[0], region[1], N)
+            else:
+                d2x1dt2_data = None
+
+            if 'dx1dt'   in measured_derivatives and dx1dt_data is not None: derivative_arrays['dx1dt']   = dx1dt_data
+            if 'd2x1dt2' in measured_derivatives and d2x1dt2_data is not None: derivative_arrays['d2x1dt2'] = d2x1dt2_data
+
+            # mark d1 as derivative-dependent and remove from measured list (preserve order elsewhere)
             derivative_dependent_variable.append('d1')
-        if 'd2' in measured_variables and ('dx2dt' in measured_derivatives or 'd2x2dt2' in measured_derivatives):
-            derivative_data_matrix.append(d2_data)
-            measured_variables.remove('d2')
+            measured_variables = [v for v in measured_variables if v != 'd1']
+        else:
+            # No d1 measured; synthesize derivatives directly
+            if 'dx1dt' in measured_derivatives:
+                dx1dt_data = np.random.uniform(region[0], region[1], N)
+                derivative_arrays['dx1dt'] = dx1dt_data
+                if 'd2x1dt2' in measured_derivatives:
+                    derivative_arrays['d2x1dt2'] = np.diff(dx1dt_data, append=dx1dt_data[0])
+            elif 'd2x1dt2' in measured_derivatives:
+                derivative_arrays['d2x1dt2'] = np.random.uniform(region[0], region[1], N)
+
+    # d2-branch
+    if derivative_data and ('dx2dt' in measured_derivatives or 'd2x2dt2' in measured_derivatives):
+        if 'd2' in measured_variables:
+            d2_data      = np.random.uniform(region[0], region[1], N)
+            dx2dt_data   = np.diff(d2_data, append=d2_data[0]) if 'dx2dt' in measured_derivatives else None
+            if 'd2x2dt2' in measured_derivatives:
+                if dx2dt_data is not None:
+                    d2x2dt2_data = np.diff(dx2dt_data, append=dx2dt_data[0])
+                else:
+                    d2x2dt2_data = np.random.uniform(region[0], region[1], N)
+            else:
+                d2x2dt2_data = None
+
+            if 'dx2dt'   in measured_derivatives and dx2dt_data is not None: derivative_arrays['dx2dt']   = dx2dt_data
+            if 'd2x2dt2' in measured_derivatives and d2x2dt2_data is not None: derivative_arrays['d2x2dt2'] = d2x2dt2_data
+
+            # mark d1 as derivative-dependent and remove from measured list (preserve order elsewhere)
             derivative_dependent_variable.append('d2')
-
-    if derivative_data_matrix:
-        dataset = np.hstack((dataset, np.column_stack(derivative_data_matrix)))
-    
-    # Step 2c: Sort measured variables by degree in target polynomial
-    degree_dict = defaultdict(int)
-    for var in measured_variables:
-        matches = re.findall(rf'{var}\^(\d+)', target_polynomial)
-        if matches:
-            degree_dict[var] = sum(int(exp) for exp in matches)
+            measured_variables = [v for v in measured_variables if v != 'd2']
         else:
-            degree_dict[var] = 1
-    sorted_variables = measured_variables #sorted(measured_variables, key=lambda x: degree_dict[x], reverse=True)
-    # Generate data for all but the last variable
-    for var in sorted_variables[:-1]:
-        var_data = np.random.uniform(region[0], region[1], 1000)
-        dataset = np.hstack((dataset, var_data.reshape(-1, 1)))
+            # No d1 measured; synthesize derivatives directly
+            if 'dx2dt' in measured_derivatives:
+                dx2dt_data = np.random.uniform(region[0], region[1], N)
+                derivative_arrays['dx2dt'] = dx2dt_data
+                if 'd2x2dt2' in measured_derivatives:
+                    derivative_arrays['d2x2dt2'] = np.diff(dx2dt_data, append=dx2dt_data[0])
+            elif 'd2x2dt2' in measured_derivatives:
+                derivative_arrays['d2x2dt2'] = np.random.uniform(region[0], region[1], N)
 
-    # Step 2d: Generate data for the last variable
-    last_var = sorted_variables[-1]
-    last_var_symbol = symbols(last_var)  # Convert to symbolic variable
+    # Append derivative columns in the declared order; then append their bases (if used)
+    if measured_derivatives and '' not in measured_derivatives:
+        for dname in measured_derivatives:
+            if dname in derivative_arrays:
+                dataset = np.hstack((dataset, derivative_arrays[dname].reshape(-1, 1)))
 
-    roots_column = np.zeros((dataset.shape[0], 1)) * np.nan  # Initialize with NaN
+        # then append d1/d2 bases (if any) in that same order
+        for base in derivative_dependent_variable:
+            if base == 'd1':
+                dataset = np.hstack((dataset, d1_data.reshape(-1, 1)))
+            elif base == 'd2':
+                dataset = np.hstack((dataset, d2_data.reshape(-1, 1)))
+
+    # ---- theta / trig/exponential variables ----
+    trig_funcs = {'sinTheta': np.sin, 'cosTheta': np.cos, 'eTheta': np.exp}
+    trig_vars_present = [v for v in measured_variables if v in trig_funcs]
+    need_theta_stream = ('theta' in measured_variables) or bool(trig_vars_present)
+
+    theta_stream = None
+    if need_theta_stream:
+        theta_stream = np.random.uniform(region[0], region[1], N)
+
+    trig_values = {}
+    for v in trig_vars_present:
+        trig_values[v] = trig_funcs[v](theta_stream)
+
+     # ---- choose last var to solve for (exclude specials) ----
+    specials = {'theta', 'sinTheta', 'cosTheta', 'eTheta'}
+    # Preserve measured order; pick last that isn't a special
+    solve_candidates = [v for v in measured_variables if v not in specials]
+    if len(solve_candidates) == 0:
+        # Nothing left to solve for; signal failure
+        return np.zeros((0, 0))
+
+    last_var = solve_candidates[-1]
+    known_measured_vars = [v for v in measured_variables if v != last_var]
+
+    # ---- sample measured vars (except the solved one), in order ----
+    measured_cols = []
+    for var in known_measured_vars:
+        if var == 'theta':
+            measured_cols.append(theta_stream)
+        elif var in trig_values:
+            measured_cols.append(trig_values[var])
+        else:
+            measured_cols.append(np.random.uniform(region[0], region[1], N))
+
+    if measured_cols:
+        dataset = np.hstack([dataset] + [col.reshape(-1, 1) for col in measured_cols])
+
+    # ---- solve for last_var per-row (drop rows with complex/no real solution) ----
+    last_var_symbol = symbols(last_var)
+    roots_column = np.full((N, 1), np.nan)
 
     complex_count = 0
     evaluation_fail_count = 0
 
-    for i in range(1000):
-        # Substitute all known values into the polynomial at once
+    # Substitution order must mirror dataset columns:
+    sub_order = []
+    sub_order.extend(observed_constants)
+    if measured_derivatives and '' not in measured_derivatives:
+        sub_order.extend(measured_derivatives)
+        sub_order.extend(derivative_dependent_variable) # bases were appended after derivatives
+    sub_order.extend(known_measured_vars)
+
+    for i in range(N):
         polynomial = target_polynomial
 
-        for j, var in enumerate(observed_constants + measured_derivatives + derivative_dependent_variable + sorted_variables[:-1]):
-            # Replace variables with placeholders to avoid invalid syntax
-            polynomial = re.sub(rf'\b{var}\b', f'{var}_value', polynomial)
+        # Replace variable names with *_value placeholders so we can substitute scalars
+        for name in (observed_constants +
+                     (measured_derivatives if (measured_derivatives and '' not in measured_derivatives) else []) +
+                     derivative_dependent_variable +
+                     known_measured_vars):
+            polynomial = re.sub(rf'\b{re.escape(name)}\b', f'{name}_value', polynomial)
 
-        # Replace '^' with '**' for exponentiation
         polynomial = polynomial.replace('^', '**')
 
-        # Convert the polynomial into a symbolic expression
         try:
             expr = sympify(polynomial)
-            
-            # Substitute numeric values into the expression
             substitutions = {}
-            for j, var in enumerate(observed_constants + measured_derivatives + derivative_dependent_variable + sorted_variables[:-1]):
-                substitutions[symbols(f'{var}_value')] = dataset[i, j]
-            
-            expr = expr.subs(substitutions)
-            
-            # Extract coefficients of the polynomial in the last variable
-            poly = Poly(expr, last_var_symbol)
-            coefficients = poly.all_coeffs()
+            for j, var_name in enumerate(sub_order):
+                substitutions[symbols(f'{var_name}_value')] = dataset[i, j]
 
-            # Solve for the roots
-            roots = np.roots(coefficients)
-            
-            # Filter real roots
+            expr = expr.subs(substitutions)
+
+            poly = Poly(expr, last_var_symbol)
+            coeffs = poly.all_coeffs()
+            roots = np.roots(coeffs)
             real_roots = roots[np.isreal(roots)].real
-            
             if len(real_roots) > 0:
-                roots_column[i] = real_roots[0]  # Use the first real root
+                roots_column[i, 0] = real_roots[0]
             else:
                 complex_count += 1
         except Exception as e:
             evaluation_fail_count += 1
-            print(f"An exception occurred: {e}")  # Skip if polynomial evaluation fails   
+            # print(f"An exception occurred: {e}")
+            continue
 
-    # Append the roots column to the dataset
+    # Append solved column and drop rows with NaN (failed/complex)
     dataset = np.hstack((dataset, roots_column))
+    dataset = dataset[~np.isnan(dataset).any(axis=1)]
 
-    # Remove rows with NaN values
-    dataset = dataset[~np.isnan(dataset).any(axis=1)] 
     print("Complex roots thrown out: ", complex_count)
-    print("Number of failed evaluations: ", evaluation_fail_count)  
-    
+    print("Number of failed evaluations: ", evaluation_fail_count)
+
     return dataset
 
-def generate_dataset_no_der(target_polynomial, measured_variables, observed_constants, constant_data=True, region=[1,5]):
-    # Initialize dataset as a 2D array with 1000 rows and 0 columns
-    dataset = np.zeros((1000, 0))  # Start with an empty 2D array
+def generate_dataset_no_der(target_polynomial,measured_variables,observed_constants,constant_data=True,region=[1, 5]):
+    """
+    Generate a dataset when there are no derivatives.
 
-    # Step 2a: Generate data for constants
-    if constant_data and observed_constants:  # Only proceed if constants are provided
-        constant_values = {const: np.random.uniform(0, 10) for const in observed_constants}  # Sample once
-        if 'c' in observed_constants:
-            constant_values['c'] = 1
-        if 'G' in observed_constants:
-            constant_values['G'] = 1
-        constant_data_matrix = np.array([[constant_values[const]] * 1000 for const in observed_constants]).T  # Repeat 1000 times
-        dataset = np.hstack((dataset, constant_data_matrix))  # Append constant data
-    elif not constant_data and observed_constants:
-        constant_values = {const: np.random.uniform(region[0], region[1], 1000) for const in observed_constants}  # Generate 1000 samples per constant
-        constant_data_matrix = np.column_stack([constant_values[const] for const in observed_constants])  # Stack properly
-        dataset = np.hstack((dataset, constant_data_matrix))  # Append constant data
-    
-    # Step 2c: Sort measured variables by degree in target polynomial
-    degree_dict = defaultdict(int)
-    for var in measured_variables:
-        matches = re.findall(rf'{var}\^(\d+)', target_polynomial)
-        if matches:
-            degree_dict[var] = sum(int(exp) for exp in matches)
+    Column order produced:
+        [constants...] +
+        [measured_variables except the last solved variable, in order] +
+        [last variable solved from the polynomial]
+
+    Args:
+        target_polynomial: Target polynomial as a string; '^' allowed.
+        measured_variables: Measured variable names (may include theta/trig/exponential).
+        observed_constants: Constant names.
+        constant_data: If True, constants are fixed across rows; else per-row sampling.
+        region: [low, high] sampling interval for random draws.
+
+    Returns:
+        2D array where final column is the solved variable. Rows with complex/no solution are dropped.
+    """
+    N = 1000
+    dataset = np.zeros((N, 0))
+
+    # ---- Constants ----
+    const_data_cols = []
+    if observed_constants:
+        if constant_data:
+            constant_values = {const: np.random.uniform(0, 10) for const in observed_constants}
+            if 'c' in observed_constants:
+                constant_values['c'] = 1
+            if 'G' in observed_constants:
+                constant_values['G'] = 1
+            for const in observed_constants:
+                const_data_cols.append(np.full(N, constant_values[const]))
         else:
-            degree_dict[var] = 1
-    sorted_variables = measured_variables #sorted(measured_variables, key=lambda x: degree_dict[x], reverse=True)
+            for const in observed_constants:
+                const_data_cols.append(np.random.uniform(region[0], region[1], N))
+    if const_data_cols:
+        dataset = np.hstack([dataset] + [col.reshape(-1, 1) for col in const_data_cols])
 
-    # Generate data for all but the last variable
-    for var in sorted_variables[:-1]:
-        var_data = np.random.uniform(region[0], region[1], 1000)
-        dataset = np.hstack((dataset, var_data.reshape(-1, 1)))
+    # ---- theta / trig/exponential generated variables ----
+    trig_funcs = {'sinTheta': np.sin, 'cosTheta': np.cos, 'eTheta': np.exp}
+    trig_vars_present = [v for v in measured_variables if v in trig_funcs]
+    need_theta_stream = ('theta' in measured_variables) or bool(trig_vars_present)
 
-    # Step 2d: Generate data for the last variable
-    last_var = sorted_variables[-1]
-    last_var_symbol = symbols(last_var)  # Convert to symbolic variable
+    theta_stream = None
+    if need_theta_stream:
+        theta_stream = np.random.uniform(region[0], region[1], N)
 
-    roots_column = np.zeros((dataset.shape[0], 1)) * np.nan  # Initialize with NaN
+    trig_values = {}
+    for v in trig_vars_present:
+        trig_values[v] = trig_funcs[v](theta_stream)
+
+    # ---- choose last var to solve (exclude specials) ----
+    specials = {'theta', 'sinTheta', 'cosTheta', 'eTheta'}
+    solve_candidates = [v for v in measured_variables if v not in specials]
+    if len(solve_candidates) == 0:
+        return np.zeros((0, 0))
+
+    last_var = solve_candidates[-1]
+    known_measured_vars = [v for v in measured_variables if v != last_var]
+
+    # ---- sample measured vars (except the solved one) ----
+    measured_cols = []
+    for var in known_measured_vars:
+        if var == 'theta':
+            measured_cols.append(theta_stream)
+        elif var in trig_values:
+            measured_cols.append(trig_values[var])
+        else:
+            measured_cols.append(np.random.uniform(region[0], region[1], N))
+    if measured_cols:
+        dataset = np.hstack([dataset] + [col.reshape(-1, 1) for col in measured_cols])
+
+    # ---- solve for last_var per-row ----
+    last_var_symbol = symbols(last_var)
+    roots_column = np.full((N, 1), np.nan)
 
     complex_count = 0
     evaluation_fail_count = 0
 
-    for i in range(1000):
-        # Substitute all known values into the polynomial at once
-        polynomial = target_polynomial
-        for j, var in enumerate(observed_constants + sorted_variables[:-1]):
-            # Replace variables with placeholders to avoid invalid syntax
-            polynomial = re.sub(rf'\b{var}\b', f'{var}_value', polynomial)
+    # Sub order here is constants + known measured
+    sub_order = []
+    sub_order.extend(observed_constants)
+    sub_order.extend(known_measured_vars)
 
-        # Replace '^' with '**' for exponentiation
+    for i in range(N):
+        polynomial = target_polynomial
+        for name in (observed_constants + known_measured_vars):
+            polynomial = re.sub(rf'\b{re.escape(name)}\b', f'{name}_value', polynomial)
         polynomial = polynomial.replace('^', '**')
 
-        # Convert the polynomial into a symbolic expression
         try:
             expr = sympify(polynomial)
-            
-            # Substitute numeric values into the expression
             substitutions = {}
-            for j, var in enumerate(observed_constants + sorted_variables[:-1]):
-                substitutions[symbols(f'{var}_value')] = dataset[i, j]
-            
-            expr = expr.subs(substitutions)
-            
-            # Extract coefficients of the polynomial in the last variable
-            poly = Poly(expr, last_var_symbol)
-            coefficients = poly.all_coeffs()
+            for j, var_name in enumerate(sub_order):
+                substitutions[symbols(f'{var_name}_value')] = dataset[i, j]
 
-            # Solve for the roots
-            roots = np.roots(coefficients)
-            
-            # Filter real roots
+            expr = expr.subs(substitutions)
+            poly = Poly(expr, last_var_symbol)
+            coeffs = poly.all_coeffs()
+            roots = np.roots(coeffs)
             real_roots = roots[np.isreal(roots)].real
-            
             if len(real_roots) > 0:
-                roots_column[i] = real_roots[0]  # Use the first real root
+                roots_column[i, 0] = real_roots[0]
             else:
                 complex_count += 1
         except Exception as e:
             evaluation_fail_count += 1
-            print(f"An exception occurred: {e}")  # Skip if polynomial evaluation fails   
+            # print(f"An exception occurred: {e}")
+            continue
 
-    # Append the roots column to the dataset
     dataset = np.hstack((dataset, roots_column))
+    dataset = dataset[~np.isnan(dataset).any(axis=1)]
 
-    # Remove rows with NaN values
-    dataset = dataset[~np.isnan(dataset).any(axis=1)] 
     print("Complex roots thrown out: ", complex_count)
-    print("Number of failed evaluations: ", evaluation_fail_count)  
-    
+    print("Number of failed evaluations: ", evaluation_fail_count)
+
     return dataset
 
+# ---------------------------------------------------------------------
+# Noise and top-level runners
+# ---------------------------------------------------------------------
 def add_gaussian_noise(input_file, output_file, epsilon):
-    # Load data
-    data = np.loadtxt(input_file)
-        
-    # Generate Gaussian noise with standard deviation as 5% of the column's mean
+    """
+    Add Gaussian noise to the last column of a saved dataset.
+
+    IMPORTANT: This matches your original behavior (noise on the solved column only).
+
+    Args:
+        input_file: Path to the base (noiseless) .dat file.
+        output_file: Path to write the noisy .dat file.
+        epsilon: Scale factor for the std dev; sigma = |mean(last_col)| * epsilon.
+    """
+    data = np.loadtxt(input_file)        
     noise = np.random.normal(0, np.abs(np.mean(data[:,-1])) * epsilon, len(data[:,-1]))
-    
-    # Apply noise only to non-constant columns
-    
     data[:, -1] += noise
-    
-    # Save to output file
     np.savetxt(output_file, data, fmt='%.18e')
 
-def run_consequence_noiseless_data_generation(input_file, output_file, region=[1, 10]):
-    np.random.seed(42)
+def run_consequence_noiseless_data_generation(input_file, output_file, region=[1, 10], seed=42):
+    """
+    Generate a noiseless dataset for a single consequence specification file.
 
-    # Extract info from file
+    Steps:
+      1) Parse file to get target polynomial and variable lists.
+      2) If derivatives depend on d1/d2, reorder 'Measured Variables' so those bases come first.
+         (This update is written back to the same file to keep metadata consistent.)
+      3) Generate dataset using derivative-aware or no-derivative path.
+      4) Save to `output_file`.
+
+    Args:
+        input_file: Path to the consequence.txt-like file with sections described above.
+        output_file: Destination .dat path.
+        region: [low, high] sampling interval for random draws.
+        seed: int for data generation seed. 
+
+    Returns:
+        True if generation succeeded and wrote a non-empty dataset; False otherwise.
+    """
+    np.random.seed(seed) # determinism for sampling
+
     target_polynomial, measured_variables, observed_constants, measured_derivatives = extract_info_from_file(input_file)
-    # Create a copy of the original file content
     with open(input_file, 'r') as f:
         original_content = f.read()
     
-    # Identify derivative-dependent variables
+    # Detect whether derivatives “use” d1/d2, so we can move d1/d2 up front
     derivative_dependent_vars = []
     if 'dx1dt' in measured_derivatives or 'd2x1dt2' in measured_derivatives:
         if 'd1' in measured_variables:
@@ -390,7 +523,6 @@ def run_consequence_noiseless_data_generation(input_file, output_file, region=[1
         print("Dataset Generation Failed. Skipping \n")
         return False
     
-    # Save dataset to file
     np.savetxt(output_file, dataset, delimiter=' ')
     print("Reordered measured variables:", [v for v in derivative_dependent_vars if v in measured_variables] + 
           [v for v in measured_variables if v not in derivative_dependent_vars])
@@ -400,8 +532,18 @@ def run_consequence_noiseless_data_generation(input_file, output_file, region=[1
     return True
 
 def run_consequence_noisy_data_generation(input_file):
-    epsilon_list = [1e-3,1e-2,1e-1,5e-2]
+    """
+    Emit multiple noisy variants of a saved dataset.
 
+    Args:
+        input_file: Path to the noiseless `.dat` file previously created.
+
+    Side effects:
+        Writes files alongside `input_file` with suffixes:
+        _0.001.dat, _0.01.dat, _0.1.dat, _0.05.dat
+        (Order preserved from your original list.)
+    """
+    epsilon_list = [1e-3,1e-2,1e-1,5e-2]
     for epsilon in epsilon_list:
         output_file = input_file.replace('.dat', f'_{epsilon}.dat')
         add_gaussian_noise(input_file, output_file,epsilon)
