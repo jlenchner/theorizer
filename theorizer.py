@@ -84,7 +84,8 @@ def NewtonianGravity():
     w = Variable('w', UofM(1 / UofM.s))
     p = Variable('p', UofM(UofM.s))
     vars = [d1, d2, d, m1, m2, w, p, Fg, Fc]
-    G, pi = constants = ('G, pi')
+    G, pi = constants('G, pi')
+    cons = [G, pi]
     eqn0 = Equation(d1 * m1 - d2 * m2)
     eqn1 = Equation(d - d1 - d2)
     eqn2 = Equation(Fg * d1**2 -  G * m1 * m2)
@@ -92,22 +93,27 @@ def NewtonianGravity():
     eqn4 = Equation(Fc - Fg)
     eqn5 = Equation(p * w - 2 * pi)
     eqns = [eqn0, eqn1, eqn2, eqn3, eqn4, eqn5]
-    eqnSys = EquationSystem(vars=vars, derivatives=[], constants=constants, equations=eqns,
+    eqnSys = EquationSystem(vars=vars, derivatives=[], constants=cons, measuredVars=vars, equations=eqns,
                                 max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
+    #for i in range(10):
+    #    index, newEqn = eqnSys.replaceRamdomDimensionallyConsistentEqn()
+    #    print("New eqn for index = " + str(index) + ": " + str(newEqn))
+    #print("\n")
     return eqnSys
 
 def SpecialRelativity():
     dt0, dt, d, v, f0, f = variables('dt0, dt, d, v, f0, f')
     L = Variable('L', UofM(UofM.m))
     vars = [dt0, dt, d, v, f0, f, L]
-    c, one = constants = ('c, one')
+    c, one = constants('c, one')
+    cons = [c, one]
     eqn0 = Equation(c * dt0 - 2 * d)
     eqn1 = Equation(c * dt - 2 * L)
     eqn2 = Equation(4 * L**2 + 4 * d**2 - v**2 * dt**2)
     eqn3 = Equation(f0 * dt0 - one)
     eqn4 = Equation(f * dt - one)
     eqns = [eqn0, eqn1, eqn2, eqn3, eqn4]
-    eqnSys = EquationSystem(vars=vars, derivatives=[], constants=constants, equations=eqns,
+    eqnSys = EquationSystem(vars=vars, derivatives=[], constants=cons, measuredVars=vars, equations=eqns,
                                 max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
     return eqnSys
 
@@ -212,3 +218,5 @@ def TimeDilationLikeTheoriesWithReplacement():
     GeneratePseudoTheoriesWithReplacement(vars=vars, derivatives=[], constants=constants,
                                           measuredVars=vars, minEqns=4, maxEqns=4,
                                           max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX)
+
+NewtonianGravity()
