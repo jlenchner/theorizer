@@ -68,10 +68,14 @@ class Constant(Variable):  #should be able to automatically pick up units of mea
                 self._value = 1.0545771817e-34
             elif self._name == 'k':
                 self._value = 1.380649e-23
-            elif self._name == "e":
+            elif self._name == "e":  #the mass of an electron, NOT the base of the natural logarithm ('exp')
                 self._value = 1.602176634e-19
             elif self._name == "pi":
                 self._value = 3.14159265359
+            elif self._name == "exp":
+                self._value = 2.71828182846
+            elif self._name == "one":
+                self._value = 1
 
         return self._value
 
