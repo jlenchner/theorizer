@@ -1306,22 +1306,3 @@ class Equation:
 
     def __str__(self):
         return str(self._poly.expr) + " (U of M: " + str(self.getUofM()) + ")"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
