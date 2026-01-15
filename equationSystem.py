@@ -596,6 +596,7 @@ class EquationSystem:
             "EquationSystem.replaceRandomDimensionallyConsistentEqnByIndex(): Vars,derivs and constants needed = " + str(
                 symbols_needed))
 
+        # --- NEW: enforce linearity in theta if present ---
         # Find the actual Variable object named "theta" (dimensionless var you added)
         theta_var = next((v for v in self._vars if str(v) == "theta"), None)
 

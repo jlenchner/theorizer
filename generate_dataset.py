@@ -1,97 +1,42 @@
-"""
-SynPAT dataset generator: builds random, dimensionally consistent axiom systems,
-optionally generates replacement axioms, computes algebraic consequences (via M2),
-and emits noiseless/noisy datasets.
-
-Notes
------
-- Timeout uses SIGALRM (POSIX only). On Windows, set --timeout None or run on macOS/Linux.
-"""
-
+import random
+from theorizer import *
+from consequence_generation import *
+from consequence_data_generation import *
+from system_data_generation import *
+from equationSystem import *
+from equation import *
+from m2_functions import *
+from unitOfMeasure import *
+from derivative import *
+from constant import *
+import re
+import os
+from pathlib import Path
+import shutil
+import time
+import psutil 
 import argparse
 import ast
-import io
-import itertools
-import os
-import random
-import re
-import shutil
 import signal
-import time
-from contextlib import contextmanager, redirect_stdout
-from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from contextlib import contextmanager
+from sympy import Integer 
 
-import numpy as np
-import psutil
-from sympy import Integer
 
-# Project imports
-from consequence_data_generation import (
-    run_consequence_noisy_data_generation,
-    run_consequence_noiseless_data_generation,
-)
-from consequence_generation import run_consequence_generation
-from constant import *
-from derivative import *
-from equation import *
-from equationSystem import *
-from m2_functions import *
-from system_data_generation import (
-    run_noiseless_system_data_generation,
-    run_noisy_system_data_generation,
-)
-from theorizer import *
-from unitOfMeasure import *
-
-# ==============================
-# Exceptions & Timeout Context
-# ==============================
 class TimeoutException(Exception):
-    """Raised when `time_limit` context times out."""
     pass
 
 @contextmanager
-def time_limit(seconds: int):
-    """
-    POSIX-only alarm-based timeout context.
-
-    Args:
-        seconds: Maximum wall time for the wrapped block. Use None to disable externally.
-
-    Raises:
-        TimeoutException: If the time limit is exceeded.
-    """
-    if seconds is None:
-        # No timeout requested: run block normally
-        yield
-        return
-
-    def _handler(signum, frame):
+def time_limit(seconds):
+    def signal_handler(signum, frame):
         raise TimeoutException("Timed out!")
-
-    # Register alarm; ensure it’s cleared afterward
-    signal.signal(signal.SIGALRM, _handler)
-    signal.alarm(int(seconds))
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(seconds)
     try:
         yield
     finally:
         signal.alarm(0)
 
-# ===================================
-# CLI Parsing & Simple Validations
-# ===================================
 def parse_args():
-    """
-    CLI for generating systems and data.
-
-    Returns:
-        argparse.Namespace with fields used throughout generation:
-          vars, derivs, numVars, numDerivs, numEquations, numReplacements,
-          numSystems, numConstConseq, genReplacements, genSysData,
-          genConsequence, genConsequenceData, conseqDataRange, sysDataRange,
-          maxConseqTerms, timeout, seed.
-    """
     parser = argparse.ArgumentParser(description="Generate dimensionally consistent systems for dataset.")
 
     parser.add_argument('--numVars', type=ast.literal_eval, default="[6,7,8,9]",
@@ -112,6 +57,10 @@ def parse_args():
 
     parser.add_argument('--numConstConseq', type=ast.literal_eval, default="1",
     help="Maximum number of constants allowed in the consequence. E.g 0 or 1"
+)
+
+    parser.add_argument('--numDerivConseq', type=ast.literal_eval, default="1",
+    help="Maximum number of derivatives allowed in the consequence. E.g 0 or 1"
 )
 
 
@@ -137,19 +86,6 @@ def parse_args():
     return parser.parse_args()
 
 def parse_and_validate_range(range_str, flag_name):
-    """
-    Validate a 2-element [low, high] range.
-
-    Args:
-        range_list: Parsed value from CLI (already list via ast.literal_eval).
-        flag_name: Name to print in error messages.
-
-    Returns:
-        The validated [low, high] list.
-
-    Raises:
-        ValueError: On invalid shape or order.
-    """
     try:
         r = range_str
         assert (
@@ -162,11 +98,9 @@ def parse_and_validate_range(range_str, flag_name):
     except Exception:
         raise ValueError(f"Invalid {flag_name}. Use format like \"[1, 5]\" with start < end.")
 
-# ==========================================
-# Compact save helpers for EquationSystem
-# ==========================================
+########## SAVING EQUATION SYSTEM FUNCTIONS ##########
+
 def _split_top_level_commas(s: str):
-    """Split by commas ignoring those inside parentheses."""
     parts, depth, start = [], 0, 0
     for i, ch in enumerate(s):
         if ch == '(':
@@ -184,29 +118,32 @@ def _split_top_level_commas(s: str):
 
 def _parse_name_unit_pairs(section_text: str):
     """
-    Parse pairs like 'a (1), b (m), c (kg)' or spaced 'a (1) b (m) c (kg)'.
-
-    Returns:
-        names, units (balanced parentheses allowed inside units).
+    Accepts text like 'a (1), b (m), c (kg)' OR 'a (1) b (m) c (kg)'.
+    Returns (names, units). Supports nested parentheses within units.
     """
     text = section_text.replace("\n", " ").strip()
     names, units = [], []
     i, n = 0, len(text)
 
     while i < n:
+        # skip separators/spaces/commas
         while i < n and text[i] in " ,":
             i += 1
         if i >= n:
             break
+
+        # parse name
         m = re.match(r'[A-Za-z_]\w*', text[i:])
         if not m:
             break
         name = m.group(0)
         i += m.end()
 
+        # skip spaces
         while i < n and text[i].isspace():
             i += 1
 
+        # expect '(' then grab balanced unit
         if i >= n or text[i] != '(':
             break
         depth = 0
@@ -219,13 +156,14 @@ def _parse_name_unit_pairs(section_text: str):
                 depth -= 1
                 if depth == 0:
                     end_unit = i
-                    i += 1 
+                    i += 1  # consume ')'
                     break
             i += 1
         unit = text[start_unit:end_unit].strip()
         names.append(name)
         units.append(unit)
 
+        # move past trailing spaces/commas
         while i < n and text[i] in " ,":
             i += 1
 
@@ -233,10 +171,8 @@ def _parse_name_unit_pairs(section_text: str):
 
 def _parse_constants(section_text: str):
     """
-    Parse constants lines like:
-      'G = 6.67e-11 (1/kg*m**3*s**(-2)), c = 299792458.0 (1/s*m)'
-    Returns:
-      (['G','c'], ['1/kg*m**3*s**(-2)', '1/s*m'])
+    Accepts 'G = 6.67e-11 (1/kg*m**3*s**(-2)), c = 299792458.0 (1/s*m)'
+    and returns (['G','c'], ['1/kg*m**3*s**(-2)', '1/s*m']).
     """
     text = section_text.replace("\n", " ").strip()
     items = _split_top_level_commas(text)
@@ -267,24 +203,21 @@ def _parse_constants(section_text: str):
     return names, units
 
 def _format_units(u: str) -> str:
-    """Normalize unit strings: '**' -> '^' and collapse whitespace."""
+    # Convert Python power to caret, keep parentheses like s^(-2)
     u = (u or "").replace("**", "^")
-    return re.sub(r'\s+', '', u)
+    # remove extraneous whitespace
+    u = re.sub(r'\s+', '', u)
+    return u
 
 def save_equation_system_to_file(eqn_system_or_str, filename="temp.txt"):
     """
-    Write a compact, machine-parsable system file.
-
-    Accepts either an EquationSystem object or its pretty string.
-
-    Args:
-        eqn_system_or_str: EquationSystem or str(equation system).
-        filename: Destination path.
+    Accepts either an EquationSystem object OR its string.
+    Writes a compact, clean, machine-parsable file.
     """
     text_full = str(eqn_system_or_str) if not isinstance(eqn_system_or_str, str) else eqn_system_or_str
     text = (text_full or "").strip().replace("\r\n", "\n")
 
-    # Locate top-level sections
+    # locate sections
     header_re = re.compile(r'^\s*(Variables|Derivatives|Constants|Equations)\s*:\s*$', flags=re.MULTILINE)
     matches = list(header_re.finditer(text))
     sections = {}
@@ -320,7 +253,7 @@ def save_equation_system_to_file(eqn_system_or_str, filename="temp.txt"):
         const_names = cn
         const_units = [_format_units(x) for x in cu]
 
-    # Equations (optional "(U of M: ...)" per line)
+    # Equations (optionally have "(U of M: ...)")
     eq_exprs, eq_units = [], []
     if sections.get("Equations"):
         lines = [ln for ln in sections["Equations"].splitlines() if ln.strip()]
@@ -336,13 +269,13 @@ def save_equation_system_to_file(eqn_system_or_str, filename="temp.txt"):
             eq_exprs.append(expr)
             eq_units.append(unit)
 
-    # Fall back to pretty string if nothing parsed
+    # If everything parsed empty, write the pretty string
     if not (vars_names or deriv_names or const_names or eq_exprs):
         with open(filename, "w", encoding="utf-8") as f:
             f.write(text_full)
         return
 
-    # Writing to file
+    # Write compact file
     with open(filename, "w", encoding="utf-8") as f:
         f.write(f"Variables: {vars_names}\n")
         f.write(f"Constants: {const_names}\n")
@@ -357,30 +290,14 @@ def save_equation_system_to_file(eqn_system_or_str, filename="temp.txt"):
         for unit in eq_units:
             f.write((unit or "") + "\n")
 
-# ======================================================================
-# Temporary files utilities (Managing scripts generated by subprocesses)
-# ======================================================================
+######### FILE PARSING FUNCTIONS #########
+
 def create_replacement_files(replacement_info, num_replacements, original_file="temp.txt"):
-    """
-    Create `temp_replacement_#.txt` files by applying provided replacements
-    to a compact system file.
-
-    `replacement_info` format (sequence of lines):
-        <equation_index (1-based)>
-        <equation string> (U of M: <unit string with possible nested parens>)
-        <equation_index>
-        <equation string> (U of M: <unit>)
-        ...
-
-    Args:
-        replacement_info: Text block produced by `replaceRandomDimensionallyConsistentEqn()`.
-        num_replacements: How many replacements/files to emit (prefix of the provided list).
-        original_file: Source compact file (typically the just-saved temp system).
-    """
+    # Read the original file
     with open(original_file, 'r') as f:
-        original_content = f.read() 
-
-    # Parse replacement_info into structured entries   
+        original_content = f.read()
+    
+    # Parse the replacement info
     replacements = []
     current_replacement = {}
     lines = replacement_info.split('\n')
@@ -389,15 +306,16 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
         line = line.strip()
         if not line:
             continue
-        if line.isdigit(): 
-            if current_replacement:  
+        if line.isdigit():  # This is an equation index
+            if current_replacement:  # Save previous replacement if exists
                 replacements.append(current_replacement)
-            current_replacement = {'index': int(line) - 1} 
-        elif '(U of M:' in line:  
+            current_replacement = {'index': int(line) - 1}  # Convert to 0-based index
+        elif '(U of M:' in line:  # Unit of measure
+            # Extract the equation and unit - handle nested parentheses in units
             parts = line.split('(U of M:')
             current_replacement['equation'] = parts[0].strip().replace('**', '^')
             
-            # Find matching ')' for nested unit parens
+            # Find the matching closing parenthesis for the unit
             unit_part = parts[1]
             open_parens = 1
             end_pos = 0
@@ -419,10 +337,10 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
     # Ensure we have exactly num_replacements
     replacements = replacements[:num_replacements]
     
-    # Re-scan original into sections while preserving order
+    # Parse the original file structure
     sections = {}
     current_section = None
-    sections_order = []  
+    sections_order = []  # To maintain original section order
     
     for line in original_content.split('\n'):
         if line.startswith('Variables:') or line.startswith('Constants:') or line.startswith('Derivatives:'):
@@ -431,7 +349,7 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
             sections_order.append(current_section)
         elif line.startswith('Equations:'):
             current_section = 'Equations'
-            sections[current_section] = [line + '\n']  
+            sections[current_section] = [line + '\n']  # Start equations list
             sections_order.append(current_section)
         elif line.startswith('Units of Measure of'):
             current_section = line
@@ -440,19 +358,21 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
         elif current_section == 'Equations' and line.strip():
             sections['Equations'].append(line + '\n')
         elif current_section and current_section.startswith('Units of Measure of'):
+            # Only add to units section if it's not the header line
             if line.strip() and not line.startswith('Units of Measure of'):
                 sections[current_section] += line + '\n'
     
-    # Apply replacements and write out single-file variants
+    # For each replacement, create a new file
     for k, replacement in enumerate(replacements[:num_replacements]):
-
+        # Create a copy of the original content
         new_content = {k: v[:] if isinstance(v, list) else v for k, v in sections.items()}
-        # Swap equation line
+        
+        # Replace the specified equation
         eqn_index = replacement['index']
         if 'Equations' in new_content and eqn_index < len(new_content['Equations']) - 1:
             new_content['Equations'][eqn_index + 1] = replacement['equation'] + '\n'
         
-        # Swap corresponding unit line
+        # Replace the corresponding unit of measure
         units_line = None
         for section in new_content:
             if section.startswith('Units of Measure of Equations'):
@@ -460,7 +380,9 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
                 break
         
         if units_line:
+            # Split units section into lines
             unit_lines = new_content[units_line].split('\n')
+            # The first line is the header "Units of Measure of Equations:"
             header = unit_lines[0]
             unit_values = unit_lines[1:-1]  # Skip header and last empty line
             
@@ -473,7 +395,7 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
                 if unit.strip():  # Only add non-empty lines
                     new_content[units_line] += unit + '\n'
         
-        # Reconstruct in original section order
+        # Reconstruct the file content in original order
         output_lines = []
         for section in sections_order:
             if section in new_content:
@@ -482,6 +404,7 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
                 else:
                     output_lines.append(new_content[section])
         
+        # Write to replacement file
         replacement_file = f"temp_replacement_{k+1}.txt"
         with open(replacement_file, 'w') as f:
             f.write(''.join(output_lines))
@@ -489,9 +412,7 @@ def create_replacement_files(replacement_info, num_replacements, original_file="
         print(f"Created replacement file: {replacement_file}")
 
 def cleanup_temp_files(system_num):
-    """
-    Remove temporary files emitted during a generation attempt for a given system index.
-    """
+    """Clean up all temporary files for a given system number"""
     patterns = [
         f"temp_system_{system_num}.txt",
         f"temp_system_{system_num}.dat",
@@ -511,15 +432,6 @@ def cleanup_temp_files(system_num):
                 pass
 
 def parse_eqnSystem_from_file(file_path):
-    """
-    Read a compact system file and reconstruct an EquationSystem.
-
-    Args:
-        file_path: Path to a compact 'system.txt'.
-
-    Returns:
-        EquationSystem instance ready for downstream use.
-    """
     data = {
         'variables': [],
         'constants': [],
@@ -530,6 +442,7 @@ def parse_eqnSystem_from_file(file_path):
     with open(file_path, 'r') as file:
         content = file.read()
     
+    # Helper function to extract list data
     def extract_list(section, prefix):
         list_str = section.split(prefix, 1)[1].split('\n', 1)[0].strip()
         try:
@@ -537,8 +450,10 @@ def parse_eqnSystem_from_file(file_path):
         except:
             return []
     
-    # Split into sections and collect lists/equations
+    # Split into main sections
     sections = re.split(r'\n(?=\w+:)', content)
+    
+    # Process each section
     for section in sections:
         if section.startswith('Variables:'):
             data['variables'] = extract_list(section, 'Variables:')
@@ -547,9 +462,12 @@ def parse_eqnSystem_from_file(file_path):
         elif section.startswith('Derivatives:'):
             data['derivatives'] = extract_list(section, 'Derivatives:')
         elif section.startswith('Equations:'):
+            # Get everything after "Equations:" and before "Units of Measure"
             eqn_content = section.split('Equations:', 1)[1]
             if 'Units of Measure of Variables:' in eqn_content:
-                eqn_content = eqn_content.split('Units of Measure of Variables:', 1)[0]            
+                eqn_content = eqn_content.split('Units of Measure of Variables:', 1)[0]
+            
+            # Take all non-empty lines that don't look like units sections
             equations = []
             for line in eqn_content.split('\n'):
                 line = line.strip()
@@ -557,17 +475,24 @@ def parse_eqnSystem_from_file(file_path):
                     equations.append(line)
             data['equations'] = equations
 
-    # Build symbol objects
+    # Create variables
     vars = variables(','.join(data['variables'])) if data['variables'] else []
+    
+    # Create derivatives
     derivs = derivatives(','.join(data['derivatives'])) if data['derivatives'] else []
+    
+    # Create constants
     consts = constants(','.join(data['constants'])) if data['constants'] else []
     
-    # Evaluate equation strings in the symbol context
+    # Create equations by parsing the equation strings
     eqns = []
     for eqn_str in data['equations']:
         try:
+            # Skip any lines that look like units
             if 'Units of Measure of' in eqn_str:
-                continue                
+                continue
+                
+            # Convert ^ to ** for Python exponentiation
             eqn_str = eqn_str.replace('^', '**')
             
             # Create a dictionary of all symbols for evaluation
@@ -583,11 +508,11 @@ def parse_eqnSystem_from_file(file_path):
             eqn_expr = eval(eqn_str, {'__builtins__': None}, symbols_dict)
             eqn = Equation(eqn_expr)
             eqns.append(eqn)
-
         except Exception as e:
             print(f"Error parsing equation '{eqn_str}': {str(e)}")
             continue
-
+    
+    # Create and return the EquationSystem
     eqnSys = EquationSystem(
         vars=vars,
         derivatives=derivs,
@@ -595,30 +520,19 @@ def parse_eqnSystem_from_file(file_path):
         equations=eqns,
         max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX
     )
+    
     return eqnSys
 
 def get_next_system_num():
-    """
-    Return next available global System_N index under dataset/ (legacy helper).
-    Prefer the per-config incrementer used inside run_generation().
-    """
     system_num = 1
     while Path(f"dataset/System_{system_num}").exists():
         system_num += 1
     return system_num
 
+####### DATA GENERATION FUNCTIONS ########
 
-# =========================================
-# Rerun pipeline on an existing system dir
-# =========================================
-def run_generation_from_prior_file(system_directory: str, args: argparse.Namespace) -> None:
-    """
-    Rerun the downstream pipeline (replacements, data, consequence) for an existing system directory.
+def run_generation_from_prior_file(system_directory, args):
 
-    Args:
-        system_directory: Path like dataset/<config>/System_<n>.
-        args: Parsed CLI args (flags determine which stages are run).
-    """
     genReplacement = args.genReplacements
     genSysData = args.genSysData
     genConsequence = args.genConsequence
@@ -626,13 +540,16 @@ def run_generation_from_prior_file(system_directory: str, args: argparse.Namespa
     conseqDataRange = args.conseqDataRange
     sysDataRange = args.sysDataRange
     timeout_limit = args.timeout
+    numConstConseq = args.numConstConseq
+    numDerivConseq = args.numDerivConseq
+    max_conseq_terms = args.maxConseqTerms
 
     start_time = time.process_time()
     process = psutil.Process(os.getpid())
     Equation.SetLogging()
 
-    stage_times: Dict[str, float] = {}
-    mem_usage: Dict[str, float] = {}
+    stage_times = {}
+    mem_usage = {}
 
     if not Path(system_directory).exists():
         print(f"Directory {system_directory} does not exist")
@@ -689,13 +606,7 @@ def run_generation_from_prior_file(system_directory: str, args: argparse.Namespa
             t = time.process_time()
             if genConsequence:
                 print("Generating consequence. \n")
-                # Pass the same knobs as in run_generation for consistency
-                found_consequence = run_consequence_generation(
-                    temp_system_file,
-                    temp_consequence,
-                    args.numConstConseq,
-                    args.maxConseqTerms
-                )
+                found_consequence = run_consequence_generation(temp_system_file, temp_consequence, numConstConseq, max_conseq_terms, numDerivConseq)
                 if not found_consequence:
                     print("Could not find a consequence. Skipping. \n")
                     cleanup_temp_files(system_num)
@@ -729,19 +640,20 @@ def run_generation_from_prior_file(system_directory: str, args: argparse.Namespa
             print(f"Total time: {total_time:.2f} seconds")
             print(f"Peak memory: {peak_memory:.2f} MB")
             print("Stage times:")
-            for stage, tv in stage_times.items():
-                print(f"  {stage}: {tv:.2f}s")
-
+            for stage, t in stage_times.items():
+                print(f"  {stage}: {t:.2f}s")
+            
             stats_dir = f"dataset_gen_statistics/{config_key}/System_{system_num}"
             Path(stats_dir).mkdir(parents=True, exist_ok=True)
+
             with open(f"{stats_dir}/performance.txt", "a") as f:
                 f.write(f"\n--- RERUN STATS ---\n")
                 f.write(f"Total time: {total_time:.2f} seconds\n")
                 f.write(f"Peak memory: {peak_memory:.2f} MB\n")
-                for stage, tv in stage_times.items():
-                    f.write(f"{stage}_time: {tv:.2f}\n")
-                for stage, mv in mem_usage.items():
-                    f.write(f"{stage}_memory: {mv:.2f} MB\n")
+                for stage, t in stage_times.items():
+                    f.write(f"{stage}_time: {t:.2f}\n")
+                for stage, m in mem_usage.items():
+                    f.write(f"{stage}_memory: {m:.2f} MB\n")
 
     except TimeoutException:
         print(f"Timeout reached after {timeout_limit} seconds, skipping this rerun.")
@@ -751,17 +663,7 @@ def run_generation_from_prior_file(system_directory: str, args: argparse.Namespa
         print(f"Error during rerun: {str(e)}")
         cleanup_temp_files(system_num)
 
-# =========================
-# Main generation pipeline
-# =========================        
 def run_generation(args):
-    """
-    Top-level pipeline to enumerate configurations, generate systems, and run selected stages.
-
-    Args:
-        args: Parsed CLI args.
-    """
-
     Equation.SetLogging()
 
     variable_options = args.vars
@@ -772,6 +674,7 @@ def run_generation(args):
     numReplacements = args.numReplacements
     numSystems = args.numSystems
     numConstConseq = args.numConstConseq
+    numDerivConseq = args.numDerivConseq
     conseqDataRange = args.conseqDataRange
     sysDataRange = args.sysDataRange
     genReplacement = args.genReplacements
@@ -787,13 +690,13 @@ def run_generation(args):
         np.random.seed(seed)
         print(f"Using random seed: {seed}")
 
-    # output dir
+    # Create dataset directory if it doesn't exist
     Path("dataset").mkdir(exist_ok=True)
 
-    # Count existing systems per configuration (so that code may resume between runs)
+    # Track completed systems per configuration
     config_counts = {}
 
-    # All parameter combinations
+    # Generate all parameter combinations
     param_combinations = list(itertools.product(num_vars_options, num_derivs_options, num_eqns_options))
 
     for num_vars, num_derivs, num_eqns in param_combinations:
@@ -814,24 +717,21 @@ def run_generation(args):
         systems_added = 0
         attempts = 1
 
-        # Keep trying until we add the requested number or hit a soft attempt cap
         while config_counts[config_key] < (numSystems + existing_systems) and attempts < 10:
+            # Start timing
             start_time = time.process_time()
             process = psutil.Process(os.getpid())
             print(f"\nAttempt {attempts} (Adding system: {systems_added+1}/{numSystems})")
             attempts+=1
         
-            # Randomly sample symbols for this system
             var_names   = random.sample(variable_options, k=num_vars)
             deriv_names = random.sample(derivative_options, k=num_derivs)
-
-            # If sin/cos are present without theta, swap in theta for a non-trig var (ensures identity validity)
             deps = {'sinTheta', 'cosTheta', 'eTheta'}
             if any(d in var_names for d in deps) and 'theta' not in var_names and 'theta' in variable_options:
                 i = next((i for i, v in enumerate(var_names) if v not in deps), None)
                 var_names[i if i is not None else random.randrange(len(var_names))] = 'theta'
             
-            # Construct EquationSystem
+            # Create the symbols
             vars = variables(','.join(var_names))
             derivs = derivatives(','.join(deriv_names))
             G, c, pi = constants('G,c,pi')
@@ -847,6 +747,7 @@ def run_generation(args):
             stage_times = {}
             mem_usage = {}
 
+
             # Find the next available system number within this configuration
             def get_next_system_num_with_config():
                 system_num = 1
@@ -858,7 +759,7 @@ def run_generation(args):
             
             try:
                 with time_limit(timeout_limit):
-                    # ----- 1) Generate random system (and optionally tack on trig identity) -----
+                    ##### Generating system #####
                     t = time.process_time()
 
                     if base_num_eqns > 0:
@@ -881,11 +782,14 @@ def run_generation(args):
                             max_vars_derivatives_and_constants_per_eqn=Equation.NO_MAX
                         )
 
+                    # If both sin_theta and cos_theta are in the sampled set, append sin^2 + cos^2 = 1
                     if need_trig_identity:
                         sin_v = EquationSystem._get_var_by_name(eqnSystem._vars, "sinTheta")
                         cos_v = EquationSystem._get_var_by_name(eqnSystem._vars, "cosTheta")
+                        # (They should be present since they were in `vars`, but we double-check.)
                         if sin_v is not None and cos_v is not None:
                             trig_identity = Equation(sin_v**2 + cos_v**2 - Integer(1))
+                            # We generated base_num_eqns already, so APPEND to reach the requested total:
                             eqnSystem.addEquation(trig_identity, keep_count=False)
 
                     eqn_system_str = str(eqnSystem)
@@ -901,7 +805,7 @@ def run_generation(args):
                     temp_system_file = f"temp_system_{system_num}.txt"
                     save_equation_system_to_file(eqn_system_str, temp_system_file)
 
-                    # ----- 2) Replacement axioms -----
+                    ##### Generating replacement axioms #####
                     t = time.process_time()
                     if genReplacement:
                         print("\n Now generating replacement axioms. \n")
@@ -913,6 +817,7 @@ def run_generation(args):
                                 replacement_info += f"{index+1}\n{eqn}\n"  # +1 to make it 1-based index
                                 print(f"Replacement {j+1}: Equation {index+1} with {eqn}")
 
+                        # Generate replacement files if needed
                         if numReplacements > 0:
                             create_replacement_files(replacement_info, numReplacements, temp_system_file)
 
@@ -920,7 +825,7 @@ def run_generation(args):
                     stage_times['replacement_generation'] = time.process_time() - t
                     mem_usage['replacement_generation'] = process.memory_info().rss / (1024 * 1024)
                     
-                    # ----- 3) System data -----
+                    ##### Generating system data #####
                     t = time.process_time()
                     if genSysData:
                         print("\n Generating system data. Searching for roots. \n")
@@ -941,12 +846,12 @@ def run_generation(args):
                     stage_times['system_root_search'] = time.process_time() - t
                     mem_usage['system_root_search'] = process.memory_info().rss / (1024 * 1024)
                     
-                    # ----- 4) Algebraic consequence (M2 elimination) -----
+                    ##### Generating consequence #####
                     t = time.process_time()
                     if genConsequence:
                         print("Generating consequence. \n")
                         temp_consequence = f"temp_consequence_{system_num}.txt"
-                        found_consequence = run_consequence_generation(temp_system_file, temp_consequence, numConstConseq, max_conseq_terms)
+                        found_consequence = run_consequence_generation(temp_system_file, temp_consequence, numConstConseq, max_conseq_terms, numDerivConseq)
                         if not found_consequence:
                             print("Could not find a consequence. Skipping. \n")
                             cleanup_temp_files(system_num)
@@ -955,7 +860,7 @@ def run_generation(args):
                     stage_times['consequence_generation'] = time.process_time() - t
                     mem_usage['consequence_generation'] = process.memory_info().rss / (1024 * 1024)
 
-                    # ----- 5) Data for consequence -----
+                    ##### Generating data for consequence #####
                     t = time.process_time()
                     if genConsequenceData:
                         print("\n Generating noiseless data for consequence. ")
@@ -977,7 +882,6 @@ def run_generation(args):
                     stage_times['consequence_data_generation'] = time.process_time() - t
                     mem_usage['consequence_data_generation'] = process.memory_info().rss / (1024 * 1024)
 
-                    # ----- 6) Write outputs and stats -----
                     total_time = time.process_time() - start_time
                     peak_memory = max(mem_usage.values())
                     print("\nPerformance Summary:")
@@ -1053,18 +957,20 @@ if __name__ == "__main__":
     args.sysDataRange = parse_and_validate_range(args.sysDataRange, "--sysDataRange")
     run_generation(args)
 
-    # Batch rerun utility (disabled by default)
     """
     base_dir = "dataset"
-    all_system_dirs: List[Path] = []
+    all_system_dirs = []
+
+    # First collect all directories
     for config_dir in Path(base_dir).iterdir():
         if config_dir.is_dir():
             for system_dir in config_dir.iterdir():
                 if system_dir.is_dir() and system_dir.name.startswith("System_"):
                     all_system_dirs.append(system_dir)
 
+    # Then process them
     for current_directory in all_system_dirs:
         print(f"\nProcessing directory: {current_directory} \n")
-        run_generation_from_prior_file(str(current_directory), args)
+        run_generation_from_prior_file(current_directory, args)
     """
-                
+                    

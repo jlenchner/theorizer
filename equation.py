@@ -23,7 +23,7 @@ from deprecated import deprecated  # In PyCharm debug mode this can cause the er
 
 
 class Equation:
-    PROB_OF_NUM_TERMS = [0, 42.0/70.0, 20.0/70.0, 6.0/70.0, 2/70.0]  #Probs of a randomly generated poly having 1 term, 2 terms, etc.
+    PROB_OF_NUM_TERMS = [0, 32.0/70.0, 26.0/70.0, 10.0/70.0, 2/70.0]  #Probs of a randomly generated poly having 1 term, 2 terms, etc.
                                                                      #Values have been extrapolated from the AI Feynman database.
     PROB_FACTORS_PER_TERM = [0.19, 0.47, 0.25, 0.09]  #Probs that a term in a randomly generated poly will have 1, 2, 3, etc. factors
                                                       #Values have been extrapolated from the AI Feynman database.

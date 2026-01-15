@@ -1,6 +1,6 @@
 # SynPAT: Generating Synthetic Physical Theories with Data
 
-This is a GitHub repository for the synthetic theory and data generation system developed for the paper [**SynPAT: Generating Synthetic Physical Theories with Data**](https://www.arxiv.org/abs/2505.00878). It generates symbolic physical systems and corresponding synthetic data to benchmark symbolic regression and scientific discovery algorithms.
+This is a GitHub repository for the synthetic theory and data generation system developed for the paper **SynPAT: Generating Synthetic Physical Theories with Data**. It generates symbolic physical systems and corresponding synthetic data to benchmark symbolic regression and scientific discovery algorithms.
 
 ---
 
@@ -61,27 +61,37 @@ i1 : exit()
 
 ## Usage: Generating Synthetic Systems and Data
 
-The main script is `run_generation.py`. It generates symbolic systems, derivative structures, replacements, and consequences, and produces datasets with optional noise.
+The main script is `generate_dataset.py`. It generates symbolic systems, derivative structures, replacements, and consequences, and produces datasets with optional noise.
+
+### Quick Start with Shell Script
+
+For convenience, a shell script `run_generation.sh` is provided with all commonly used parameters:
+
+```bash
+./run_generation.sh
+```
+
+You can modify the parameters in the script as needed.
 
 ### Example Run
 
 ```bash
 python generate_dataset.py \
-    --vars "['m1', 'm2', 'd1', 'd2', 'W', 'theta', 'sinTheta', 'p', 'Fc', 'Fg']" \
+    --vars "['m1', 'm2', 'd1', 'd2', 'W', 'p', 'Fc', 'Fg']" \
     --derivs "['dx1dt', 'dx2dt', 'd2x1dt2', 'd2x2dt2']" \
     --numVars "[6,7,8]" \
     --numDerivs "[2,3]" \
     --numEquations "[4,5]" \
     --numReplacements 5 \
     --numSystems 2 \
-    --genReplacements True\
-    --genSysData False\
-    --genConsequence True\
-    --genConsequenceData True\
+    --genReplacements True \
+    --genSysData False \
+    --genConsequence True \
+    --genConsequenceData True \
     --numConstConseq 1 \
+    --numDerivConseq 1 \
     --conseqDataRange "[1, 5]" \
     --sysDataRange "[2, 6]" \
-    --maxConseqTerms "8" \
     --timeout 3600 \
     --seed 123
 ```
@@ -98,13 +108,13 @@ python generate_dataset.py \
 | `--numReplacements`    | Number of replacement axioms to generate per system.                       | `5` |
 | `--numSystems`         | Number of independent systems to generate for each configuration.          | `3` |
 | `--numConstConseq`     | Maximum number of constants allowed in the consequence.                    | `1` |
+| `--numDerivConseq`     | Maximum number of derivatives allowed in the consequence.                  | `1` |
 | `--genReplacements`    | Enable generation of dimensionally consistent replacement axioms.          | `True` |
 | `--genSysData`         | Generate synthetic data for each axiom system.                             | `True` |
 | `--genConsequence`     | Compute an algebraic consequence using Macaulay2.                          | `True` |
 | `--genConsequenceData` | Generate data for the derived consequence.                                 | `True` |
 | `--conseqDataRange`    | Range `[start, end]` for consequence data sampling.                        | `[1, 10]` |
 | `--sysDataRange`       | Range `[start, end]` for system data sampling.                             | `[1, 10]` |
-| `--maxConseqTerms`     | Upper bound on the number of monomials allowed in the consequence polynomial                             | `8` |
 | `--timeout`            | Max number of seconds to allow for generating a single system. `None` disables the timeout. | `3600` |
 | `--seed`               | Random seed for reproducibility.                                           | `42` |
 
@@ -122,19 +132,19 @@ Dataset contents:
 
 ```
 - **Symbolic System**
-  - `system.txt` — Base symbolic system with variable types, units, constants, and equations
-  - `consequence.txt` — Derived consequence polynomial with metadata
+  - `system.txt` â€” Base symbolic system with variable types, units, constants, and equations
+  - `consequence.txt` â€” Derived consequence polynomial with metadata
 
 - **Noiseless Data**
-  - `system.dat` — Clean data for `system.txt`
-  - `consequence.dat` — Clean data for `consequence.txt`
+  - `system.dat` â€” Clean data for `system.txt`
+  - `consequence.dat` â€” Clean data for `consequence.txt`
 
-- **Noisy Data** (Gaussian noise with ε ∈ {0.001, 0.01, 0.05, 0.1}):
-  - `system_ε.dat` — Noisy system data
-  - `consequence_ε.dat` — Noisy consequence data
+- **Noisy Data** (Gaussian noise with Îµ âˆˆ {0.001, 0.01, 0.05, 0.1}):
+  - `system_Îµ.dat` â€” Noisy system data
+  - `consequence_Îµ.dat` â€” Noisy consequence data
 
 - **Replacement Systems**
-  - `replacement_1.txt` to `replacement_5.txt` — `system.txt` with one axiom replaced (for ablation studies)
+  - `replacement_1.txt` to `replacement_5.txt` â€” `system.txt` with one axiom replaced (for ablation studies)
 
 ```
 
@@ -177,31 +187,8 @@ Our code is released under the MIT License (see `LICENSE`).
 
 This project uses the following third-party software:
 
-- **SymPy** — BSD 3-Clause  
+- **SymPy** â€” BSD 3-Clause  
   License: https://github.com/sympy/sympy/blob/master/LICENSE
 
-- **Macaulay2** — GNU GPL (v2 or later / v3)  
+- **Macaulay2** â€” GNU GPL (v2 or later / v3)  
   License: https://macaulay2.com/Downloads/Copyright/
-
----
-
-## How to Cite
-
-If you use **SynPAT** (code or datasets), please cite the paper and (optionally) the dataset.
-
-**Paper**
-
-> Jon Lenchner, Karan Srivastava, Joao Goncalves, Lior Horesh. *SynPAT: Generating Synthetic Physical Theories with Data*. arXiv:2505.00878.
-
-- Preprint: https://www.arxiv.org/abs/2505.00878
-
-```bibtex
-@misc{synpat2025,
-  title         = {SynPAT: Generating Synthetic Physical Theories with Data},
-  author        = {Karan Srivastava},
-  year          = {2025},
-  eprint        = {2505.00878},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  url           = {https://arxiv.org/abs/2505.00878}
-}

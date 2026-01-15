@@ -1,28 +1,13 @@
 import subprocess
 import os
 
+
+
 def projection(variables, axioms, measured_variables, non_measured_variables, filename):
-    """
-    Compute the algebraic projection (elimination) of an ideal using Macaulay2.
-
-    Given:
-      - variables: All ring variables (strings usable as M2 symbols).
-      - axioms: Axioms as strings in M2 syntax (e.g., "x^2 + y - 1").
-      - measured_variables: Subset of variables to keep after elimination.
-      - non_measured_variables: Variables to eliminate.
-      - filename: Destination file to write human-readable results to.
-
-    Side effects:
-      - Writes a result file (gröbner bases + eliminated basis polynomials).
-      - Prints M2 stdout; prints M2 stderr if present.
-
-    Returns:
-      The textual contents of `filename` on success, or an error message string on failure.
-    """
-    
+    # Macaulay2 executable path
     macaulay2_path = "/opt/homebrew/bin/M2"
 
-    # Constructing the Macaulay2 script
+    # Construct the Macaulay2 script
     macaulay2_script = f"""
 -- Define the ring and ideal
 print("Beginning projection process")
@@ -79,7 +64,7 @@ close f;
 
 """
 
-    # Use a temporary script and output file; move to `filename` on success.
+    # Write the Macaulay2 script to a temporary file
     script_path = "temp_script.m2"
     with open(script_path, "w") as file:
         file.write(macaulay2_script)
@@ -90,14 +75,14 @@ close f;
     # Remove the temporary script file
     os.remove(script_path)
 
-    # (Optional) Uncomment to print Macaulay2 logs
-    """
+    # Print the output from Macaulay2
     print("Output from Macaulay2:")
     print(result.stdout)
+
+    # Print any errors
     if result.stderr:
         print("Errors:")
         print(result.stderr)
-    """
 
     # Read and return the contents of the saved file
     try:
@@ -110,21 +95,7 @@ close f;
         return f"Error reading the file: {e}"
     
 def check_consistency(variables, axioms, filename):
-    """
-    Check ideal consistency (non-empty variety) with Macaulay2.
-
-    Considers the ideal I = <axioms> in QQ[variables] with Lex order.
-    A common convention: dim(I) == -1 ↔ inconsistent (empty variety).
-
-    Args:
-      variables: Ring variables in M2 syntax.
-      axioms: Axioms as M2 expressions (strings).
-      filename: Destination text file written with either "consistent." or "inconsistent."
-      macaulay2_path: Optional explicit path to M2 binary.
-
-    Returns:
-      The textual contents of `filename` on success, or an error message string on failure.
-    """
+    # Macaulay2 executable path
     macaulay2_path = "/opt/homebrew/bin/M2"
 
     # Construct the Macaulay2 script
@@ -160,7 +131,7 @@ close f;
 
 """
     
-    # Use a temporary script and output file; move to `filename` on success.
+    # Write the Macaulay2 script to a temporary file
     script_path = "temp_script.m2"
     with open(script_path, "w") as file:
         file.write(macaulay2_script)
@@ -171,14 +142,15 @@ close f;
     # Remove the temporary script file
     os.remove(script_path)
 
-    # (Optional) Uncomment to print Macaulay2 logs
-    """
-    print("Output from Macaulay2:")
-    print(result.stdout)
+    # Print the output from Macaulay2
+    #print("Output from Macaulay2:")
+    #print(result.stdout)
+
+    # Print any errors
     if result.stderr:
         print("Errors:")
         print(result.stderr)
-    """
+
     # Read and return the contents of the saved file
     try:
         with open(filename, "r") as file:
