@@ -23,7 +23,7 @@ from deprecated import deprecated  # In PyCharm debug mode this can cause the er
 
 
 class Equation:
-    PROB_OF_NUM_TERMS = [0, 32.0/70.0, 26.0/70.0, 10.0/70.0, 2/70.0]  #Probs of a randomly generated poly having 1 term, 2 terms, etc.
+    PROB_OF_NUM_TERMS = [0, 42.0/70.0, 20.0/70.0, 6.0/70.0, 2/70.0]  #Probs of a randomly generated poly having 1 term, 2 terms, etc.
                                                                      #Values have been extrapolated from the AI Feynman database.
     PROB_FACTORS_PER_TERM = [0.19, 0.47, 0.25, 0.09]  #Probs that a term in a randomly generated poly will have 1, 2, 3, etc. factors
                                                       #Values have been extrapolated from the AI Feynman database.
@@ -36,6 +36,9 @@ class Equation:
                                                                                   #Values have been extrapolated from the AI Feynman database.
 
     HOMOGENEOUS_EQN_PROB = 0.05
+
+    ALLOW_MULTIPLE_DERIVS_PER_TERM = False
+    HIGHEST_ALLOWED_DERIV_POWERS = 2
 
     NO_MAX = 999
 
@@ -260,9 +263,11 @@ class Equation:
             numVarsDerivsAndConstants = len(vars) + len(derivatives) + len(constants) - numZeroes
             if numVarsDerivsAndConstants <= max_varsDerivsAndConstants:
                 term = Equation.GenerateTermFromBaseNum(baseNum, vars, derivatives, constants)
-                u_of_m = Equation.GetUofMForTerm(term)
-                if u_of_m_to_match == u_of_m and not Equation.TermsEqualModUnnamedConstants(term, term_to_match):
-                    allConsistentTerms.append(term)
+                if Equation.TermMeetsDerivativeConstraints(term):
+                    u_of_m = Equation.GetUofMForTerm(term)
+                    if u_of_m_to_match == u_of_m and not Equation.TermsEqualModUnnamedConstants(term, term_to_match):
+                        allConsistentTerms.append(term)
+
 
         return allConsistentTerms
 
@@ -637,6 +642,8 @@ class Equation:
             for tuple in tuples:
                 for s_baseNum in sBaseNums:
                     primitiveTerm = Equation.GenerateTermFromTupleAndBaseNum(tuple, s_baseNum)
+                    if not Equation.TermMeetsDerivativeConstraints(primitiveTerm):
+                        continue
                     u_of_m = Equation.GetUofMForTerm(primitiveTerm)
                     lookupPair = uOfMToTermLookupDict.get(u_of_m._units)
                     vars_derivs_and_constants_in_term = primitiveTerm.free_symbols
@@ -815,7 +822,8 @@ class Equation:
                 numVarserivsAndConstants = len(vars) + len(derivatives) + len(constants) - numZeroes
                 if numVarserivsAndConstants <= max_varsDerivsAndConstants:
                     term = Equation.GenerateTermFromBaseNum(baseNum, vars, derivatives, constants)
-                    allTerms.append(term)
+                    if Equation.TermMeetsDerivativeConstraints(term):
+                        allTerms.append(term)
 
         return allTerms
 
@@ -1037,7 +1045,8 @@ class Equation:
                     if vars_derivs_and_constants_so_far[i] > highest_power:
                         highest_power = vars_derivs_and_constants_so_far[i]
 
-            if highest_power <= max_power and len(term.free_symbols) <= max_varsDerivsAndConstants:
+            if highest_power <= max_power and len(term.free_symbols) <= max_varsDerivsAndConstants and \
+                    Equation.TermMeetsDerivativeConstraints(term):
                 break
 
 
@@ -1045,6 +1054,29 @@ class Equation:
         term = c*term
 
         return term
+
+    @classmethod
+    def TermMeetsDerivativeConstraints(cls, term):
+        countDerivatifs = 0
+        maxPower = 0
+        for arg in term.args:
+            if isinstance(arg, Derivatif):
+                countDerivatifs += 1
+                if maxPower == 0:
+                    maxPower = 1
+            if isinstance(arg, Pow):
+                if isinstance(arg.args[0], Derivatif):
+                    countDerivatifs += 1
+                    if arg.args[1] > maxPower:
+                        maxPower = arg.args[1]
+
+        ALLOW_MULTIPLE_DERIVS_PER_TERM = False
+        HIGHEST_ALLOWED_DERIV_POWERS = 2
+
+        if (not ALLOW_MULTIPLE_DERIVS_PER_TERM and countDerivatifs > 1) or (maxPower > HIGHEST_ALLOWED_DERIV_POWERS):
+            return False
+        else:
+            return True
 
 
     @classmethod
