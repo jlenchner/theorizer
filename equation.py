@@ -25,14 +25,14 @@ from deprecated import deprecated  # In PyCharm debug mode this can cause the er
 class Equation:
     PROB_OF_NUM_TERMS = [0, 42.0/70.0, 20.0/70.0, 6.0/70.0, 2/70.0]  #Probs of a randomly generated poly having 1 term, 2 terms, etc.
                                                                      #Values have been extrapolated from the AI Feynman database.
-    PROB_FACTORS_PER_TERM = [0.19, 0.47, 0.25, 0.09]  #Probs that a term in a randomly generated poly will have 1, 2, 3, etc. factors
+    PROB_FACTORS_PER_TERM = [59/240, 99/240, 54/240, 21/240, 6/240, 1/240]  #Probs that a term in a randomly generated poly will have 1, 2, 3, etc. factors
                                                       #Values have been extrapolated from the AI Feynman database.
     SAME_VARIABLE_FACTOR_BIAS = 2.0  #Bias for repeating the same variable in a term (in other words, favoring x^2 over xy). Constants,
                                      # since they are variables, have the same bias.
     SAME_DERIVATIVE_FACTOR_BIAS = 0.5 #Bias for repeating the same derivative in a term (in other words, favoring dxdt^2 over dxdt*dydt)
 
-    PROB_TERM_HAS_NON_UNITAL_INTEGER_CONSTANT = 0.2
-    PROB_OF_SMALL_INTEGER_CONSTANTS = [0.0, 0.0, 15.0/34.0, 10.0/34.0, 9.0/34.0]  #Probs that a small non-unital integer constant is [0,1,2,3,4,5]
+    PROB_TERM_HAS_NON_UNITAL_INTEGER_CONSTANT = 0.18
+    PROB_OF_SMALL_INTEGER_CONSTANTS = [0.0, 0.0, 17.0/43.0, 14.0/43.0,12.0/43.0]  #Probs that a small non-unital integer constant is [0,1,2,3,4,5]
                                                                                   #Values have been extrapolated from the AI Feynman database.
 
     HOMOGENEOUS_EQN_PROB = 0.05
