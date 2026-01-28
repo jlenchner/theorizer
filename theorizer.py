@@ -88,8 +88,8 @@ def NewtonianGravity():
     cons = [G, pi]
     eqn0 = Equation(d1 * m1 - d2 * m2)
     eqn1 = Equation(d - d1 - d2)
-    eqn2 = Equation(Fg * d1**2 -  G * m1 * m2)
-    eqn3 = Equation(Fc - m2 - d2 - w**2)
+    eqn2 = Equation(Fg * d**2 -  G * m1 * m2)
+    eqn3 = Equation(Fc - m2 * d2 * w**2)
     eqn4 = Equation(Fc - Fg)
     eqn5 = Equation(p * w - 2 * pi)
     eqns = [eqn0, eqn1, eqn2, eqn3, eqn4, eqn5]
